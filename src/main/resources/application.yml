@@ -1,0 +1,13 @@
+server:
+ port: 80
+ servler: 
+  encoding:
+   charset: UTF-8
+   
+spring:
+ datasource:
+  url: jdbc:oracle:thin:@localhost:1521:XE
+  driver-class-name: oracle.jdbc.driver.OracleDriver
+  username: hr
+  password: hr
+  
