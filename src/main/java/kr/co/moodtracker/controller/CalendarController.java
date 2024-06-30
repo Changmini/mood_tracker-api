@@ -1,13 +1,12 @@
 package kr.co.moodtracker.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +30,7 @@ public class CalendarController {
 	
 	@RequestMapping(value = "/calendar")
 	public ResponseEntity<?> getCalendarInfo(SearchVO vo) {
-		if (vo == null) return null;
+		Map<String, Object> res = new HashMap<>();
 //		LocalDate.parse("1995-05-09");
 		/*
 		 * 글(Text)만 1달치를 다 뽑아서 전송해주고 
@@ -39,8 +38,8 @@ public class CalendarController {
 		 * 가져오자.
 		 */
 		List<DailyboxVO> list = calendarService.getDailyboxOfTheMonth(vo);
-		
-		return ResponseEntity.ok().body(list);
+		res.put("dailyboxList", list);
+		return ResponseEntity.ok().body(res);
 	}
 	
 }

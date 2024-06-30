@@ -3,6 +3,7 @@ package kr.co.moodtracker.service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -16,15 +17,12 @@ public class CalendarService {
 	private final String[] dayOfWeeks = {"SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"};
 	
 	public List<DailyboxVO> getDailyboxOfTheMonth(SearchVO vo) {
-		vo.setYear(2024);
-		vo.setMonth(6);
-		vo.setDayOfMonth(30);
-		makeCalendar(vo);
-		List<String> dateList = getDateRange(vo);
+		determineDateRange(vo);
+		List<String> dateList = getDateList(vo);
+		List<DailyboxVO> dailyboxList = testDailybox(dateList);
 //		List<Dailybox> dailyboxList = repository.getDailyboxOfTheMonth();
-//		if (dailyboxList.size() < 1) return Collections.emptyList();
-//		return dailyboxList;
-		return testDailybox(dateList);
+		if (dailyboxList.size() < 1) return Collections.emptyList();
+		return dailyboxList;
 	}
 	
 	private List<DailyboxVO> testDailybox(List<String> dateList) {
@@ -40,7 +38,7 @@ public class CalendarService {
 		return list;
 	}
 	
-	private List<String> getDateRange(SearchVO vo) {
+	private List<String> getDateList(SearchVO vo) {
 		LocalDate s = LocalDate.parse(vo.getStartDate());
 		LocalDate e = LocalDate.parse(vo.getEndDate());
 		List<String> dateList = new ArrayList<>();
@@ -53,12 +51,15 @@ public class CalendarService {
 		return dateList;
 	}
 	
-	private void makeCalendar(SearchVO vo) {
-		if (vo == null || vo.getYear() == 0 || vo.getMonth() == 0 || vo.getDayOfMonth() == 0)
-			return ;
-		LocalDate targetDate = LocalDate.of(
-				vo.getYear(), vo.getMonth(), vo.getDayOfMonth()
-			);
+	private void determineDateRange(SearchVO vo) {
+		LocalDate targetDate = null;
+		if (vo.getYear() != 0 && vo.getMonth() != 0 && vo.getDayOfMonth() != 0)
+			targetDate = LocalDate.of(vo.getYear(), vo.getMonth(), vo.getDayOfMonth());
+		else if (vo.getDate() != null && !vo.getDate().equals(""))
+			targetDate = LocalDate.parse(vo.getDate());
+		else 
+			targetDate = LocalDate.now();
+		
 		
 		int mFirst = targetDate.withDayOfMonth(1).getDayOfMonth();
 		int mLast = targetDate.lengthOfMonth();
@@ -108,11 +109,4 @@ public class CalendarService {
 					+"-"+ String.format("%02d", targetDate.lengthOfMonth()));
 		}
 	}
-
-	
-	public void getMemberSchedule() {
-		
-		return ;
-	}
-	
-}
+}// class
