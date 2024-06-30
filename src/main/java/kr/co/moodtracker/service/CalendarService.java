@@ -47,7 +47,6 @@ public class CalendarService {
 			dateList.add(tempDate.format(formatter));
 			tempDate = tempDate.plusDays(1);
 		}
-		dateList.forEach(System.out::println);
 		return dateList;
 	}
 	
