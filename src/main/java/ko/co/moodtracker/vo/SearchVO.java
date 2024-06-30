@@ -4,10 +4,10 @@ public class SearchVO {
 	
 	private int year;
 	private int month;
-	private int date;
+	private int dayOfMonth;
 	
 	/* Format: yyyy-mm-dd */
-	private String dayOfMonth;
+	private String date;
 	private String startDate;
 	private String endDate;
 	
@@ -23,17 +23,17 @@ public class SearchVO {
 	public void setMonth(int month) {
 		this.month = month;
 	}
-	public int getDate() {
-		return date;
-	}
-	public void setDate(int date) {
-		this.date = date;
-	}
-	public String getDayOfMonth() {
+	public int getDayOfMonth() {
 		return dayOfMonth;
 	}
-	public void setDayOfMonth(String dayOfMonth) {
+	public void setDayOfMonth(int dayOfMonth) {
 		this.dayOfMonth = dayOfMonth;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
 	}
 	public String getStartDate() {
 		return startDate;

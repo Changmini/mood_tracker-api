@@ -16,6 +16,9 @@ public class CalendarService {
 	private final String[] dayOfWeeks = {"SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"};
 	
 	public List<DailyboxVO> getDailyboxOfTheMonth(SearchVO vo) {
+		vo.setYear(2024);
+		vo.setMonth(6);
+		vo.setDayOfMonth(30);
 		makeCalendar(vo);
 		List<String> dateList = getDateRange(vo);
 //		List<Dailybox> dailyboxList = repository.getDailyboxOfTheMonth();
@@ -26,10 +29,10 @@ public class CalendarService {
 	
 	private List<DailyboxVO> testDailybox(List<String> dateList) {
 		List<DailyboxVO> list = new ArrayList<DailyboxVO>();
-		int size = dateList.size();
+		int size = dateList.size(); 
 		for (int i=0; i<size; i++) {
 			DailyboxVO d = new DailyboxVO();
-			d.setDayOfMonth(dateList.get(i));
+			d.setDate(dateList.get(i));
 			d.setTitle("오늘의 기분은.." + i);
 			d.setContent("이런이런 일이 있었다..." + i);
 			list.add(d);
@@ -42,19 +45,19 @@ public class CalendarService {
 		LocalDate e = LocalDate.parse(vo.getEndDate());
 		List<String> dateList = new ArrayList<>();
 		LocalDate tempDate = s; 
-		while(!s.isAfter(e)) {
+		while(!tempDate.isAfter(e)) {
 			dateList.add(tempDate.format(formatter));
-			tempDate.plusDays(1);
+			tempDate = tempDate.plusDays(1);
 		}
 		dateList.forEach(System.out::println);
 		return dateList;
 	}
 	
 	private void makeCalendar(SearchVO vo) {
-		if (vo == null || vo.getYear() == 0 || vo.getMonth() == 0 || vo.getDate() == 0)
+		if (vo == null || vo.getYear() == 0 || vo.getMonth() == 0 || vo.getDayOfMonth() == 0)
 			return ;
 		LocalDate targetDate = LocalDate.of(
-				vo.getYear(), vo.getMonth(), vo.getDate()
+				vo.getYear(), vo.getMonth(), vo.getDayOfMonth()
 			);
 		
 		int mFirst = targetDate.withDayOfMonth(1).getDayOfMonth();
@@ -77,7 +80,7 @@ public class CalendarService {
 		if (firstDateIndex > 0) { // 이전 달의 시작날짜
 			LocalDate minusMonth = targetDate.minusMonths(1);
 			int e = minusMonth.lengthOfMonth();
-			int s = e-(firstDateIndex+1);
+			int s = e-(firstDateIndex-1);
 			String m = String.format("%02d", minusMonth.getMonthValue());
 			int y = minusMonth.getYear();
 			LocalDate temp = minusMonth.withDayOfMonth(s);
