@@ -59,6 +59,7 @@ public class CalendarService {
 				.getDayOfWeek()
 				.toString();
 		
+		List<DailyboxVO> list = new ArrayList<>();
 		int firstDateIndex = 0;
 		int lastDateIndex = 0;
 		for (int i=0; i<dayOfWeeks.length; i++) {
@@ -66,32 +67,39 @@ public class CalendarService {
 			if (lastDayOfWeek.equals(dayOfWeeks[i])) lastDateIndex = i;
 		}
 		
-		if (firstDateIndex > 0) {
+		if (firstDateIndex > 0) { // 이전 달의 시작날짜
 			LocalDate minusMonth = targetDate.minusMonths(1);
-			LocalDate temp = minusMonth.withDayOfMonth(minusMonth.lengthOfMonth()-(firstDateIndex+1));
+			int e = minusMonth.lengthOfMonth();
+			int s = e-(firstDateIndex+1);
+			String m = String.format("%02d", minusMonth.getMonthValue());
+			int y = minusMonth.getYear();
+			LocalDate temp = minusMonth.withDayOfMonth(s);
+			for (int i=s; i<e; i++) {
+				list.add(null);
+			}
 			searchVO.setStartDate(temp.getYear() 
 					+"-"+ String.format("%02d", temp.getMonthValue()) 
 					+"-"+ String.format("%02d", temp.getDayOfMonth()));
-		} else {
+		} else { // 당월 시작날짜
 			searchVO.setStartDate(targetDate.getYear() 
 					+"-"+ String.format("%02d", targetDate.getMonthValue()) 
 					+"-"+ String.format("%02d", targetDate.getDayOfMonth()));
 		}
 		
-		if ((dayOfWeeks.length-(lastDateIndex+1)) > 0) {
+		if ((dayOfWeeks.length-(lastDateIndex+1)) > 0) { // 다음 달의 끝날짜
 			LocalDate plusMonth = targetDate.plusMonths(1);
 			LocalDate temp = plusMonth.withDayOfMonth((dayOfWeeks.length-(lastDateIndex+1)));
 			searchVO.setEndDate(temp.getYear() 
 					+"-"+ String.format("%02d", temp.getMonthValue()) 
 					+"-"+ String.format("%02d", temp.getDayOfMonth()));
-		} else {
+		} else { // 당월 끝날짜
 			searchVO.setEndDate(targetDate.getYear() 
 					+"-"+ String.format("%02d", targetDate.getMonthValue()) 
 					+"-"+ String.format("%02d", targetDate.lengthOfMonth()));
 		}
 		return searchVO;
 	}
-	
+
 	
 	public void getMemberSchedule() {
 		
