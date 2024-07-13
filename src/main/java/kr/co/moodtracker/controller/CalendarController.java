@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ko.co.moodtracker.vo.DailyboxVO;
+import ko.co.moodtracker.vo.DailyEntryVO;
 import ko.co.moodtracker.vo.SearchVO;
 import kr.co.moodtracker.service.CalendarService;
 
@@ -37,7 +37,7 @@ public class CalendarController {
 		 * 사진(picture) 상세 조회를 할 경우에만 개별 API를 통해서 
 		 * 가져오자.
 		 */
-		List<DailyboxVO> list = calendarService.getDailyboxOfTheMonth(vo);
+		List<DailyEntryVO> list = calendarService.getDailyboxOfTheMonth(vo);
 		res.put("dailyboxList", list);
 		return ResponseEntity.ok().body(res);
 	}

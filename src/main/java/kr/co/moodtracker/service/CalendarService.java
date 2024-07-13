@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import ko.co.moodtracker.vo.DailyboxVO;
+import ko.co.moodtracker.vo.DailyEntryVO;
 import ko.co.moodtracker.vo.SearchVO;
 
 @Service
@@ -16,26 +16,18 @@ public class CalendarService {
 	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private final String[] dayOfWeeks = {"SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"};
 	
-	public List<DailyboxVO> getDailyboxOfTheMonth(SearchVO vo) {
+	public DailyEntryVO getDailybox(SearchVO vo) {
+//		Dailybox dailybox = repository.getDailybox();
+		return null;
+	}
+	
+	public List<DailyEntryVO> getDailyboxOfTheMonth(SearchVO vo) {
 		determineDateRange(vo);
-		List<String> dateList = getDateList(vo);
-		List<DailyboxVO> dailyboxList = testDailybox(dateList);
+		List<String> dateList = getDateList(vo);               // 임시 날짜 생성
+		List<DailyEntryVO> dailyboxList = testDailybox(dateList);// 임시 날짜에 내용 저장
 //		List<Dailybox> dailyboxList = repository.getDailyboxOfTheMonth();
 		if (dailyboxList.size() < 1) return Collections.emptyList();
 		return dailyboxList;
-	}
-	
-	private List<DailyboxVO> testDailybox(List<String> dateList) {
-		List<DailyboxVO> list = new ArrayList<DailyboxVO>();
-		int size = dateList.size(); 
-		for (int i=0; i<size; i++) {
-			DailyboxVO d = new DailyboxVO();
-			d.setDate(dateList.get(i));
-			d.setTitle("오늘의 기분은.." + i);
-			d.setContent("이런이런 일이 있었다..." + i);
-			list.add(d);
-		} 
-		return list;
 	}
 	
 	private List<String> getDateList(SearchVO vo) {
@@ -48,6 +40,18 @@ public class CalendarService {
 			tempDate = tempDate.plusDays(1);
 		}
 		return dateList;
+	}
+	private List<DailyEntryVO> testDailybox(List<String> dateList) {
+		List<DailyEntryVO> list = new ArrayList<DailyEntryVO>();
+		int size = dateList.size(); 
+		for (int i=0; i<size; i++) {
+			DailyEntryVO d = new DailyEntryVO();
+			d.setDate(dateList.get(i));
+			d.setTitle("오늘의 기분은.." + i);
+			d.setNotes("이런이런 일이 있었다..." + i);
+			list.add(d);
+		} 
+		return list;
 	}
 	
 	private void determineDateRange(SearchVO vo) {
@@ -69,7 +73,7 @@ public class CalendarService {
 				.getDayOfWeek()
 				.toString();
 		
-		List<DailyboxVO> list = new ArrayList<>();
+		List<DailyEntryVO> list = new ArrayList<>();
 		int firstDateIndex = 0;
 		int lastDateIndex = 0;
 		for (int i=0; i<dayOfWeeks.length; i++) {
