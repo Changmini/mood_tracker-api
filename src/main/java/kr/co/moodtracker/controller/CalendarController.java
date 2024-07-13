@@ -38,7 +38,7 @@ public class CalendarController {
 		 * 가져오자.
 		 */
 		List<DailyEntryVO> list = calendarService.getDailyboxOfTheMonth(vo);
-		res.put("dailyboxList", list);
+		res.put("dailyEntryList", list);
 		return ResponseEntity.ok().body(res);
 	}
 	

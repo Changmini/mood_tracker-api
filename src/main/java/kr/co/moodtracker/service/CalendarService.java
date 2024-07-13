@@ -24,10 +24,10 @@ public class CalendarService {
 	public List<DailyEntryVO> getDailyboxOfTheMonth(SearchVO vo) {
 		determineDateRange(vo);
 		List<String> dateList = getDateList(vo);               // 임시 날짜 생성
-		List<DailyEntryVO> dailyboxList = testDailybox(dateList);// 임시 날짜에 내용 저장
-//		List<Dailybox> dailyboxList = repository.getDailyboxOfTheMonth();
-		if (dailyboxList.size() < 1) return Collections.emptyList();
-		return dailyboxList;
+		List<DailyEntryVO> dailyEntryList = testDailybox(dateList);// 임시 날짜에 내용 저장
+//		List<Dailybox> dailyEntryList = repository.getDailyboxOfTheMonth();
+		if (dailyEntryList.size() < 1) return Collections.emptyList();
+		return dailyEntryList;
 	}
 	
 	private List<String> getDateList(SearchVO vo) {
