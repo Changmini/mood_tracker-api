@@ -69,7 +69,7 @@ public class CalendarService {
 		}
 		
 		if (targetDate == null) 
-			throw new DataMissingException("CalendarService: determineDateRange(): 데이터 오류");
+			throw new DataMissingException("CalendarService: determineDateRange(): 객체 생성 실패");
 		int mFirst = targetDate.withDayOfMonth(1).getDayOfMonth();
 		int mLast = targetDate.lengthOfMonth();
 		String firstDayOfWeek = targetDate.withDayOfMonth(mFirst)
