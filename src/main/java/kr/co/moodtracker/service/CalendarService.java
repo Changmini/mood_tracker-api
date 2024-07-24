@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import ko.co.moodtracker.vo.DailyEntryVO;
 import ko.co.moodtracker.vo.SearchVO;
+import kr.co.moodtracker.exception.DataMissingException;
 
 @Service
 public class CalendarService {
@@ -21,7 +22,7 @@ public class CalendarService {
 		return null;
 	}
 	
-	public List<DailyEntryVO> getDailyboxOfTheMonth(SearchVO vo) {
+	public List<DailyEntryVO> getDailyboxOfTheMonth(SearchVO vo) throws DataMissingException {
 		determineDateRange(vo);
 		List<String> dateList = getDateList(vo);               // 임시 날짜 생성
 		List<DailyEntryVO> dailyEntryList = testDailybox(dateList);// 임시 날짜에 내용 저장
@@ -54,16 +55,21 @@ public class CalendarService {
 		return list;
 	}
 	
-	private void determineDateRange(SearchVO vo) {
+	private void determineDateRange(SearchVO vo) throws DataMissingException {
 		LocalDate targetDate = null;
-		if (vo.getYear() != 0 && vo.getMonth() != 0 && vo.getDayOfMonth() != 0)
+		if (vo.getYear() != 0 && vo.getMonth() != 0 && vo.getDayOfMonth() != 0) {
 			targetDate = LocalDate.of(vo.getYear(), vo.getMonth(), vo.getDayOfMonth());
-		else if (vo.getDate() != null && !vo.getDate().equals(""))
-			targetDate = LocalDate.parse(vo.getDate());
-		else 
+		} else if (vo.getDate() != null && !vo.getDate().equals("")) {
+			String date = vo.getDate();
+			int len = date.length();
+			if (len == 7) targetDate = LocalDate.parse(date+"-01", formatter); 
+			else if (len == 10) targetDate = LocalDate.parse(date, formatter);
+		} else { 
 			targetDate = LocalDate.now();
+		}
 		
-		
+		if (targetDate == null) 
+			throw new DataMissingException("CalendarService: determineDateRange(): 데이터 오류");
 		int mFirst = targetDate.withDayOfMonth(1).getDayOfMonth();
 		int mLast = targetDate.lengthOfMonth();
 		String firstDayOfWeek = targetDate.withDayOfMonth(mFirst)

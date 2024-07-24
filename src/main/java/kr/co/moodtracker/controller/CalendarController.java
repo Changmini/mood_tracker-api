@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ko.co.moodtracker.vo.DailyEntryVO;
 import ko.co.moodtracker.vo.SearchVO;
+import kr.co.moodtracker.exception.DataMissingException;
 import kr.co.moodtracker.service.CalendarService;
 
 @RestController
@@ -37,8 +38,14 @@ public class CalendarController {
 		 * 사진(picture) 상세 조회를 할 경우에만 개별 API를 통해서 
 		 * 가져오자.
 		 */
-		List<DailyEntryVO> list = calendarService.getDailyboxOfTheMonth(vo);
-		res.put("dailyEntryList", list);
+		List<DailyEntryVO> list;
+		try {
+			list = calendarService.getDailyboxOfTheMonth(vo);
+			res.put("dailyEntryList", list);
+		} catch (DataMissingException e) {
+			res.put("msg", e.getMessage());
+			e.printStackTrace();
+		}
 		return ResponseEntity.ok().body(res);
 	}
 	
