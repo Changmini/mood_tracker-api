@@ -4,8 +4,7 @@ public class DailyEntryVO extends SearchVO {
 	private int seq;
 	private String title;
 	private String notes;
-	private String mood;
-	private String activities;
+	private Integer mood;
 	
 	public int getSeq() {
 		return seq;
@@ -25,17 +24,11 @@ public class DailyEntryVO extends SearchVO {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	public String getMood() {
+	public Integer getMood() {
 		return mood;
 	}
-	public void setMood(String mood) {
+	public void setMood(Integer mood) {
 		this.mood = mood;
-	}
-	public String getActivities() {
-		return activities;
-	}
-	public void setActivities(String activities) {
-		this.activities = activities;
 	}
 
 }
