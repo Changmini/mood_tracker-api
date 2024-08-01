@@ -4,11 +4,17 @@ server:
   context-path: /mood
   encoding:
    charset: UTF-8
-   
+
+# MySQL DB 정보
 spring:
  datasource:
-  url: jdbc:oracle:orcl:@localhost:1521:XE
-  driver-class-name: oracle.jdbc.driver.OracleDriver
-  username: system
-  password: admin
-  
+  url: jdbc:mysql://127.0.0.1:3306/moodtracker?zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  username: mtroot
+  password: mtroot
+
+# MyBatis 설정 정보
+#mybatis:
+#  config-location: classpath:mybatis/config/mybatis-config.xml
+#  mapper-locations: classpath:mybatis/mapper/*/*.xml
+#  type-aliases-package: kr.co.moodtracker

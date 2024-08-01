@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -13,7 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class DbConfig {
+@MapperScan(basePackages = {"kr.co.moodtracker.mapper"})
+public class DbMoodtrackerConfig {
 
 	@Value("${spring.datasource.url}")
 	private String url;
@@ -48,7 +50,6 @@ public class DbConfig {
 	    factoryBean.setMapperLocations(applicationContext.getResources("classpath:/mybatis/mapper/**/*Mapper.xml"));
 	    return factoryBean.getObject();
 	  }
-	
 	
 	@Bean
     public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) {

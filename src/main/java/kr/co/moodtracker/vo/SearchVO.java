@@ -1,7 +1,6 @@
-package ko.co.moodtracker.vo;
+package kr.co.moodtracker.vo;
 
 public class SearchVO {
-	
 	private int year;
 	private int month;
 	private int dayOfMonth;

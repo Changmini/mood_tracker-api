@@ -5,9 +5,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import ko.co.moodtracker.vo.DailyEntryVO;
-import ko.co.moodtracker.vo.SearchVO;
 import kr.co.moodtracker.exception.DataMissingException;
+import kr.co.moodtracker.vo.DailyEntryVO;
+import kr.co.moodtracker.vo.SearchVO;
 
 public class DateHandler {
 	public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -71,15 +71,33 @@ public class DateHandler {
 		}
 	}
 	
-	public static List<String> makeDateList(SearchVO vo) {
+	public static List<DailyEntryVO> makeDateList(SearchVO vo, List<DailyEntryVO> dailies) {
 		LocalDate s = LocalDate.parse(vo.getStartDate());
 		LocalDate e = LocalDate.parse(vo.getEndDate());
-		List<String> dateList = new ArrayList<>();
-		LocalDate tempDate = s; 
+		List<DailyEntryVO> list = new ArrayList<DailyEntryVO>();
+		
+		LocalDate tempDate = s;
+		int dailiesIndex = 0;
 		while(!tempDate.isAfter(e)) {
-			dateList.add(tempDate.format(DateHandler.formatter));
+			String date = tempDate.format(DateHandler.formatter);
+			String dailiesDate = null;
+			DailyEntryVO d = null;
+			DailyEntryVO ed = null;
+			if (dailies.size() > dailiesIndex) {
+				ed = dailies.get(dailiesIndex);
+				dailiesDate = ed.getDate();
+			}
+			
+			if (dailiesDate != null && date.equals(dailiesDate)) {
+				d = ed;
+				dailiesIndex++;
+			} else {
+				d = new DailyEntryVO();
+				d.setDate(date);
+			}
+			list.add(d);
 			tempDate = tempDate.plusDays(1);
 		}
-		return dateList;
+		return list;
 	}
 }
