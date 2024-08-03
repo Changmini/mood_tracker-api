@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kr.co.moodtracker.exception.DataMissingException;
-import kr.co.moodtracker.vo.DailyEntryVO;
+import kr.co.moodtracker.vo.DailyInfoVO;
 import kr.co.moodtracker.vo.SearchVO;
 
 public class DateHandler {
@@ -71,18 +71,18 @@ public class DateHandler {
 		}
 	}
 	
-	public static List<DailyEntryVO> makeDateList(SearchVO vo, List<DailyEntryVO> dailies) {
+	public static List<DailyInfoVO> makeDateList(SearchVO vo, List<DailyInfoVO> dailies) {
 		LocalDate s = LocalDate.parse(vo.getStartDate());
 		LocalDate e = LocalDate.parse(vo.getEndDate());
-		List<DailyEntryVO> list = new ArrayList<DailyEntryVO>();
+		List<DailyInfoVO> list = new ArrayList<DailyInfoVO>();
 		
 		LocalDate tempDate = s;
 		int dailiesIndex = 0;
 		while(!tempDate.isAfter(e)) {
 			String date = tempDate.format(DateHandler.formatter);
 			String dailiesDate = null;
-			DailyEntryVO d = null;
-			DailyEntryVO ed = null;
+			DailyInfoVO d = null;
+			DailyInfoVO ed = null;
 			if (dailies.size() > dailiesIndex) {
 				ed = dailies.get(dailiesIndex);
 				dailiesDate = ed.getDate();
@@ -92,7 +92,7 @@ public class DateHandler {
 				d = ed;
 				dailiesIndex++;
 			} else {
-				d = new DailyEntryVO();
+				d = new DailyInfoVO();
 				d.setDate(date);
 			}
 			list.add(d);

@@ -10,7 +10,11 @@ public class CrossOrigin implements WebMvcConfigurer {
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
-	        .allowedOrigins("*")
+	        .allowedOrigins("http://127.0.0.1:3000/")
+	        .allowedOrigins("http://127.0.0.1:8080/")
+	        .allowedOrigins("http://localhost:3000/")
+	        .allowedOrigins("http://localhost:8080/")
+	        //.allowedOrigins("*")
 	        .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE")
 	        .allowCredentials(false)
 	        .maxAge(3600);

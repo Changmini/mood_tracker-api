@@ -1,9 +1,9 @@
 package kr.co.moodtracker.mapper;
 
-import kr.co.moodtracker.vo.DailyEntryVO;
+import kr.co.moodtracker.vo.DailyInfoVO;
 
 public interface MoodsMapper {
 
-	public int postMood(DailyEntryVO vo);
+	public int postMood(DailyInfoVO vo);
 
 }

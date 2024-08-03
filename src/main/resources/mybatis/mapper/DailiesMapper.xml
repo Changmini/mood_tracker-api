@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.moodtracker.mapper.DailiesMapper">
+	
+	<select id="getDailyEntryOfTheMonth" parameterType="kr.co.moodtracker.vo.DailyInfoVO"
+							 			 resultType="kr.co.moodtracker.vo.DailyInfoVO">
+		SELECT DS.daily_id
+			,DS.note_id
+		    ,DS.mood_id
+		    ,DS.`date`
+		    ,NS.note_title
+		    ,NS.note_content
+		    ,MS.mood_level
+		    ,M.`description`
+		FROM (
+			SELECT daily_id
+				,note_id
+				,mood_id
+		        ,DATE_FORMAT(`date`, '%Y-%m-%d') as `date`
+			FROM dailies
+			WHERE user_id = #{userId}
+			<![CDATA[
+				AND `date` >= #{startDate}
+				AND `date` <= #{endDate}
+			]]>
+		) AS DS LEFT JOIN notes AS NS ON DS.note_id = NS.note_id
+		LEFT JOIN moods AS MS ON DS.mood_id = MS.mood_id
+		LEFT JOIN mood AS M ON MS.mood_level = M.`level`
+		ORDER BY `date` ASC 
+	</select>
+	
+	<insert id="postDaily" parameterType="kr.co.moodtracker.vo.DailyInfoVO"
+			useGeneratedKeys="true" keyProperty="moodId">
+		insert into dailies (
+			user_id
+			,note_id
+		    ,mood_id
+		    ,date
+		) values (
+			#{userId}
+		    ,#{noteId}
+		    ,#{moodId}
+		    ,#{date}
+		);
+	</insert>
+
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.moodtracker.mapper.NotesMapper">
+	
+	<insert id="postNote" parameterType="kr.co.moodtracker.vo.DailyInfoVO"
+			useGeneratedKeys="true" keyProperty="noteId">
+		INSERT INTO notes (
+			user_id
+			,note_title
+			,note_content
+		) VALUES (
+			#{userId}
+		    ,#{noteTitle}
+		    ,#{noteContent}
+		)
+	</insert>
+
+</mapper>

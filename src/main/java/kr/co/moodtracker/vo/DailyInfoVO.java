@@ -1,6 +1,6 @@
 package kr.co.moodtracker.vo;
 
-public class DailyEntryVO extends SearchVO {
+public class DailyInfoVO extends SearchVO {
 	private int dailyId;
 	private int userId;
 	private int noteId;

@@ -4,9 +4,11 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import kr.co.moodtracker.vo.UserVO;
+
 @Repository
 public interface UsersMapper {
 
-	public Map<String, Object> getUser(Map<String, String> vo);
+	public UserVO getUser(Map<String, String> vo);
 
 }

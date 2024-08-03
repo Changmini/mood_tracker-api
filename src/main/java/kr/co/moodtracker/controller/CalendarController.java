@@ -15,7 +15,7 @@ import kr.co.moodtracker.exception.DataMissingException;
 import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.service.CalendarService;
 import kr.co.moodtracker.service.TestService;
-import kr.co.moodtracker.vo.DailyEntryVO;
+import kr.co.moodtracker.vo.DailyInfoVO;
 
 @RestController
 public class CalendarController {
@@ -32,17 +32,17 @@ public class CalendarController {
 	}
 	
 	@GetMapping(value = "/calendar")
-	public ResponseEntity<?> getCalendarInfo(DailyEntryVO vo) {
+	public ResponseEntity<?> getCalendarInfo(DailyInfoVO vo) {
 		Map<String, Object> res = new HashMap<>();
 		/*
 		 * 글(Text)만 1달치를 다 뽑아서 전송해주고 
 		 * 사진(picture) 상세 조회를 할 경우에만 개별 API를 통해서 
 		 * 가져오자.
 		 */
-		List<DailyEntryVO> list;
+		List<DailyInfoVO> list;
 		try {
 			list = calendarService.getDailyEntryOfTheMonth(vo);
-			res.put("dailyEntryList", list);
+			res.put("dailyInfoList", list);
 		} catch (DataMissingException e) {
 			res.put("msg", e.getMessage());
 			e.printStackTrace();
@@ -51,10 +51,11 @@ public class CalendarController {
 	}
 	
 	@PostMapping(value = "/daily")
-	public ResponseEntity<?> postDailyEntry(DailyEntryVO vo) {
+	public ResponseEntity<?> postDailyEntry(DailyInfoVO vo) {
 		Map<String, Object> res = new HashMap<>();
 		try {
-			calendarService.postDailyEntry(vo);
+			vo.setUserId(1);// dddddddddddddddddddddddddddddddddddelete
+			calendarService.postDailyInfo(vo);
 			res.put("success", true);
 			return ResponseEntity.ok().body(res);
 		} catch (DataNotInsertedException  e) {
@@ -67,7 +68,7 @@ public class CalendarController {
 	
 	@RequestMapping("/test")
 	public ResponseEntity<?> test() {
-		testService.getUser();
+		testService.getNotes();
 		return ResponseEntity.ok().body("ok");
 	}
 }
