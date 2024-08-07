@@ -4,13 +4,26 @@
 	
 	<insert id="postMood" parameterType="kr.co.moodtracker.vo.DailyInfoVO"
 			useGeneratedKeys="true" keyProperty="moodId">
-		insert into moods (
+		INSERT INTO moods (
 			user_id
 			,mood_level
-		) values (
+		) VALUES (
 		    #{userId}
 		    ,#{moodLevel}
-		);
+		)
 	</insert>
+	
+	<update id="patchMood" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+		UPDATE moods
+		SET mood_level = #{moodLevel}
+		WHERE mood_id = #{moodId}
+		AND user_id = #{userId}
+	</update>
+	
+	<delete id="deleteMood" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+		DELETE FROM moods
+		WHERE mood_id = #{moodId}
+		AND user_id = #{userId}
+	</delete>
 
 </mapper>

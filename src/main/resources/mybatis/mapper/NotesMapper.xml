@@ -14,5 +14,19 @@
 		    ,#{noteContent}
 		)
 	</insert>
+	
+	<update id="patchNote" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+		UPDATE notes
+		SET	note_title = #{noteTitle}
+			,note_content = #{noteContent}
+		WHERE note_id = #{noteId} 
+		AND user_id = #{userId}
+	</update>
+	
+	<delete id="deleteNote" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+		DELETE FROM notes
+		WHERE note_id = #{noteId} 
+		AND user_id = #{userId}
+	</delete>
 
 </mapper>

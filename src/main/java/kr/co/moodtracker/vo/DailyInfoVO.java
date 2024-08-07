@@ -7,7 +7,7 @@ public class DailyInfoVO extends SearchVO {
     private int moodId;
     private String noteTitle;
     private String noteContent;
-    private String moodLevel;
+    private Integer moodLevel;
     private String description;
     private String createdAt;
     private String updatedAt;
@@ -48,10 +48,10 @@ public class DailyInfoVO extends SearchVO {
 	public void setNoteContent(String noteContent) {
 		this.noteContent = noteContent;
 	}
-	public String getMoodLevel() {
+	public Integer getMoodLevel() {
 		return moodLevel;
 	}
-	public void setMoodLevel(String moodLevel) {
+	public void setMoodLevel(Integer moodLevel) {
 		this.moodLevel = moodLevel;
 	}
 	public String getDescription() {

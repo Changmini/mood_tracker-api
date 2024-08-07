@@ -19,29 +19,35 @@
 		        ,DATE_FORMAT(`date`, '%Y-%m-%d') as `date`
 			FROM dailies
 			WHERE user_id = #{userId}
-			<![CDATA[
-				AND `date` >= #{startDate}
-				AND `date` <= #{endDate}
-			]]>
+			AND `date` <![CDATA[ >= ]]> 
+				<if test='startDate != null and !startDate.equals("")'> #{startDate} </if>
+			AND `date` <![CDATA[ <= ]]> 
+				<if test='endDate != null and !endDate.equals("")'> #{endDate} </if>
+			
 		) AS DS LEFT JOIN notes AS NS ON DS.note_id = NS.note_id
 		LEFT JOIN moods AS MS ON DS.mood_id = MS.mood_id
 		LEFT JOIN mood AS M ON MS.mood_level = M.`level`
 		ORDER BY `date` ASC 
 	</select>
 	
-	<insert id="postDaily" parameterType="kr.co.moodtracker.vo.DailyInfoVO"
-			useGeneratedKeys="true" keyProperty="moodId">
-		insert into dailies (
+	<insert id="postDaily" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+		INSERT INTO dailies (
 			user_id
 			,note_id
 		    ,mood_id
 		    ,date
-		) values (
+		) VALUES (
 			#{userId}
 		    ,#{noteId}
 		    ,#{moodId}
 		    ,#{date}
-		);
+		)
 	</insert>
+	
+	<delete id="deleteDaily" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+		DELETE FROM dailies (
+		WHERE daily_id = #{dailyId}
+		AND user_id = #{userId}
+	</delete>
 
 </mapper>

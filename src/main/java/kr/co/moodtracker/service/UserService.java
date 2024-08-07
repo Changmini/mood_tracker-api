@@ -14,6 +14,15 @@ public class UserService {
 	@Autowired
 	UsersMapper userMapper;
 	
+	/**
+	 * <pre>
+	 * 	인자 값은 username과 password를 key로 하고 <br/>
+	 * 	해당 key와 의미가 일치하는 적절한 value를 저장하여 넘겨주면 <br/>
+	 * 	사용자 정보를 리턴해준다.
+	 * </pre>
+	 * @param vo
+	 * @return custom ValueObject
+	 */
 	public UserVO getUser(Map<String, String> vo) {
 		String username = vo.get("username");
 		String password = vo.get("password");

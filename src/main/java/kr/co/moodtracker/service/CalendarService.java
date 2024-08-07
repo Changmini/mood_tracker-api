@@ -27,7 +27,6 @@ public class CalendarService {
 	
 	public List<DailyInfoVO> getDailyEntryOfTheMonth(DailyInfoVO vo) throws DataMissingException {
 		DateHandler.determineDateRange(vo);
-		vo.setUserId(1);
 		List<DailyInfoVO> dailies = dailiesMapper.getDailyEntryOfTheMonth(vo);
 		List<DailyInfoVO> dailyEntryList = DateHandler.makeDateList(vo, dailies);
 		if (dailyEntryList.size() < 1) return Collections.emptyList();
@@ -40,11 +39,28 @@ public class CalendarService {
 		 * 이미 데이터가 존재하는지 확인하는 로직을 추가해야 한다.
 		 * */
 		int cnt = notesMapper.postNote(vo);
-		if (cnt == 0) throw new DataNotInsertedException("텍스트 정보를 등록 실패했습니다.");
+		if (cnt == 0) throw new DataNotInsertedException("입력된 텍스트 정보를 확인해주세요.");
 		cnt = moodsMapper.postMood(vo);
-		if (cnt == 0) throw new DataNotInsertedException("분위기 정보를 등록 실패했습니다.");
+		if (cnt == 0) throw new DataNotInsertedException("분위기 정보를 등록 실패했습니다. 등록 데이터: "+cnt);
 		cnt = dailiesMapper.postDaily(vo);
-		if (cnt == 0) throw new DataNotInsertedException("날짜 정보를 등록 실패했습니다.");
+		if (cnt == 0) throw new DataNotInsertedException("날짜 정보를 등록 실패했습니다. 등록 데이터: "+cnt);
+	}
+	
+	public void patchDailyInfo(DailyInfoVO vo) throws DataNotInsertedException {
+		int cnt = notesMapper.patchNote(vo);
+		if (cnt == 0) throw new DataNotInsertedException("입력된 텍스트 정보를 확인해주세요.");
+		cnt = moodsMapper.patchMood(vo);
+		if (cnt == 0) throw new DataNotInsertedException("분위기 정보를 갱신 실패했습니다. 변경 데이터: "+cnt);
+	}
+	
+	@Transactional(rollbackFor = { Exception.class })
+	public void deleteDailyInfo(DailyInfoVO vo) throws DataNotInsertedException {
+		int cnt = notesMapper.deleteNote(vo);
+		if (cnt == 0) throw new DataNotInsertedException("삭제 데이터의 noteId 정보가 일치한지 확인이 필요합니다.");
+		cnt = moodsMapper.deleteMood(vo);
+		if (cnt == 0) throw new DataNotInsertedException("삭제 데이터의 moodId 정보가 일치한지 확인이 필요합니다.");
+		cnt = dailiesMapper.deleteDaily(vo);
+		if (cnt == 0) throw new DataNotInsertedException("삭제 데이터의 dailyId 정보가 일치한지 확인이 필요합니다.");
 	}
 	
 }// class

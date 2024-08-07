@@ -10,4 +10,7 @@ public interface DailiesMapper {
 	public List<DailyInfoVO> getDailyEntryOfTheMonth(DailyInfoVO vo);
 
 	public int postDaily(DailyInfoVO vo);
+
+	public int deleteDaily(DailyInfoVO vo);
+	
 }

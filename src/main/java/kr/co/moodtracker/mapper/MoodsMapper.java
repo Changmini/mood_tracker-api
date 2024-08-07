@@ -6,4 +6,8 @@ public interface MoodsMapper {
 
 	public int postMood(DailyInfoVO vo);
 
+	public int patchMood(DailyInfoVO vo);
+
+	public int deleteMood(DailyInfoVO vo);
+
 }

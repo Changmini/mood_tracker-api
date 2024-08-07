@@ -19,22 +19,32 @@ import kr.co.moodtracker.vo.UserVO;
 
 
 @RestController
-public class UserController {
+public class LoginController {
 	
 	@Autowired
 	UserService userService;
 	
-	@GetMapping("/user")
+	@PostMapping("/login")
+	public ResponseEntity<?> login(HttpSession sess, @RequestParam Map<String,String> vo) {
+		Map<String, Object> result = new HashMap<>();
+		UserVO user = userService.getUser(vo);
+		if (user != null) {
+			sess.setAttribute("USER", user);
+			result.put("success", true);
+		} else {
+			result.put("success", false);
+		}
+		return ResponseEntity.ok().body(result);
+	}
+	
+	@GetMapping("/login/status")
 	public ResponseEntity<?> loginStatus(HttpSession sess) {
 		Map<String, Object> result = new HashMap<>();
 		UserVO user = (UserVO) sess.getAttribute("USER");
-		if (user != null) {
+		if (user != null)
 			result.put("success", true);
-		} else {
-			result.put("username", user.getUsername());
-			result.put("email", user.getEmail());
+		else 
 			result.put("success", false);
-		}
 		return ResponseEntity.ok().body(result);
 	}
 }
