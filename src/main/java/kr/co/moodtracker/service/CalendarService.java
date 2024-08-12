@@ -2,7 +2,6 @@ package kr.co.moodtracker.service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +13,7 @@ import kr.co.moodtracker.mapper.DailiesMapper;
 import kr.co.moodtracker.mapper.MoodsMapper;
 import kr.co.moodtracker.mapper.NotesMapper;
 import kr.co.moodtracker.vo.DailyInfoVO;
+import kr.co.moodtracker.vo.DailySearchVO;
 
 @Service
 public class CalendarService {
@@ -25,12 +25,21 @@ public class CalendarService {
 	@Autowired
 	MoodsMapper moodsMapper;
 	
-	public List<DailyInfoVO> getDailyEntryOfTheMonth(DailyInfoVO vo) throws DataMissingException {
+	static final int MAX_LIST_COUNT = 10;
+	
+	public List<DailyInfoVO> getDailyInfoOfTheMonth(DailySearchVO vo) throws DataMissingException {
 		DateHandler.determineDateRange(vo);
-		List<DailyInfoVO> dailies = dailiesMapper.getDailyEntryOfTheMonth(vo);
-		List<DailyInfoVO> dailyEntryList = DateHandler.makeDateList(vo, dailies);
-		if (dailyEntryList.size() < 1) return Collections.emptyList();
-		return dailyEntryList;
+		List<DailyInfoVO> dailies = dailiesMapper.getDailyInfoOfTheMonth(vo);
+		List<DailyInfoVO> dailyInfoList = DateHandler.makeDateList(vo, dailies);
+		if (dailyInfoList.size() < 1) return Collections.emptyList();
+		return dailyInfoList;
+	}
+	
+	public List<DailyInfoVO> getDailyInfoList(DailySearchVO vo) throws DataMissingException {
+		if (vo.getLimit() > 30) throw new DataMissingException("한번에 너무 많은 데이터를 요청할 수 없습니다.");
+		List<DailyInfoVO> dailies = dailiesMapper.getDailyInfoList(vo);
+		if (dailies.size() < 1) return Collections.emptyList();
+		return dailies;
 	}
 	
 	@Transactional(rollbackFor = { Exception.class })

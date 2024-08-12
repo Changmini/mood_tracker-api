@@ -18,7 +18,7 @@ import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.service.CalendarService;
 import kr.co.moodtracker.vo.DailyInfoVO;
-import kr.co.moodtracker.vo.UserVO;
+import kr.co.moodtracker.vo.DailySearchVO;
 
 @RestController
 public class CalendarController extends CommonController {
@@ -27,23 +27,41 @@ public class CalendarController extends CommonController {
 	CalendarService calendarService;
 	
 	@GetMapping(value = "/calendar/{date}")
-	public ResponseEntity<?> getCalendarInfo(HttpSession sess, DailyInfoVO vo) {
+	public ResponseEntity<?> getCalendarInfo(HttpSession sess, DailySearchVO vo) {
 		Map<String, Object> res = new HashMap<>();
 		List<DailyInfoVO> list;
 		try {
 			setUserInfo(sess, vo);
-			list = calendarService.getDailyEntryOfTheMonth(vo);
+			list = calendarService.getDailyInfoOfTheMonth(vo);
 			res.put("dailyInfoList", list);
+			res.put("success", true);
 		} catch (DataMissingException | SessionNotFoundException e) {
 			res.put("msg", e.getMessage());
 			e.printStackTrace();
 		} 
+		res.put("success", false);
+		return ResponseEntity.ok().body(res);
+	}
+	
+	@GetMapping(value = "/daily")
+	public ResponseEntity<?> timeline(HttpSession sess, DailySearchVO vo) {
+		Map<String, Object> res = new HashMap<>();
+		try {
+			setUserInfo(sess, vo);
+			res.put("dailyInfoList", calendarService.getDailyInfoList(vo));
+			res.put("success", true);
+			return ResponseEntity.ok().body(res);
+		} catch (DataMissingException | SessionNotFoundException  e) {
+			res.put("msg", e.getMessage());
+			e.printStackTrace();
+		}
+		res.put("success", false);
 		return ResponseEntity.ok().body(res);
 	}
 	
 	@PostMapping(value = "/daily")
 	public ResponseEntity<?> postDailyEntry(HttpSession sess, DailyInfoVO vo) {
-		Map<String, Object> res = new HashMap<>(); vo.setUserId(1);
+		Map<String, Object> res = new HashMap<>();
 		try {
 			setUserInfo(sess, vo);
 			calendarService.postDailyInfo(vo);
@@ -59,7 +77,7 @@ public class CalendarController extends CommonController {
 	
 	@PatchMapping(value = "/daily")
 	public ResponseEntity<?> patchDailyEntry(HttpSession sess, DailyInfoVO vo) {
-		Map<String, Object> res = new HashMap<>(); vo.setUserId(1);
+		Map<String, Object> res = new HashMap<>();
 		try {
 			setUserInfo(sess, vo);
 			calendarService.patchDailyInfo(vo);
@@ -75,7 +93,7 @@ public class CalendarController extends CommonController {
 	
 	@DeleteMapping(value = "/daily")
 	public ResponseEntity<?> deleteDailyEntry(HttpSession sess, DailyInfoVO vo) {
-		Map<String, Object> res = new HashMap<>(); vo.setUserId(1);
+		Map<String, Object> res = new HashMap<>();
 		try {
 			setUserInfo(sess, vo);
 			calendarService.deleteDailyInfo(vo);

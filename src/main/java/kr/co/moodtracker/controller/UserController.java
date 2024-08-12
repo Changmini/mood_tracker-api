@@ -29,10 +29,10 @@ public class UserController {
 		Map<String, Object> result = new HashMap<>();
 		UserVO user = (UserVO) sess.getAttribute("USER");
 		if (user != null) {
-			result.put("success", true);
-		} else {
 			result.put("username", user.getUsername());
 			result.put("email", user.getEmail());
+			result.put("success", true);
+		} else {
 			result.put("success", false);
 		}
 		return ResponseEntity.ok().body(result);

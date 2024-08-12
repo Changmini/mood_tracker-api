@@ -10,6 +10,12 @@ public class SearchVO {
 	private String startDate;
 	private String endDate;
 	
+	private String title;
+	private String content;
+	
+    private int offset;
+    private int limit=10;
+	
 	public int getYear() {
 		return year;
 	}
@@ -46,5 +52,29 @@ public class SearchVO {
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
-
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public int getOffset() {
+		return offset;
+	}
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+	public int getLimit() {
+		return limit;
+	}
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+	
 }

@@ -1,10 +1,11 @@
 package kr.co.moodtracker.vo;
 
-public class DailyInfoVO extends SearchVO {
+public class DailyInfoVO {
 	private int dailyId;
 	private int userId;
 	private int noteId;
     private int moodId;
+    private String date;
     private String noteTitle;
     private String noteContent;
     private Integer moodLevel;
@@ -35,6 +36,12 @@ public class DailyInfoVO extends SearchVO {
 	}
 	public void setMoodId(int moodId) {
 		this.moodId = moodId;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
 	}
 	public String getNoteTitle() {
 		return noteTitle;
