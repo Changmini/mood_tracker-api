@@ -66,8 +66,7 @@ public class DateHandler {
 		}
 	}
 	
-	public static List<DailyInfoVO> makeDateList(
-			SearchVO vo, List<DailyInfoVO> dailies, List<DailyInfoVO> images) {
+	public static List<DailyInfoVO> makeDateList(SearchVO vo, List<DailyInfoVO> dailies) {
 		LocalDate startDate = LocalDate.parse(vo.getStartDate());
 		LocalDate endDate = LocalDate.parse(vo.getEndDate());
 		List<DailyInfoVO> list = new ArrayList<DailyInfoVO>();
@@ -75,24 +74,15 @@ public class DateHandler {
 		LocalDate nextDate = startDate;
 		int dailesSize = dailies.size();
 		int dailiesIndex = 0;
-		int imagesSize = images.size();
-		int imagesIndex = 0;
 		/* 캘린더에 사용될 날짜 세팅하기 */
 		while(!nextDate.isAfter(endDate)) {
 			String nDate = nextDate.format(formatter);
 			String tmpDate = null;
 			DailyInfoVO daily = null;
-			if (dailesSize > dailiesIndex// DB에 저장된 날짜정보 세팅 
-					&& imagesSize > imagesIndex
+			if (dailesSize > dailiesIndex// DB에 저장된 날짜정보 세팅
 					&& (daily = dailies.get(dailiesIndex)) != null
 					&& (tmpDate = daily.getDate()) != null
 					&& nDate.equals(tmpDate)) {
-				int dailyId = daily.getDailyId();// 이미지 정보 삽입 [Start]
-				DailyInfoVO image = images.get(imagesIndex);
-				if (image !=null && image.getDailyId() == dailyId) {
-					daily.setImageList(image.getImageList());
-					imagesIndex++;
-				}// 이미지 정보 삽입 [End]
 				list.add(daily);
 				dailiesIndex++;
 			} else {// 기본 날짜정보만 세팅

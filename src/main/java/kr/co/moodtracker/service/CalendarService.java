@@ -37,10 +37,10 @@ public class CalendarService {
 	public List<DailyInfoVO> getDailyInfoOfTheMonth(DailySearchVO vo) throws DataMissingException {
 		DateHandler.determineDateRange(vo);
 		List<DailyInfoVO> dailies = dailiesMapper.getDailyInfoOfTheMonth(vo);
-		vo.setStartAtPosition(ImgFileHandler.rootPath().length());// 이미지 파일의 루트경로 길이 파악 
+		vo.setStartAtPosition(FileHandler.rootPath().length());// 이미지 파일의 루트경로 길이 파악
 		List<DailyInfoVO> images =  imagesMapper.getImageInfoList(vo);
-		/* 여기서 dailies와 images를 합치고 넘겨주자. */
-		List<DailyInfoVO> dailyInfoList = DateHandler.makeDateList(vo, dailies, images);
+		ImageHandler.insertImageDataIntoDailyInfo(images, dailies);
+		List<DailyInfoVO> dailyInfoList = DateHandler.makeDateList(vo, dailies);
 		if (dailyInfoList.size() < 1) return Collections.emptyList();
 		return dailyInfoList;
 	}
@@ -48,6 +48,9 @@ public class CalendarService {
 	public List<DailyInfoVO> getDailyInfoList(DailySearchVO vo) throws DataMissingException {
 		if (vo.getLimit() > 30) throw new DataMissingException("한번에 너무 많은 데이터를 요청할 수 없습니다.");
 		List<DailyInfoVO> dailies = dailiesMapper.getDailyInfoList(vo);
+		vo.setStartAtPosition(FileHandler.rootPath().length());// 이미지 파일의 루트경로 길이 파악
+		List<DailyInfoVO> images =  imagesMapper.getImageInfoList(vo);
+		ImageHandler.insertImageDataIntoDailyInfo(images, dailies);
 		if (dailies.size() < 1) return Collections.emptyList();
 		return dailies;
 	}
@@ -58,7 +61,7 @@ public class CalendarService {
 		if (files != null && files.size() > 0) {
 			List<ImageVO> imageList = new ArrayList<>();
 			for (MultipartFile f : files) {
-				String abs = ImgFileHandler.saveFile(f, vo.getUserId());
+				String abs = FileHandler.saveFile(f, vo.getUserId());
 				ImageVO ivo = new ImageVO();
 				ivo.setImagePath(abs);
 				imageList.add(ivo);
@@ -84,7 +87,7 @@ public class CalendarService {
 		if (files != null && files.size() > 0) {
 			List<ImageVO> imageList = new ArrayList<>();
 			for (MultipartFile f : files) {
-				String abs = ImgFileHandler.saveFile(f, vo.getUserId());
+				String abs = FileHandler.saveFile(f, vo.getUserId());
 				ImageVO ivo = new ImageVO();
 				ivo.setAftImagePath(abs);
 				imageList.add(ivo);

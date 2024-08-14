@@ -3,16 +3,10 @@ package kr.co.moodtracker.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystemException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import kr.co.moodtracker.vo.DailyInfoVO;
-import kr.co.moodtracker.vo.ImageVO;
-
-public class ImgFileHandler {
+public class FileHandler {
 	private static final String OS = System.getProperty("os.name")
 			.toLowerCase().contains("win") ? "C:" : ""; 
 	private static final String DIRECTORY = "/data";
@@ -41,21 +35,9 @@ public class ImgFileHandler {
 				+ "/" + System.currentTimeMillis()
 				+ "_" + filename
 				+".png";
-		File f = ImgFileHandler.makeDirectory(targetPath);
+		File f = FileHandler.makeDirectory(targetPath);
 		file.transferTo(f);
 		return f.getAbsolutePath();
 	}
 	
-	public static String pathToBase64(String path) {
-		if (path == null) 
-			return path;
-		return  Base64.getEncoder().encodeToString(path.getBytes());
-	}
-	
-	public static String base64ToPath(String base64) {
-		if (base64 == null) 
-			return base64;
-		byte[] byteArr = Base64.getDecoder().decode(base64);
-		return new String(byteArr);
-	}
 }
