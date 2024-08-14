@@ -5,6 +5,8 @@ public class DailySearchVO extends SearchVO {
 	private int userId;
 	private int noteId;
     private int moodId;
+    private boolean byDate;
+    private boolean byMoodLevel;
     
 	public int getDailyId() {
 		return dailyId;
@@ -29,6 +31,18 @@ public class DailySearchVO extends SearchVO {
 	}
 	public void setMoodId(int moodId) {
 		this.moodId = moodId;
+	}
+	public boolean isByDate() {
+		return byDate;
+	}
+	public void setByDate(boolean byDate) {
+		this.byDate = byDate;
+	}
+	public boolean isByMoodLevel() {
+		return byMoodLevel;
+	}
+	public void setByMoodLevel(boolean byMoodLevel) {
+		this.byMoodLevel = byMoodLevel;
 	}
 	
 }

@@ -13,6 +13,7 @@ public class SearchVO {
 	private String title;
 	private String content;
 	
+	private int startAtPosition;
     private int offset;
     private int limit=10;
 	
@@ -63,6 +64,12 @@ public class SearchVO {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public int getStartAtPosition() {
+		return startAtPosition;
+	}
+	public void setStartAtPosition(int startAtPosition) {
+		this.startAtPosition = startAtPosition;
 	}
 	public int getOffset() {
 		return offset;

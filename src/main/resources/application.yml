@@ -4,11 +4,15 @@ server:
   context-path: /mood
   encoding:
    charset: UTF-8
+spring:
+ servlet:
+  multipart:
+   maxFileSize: 10MB
+   maxRequestSize: 20MB
 
 # MySQL DB 정보
-spring:
  datasource:
-  url: jdbc:mysql://127.0.0.1:3306/moodtracker?zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+  url: jdbc:mysql://127.0.0.1:3306/moodtracker?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowMultiQueries=true
   driver-class-name: com.mysql.cj.jdbc.Driver
   username: mtroot
   password: mtroot

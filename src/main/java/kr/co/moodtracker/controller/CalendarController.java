@@ -1,5 +1,6 @@
 package kr.co.moodtracker.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
 import kr.co.moodtracker.exception.DataMissingException;
@@ -60,14 +62,17 @@ public class CalendarController extends CommonController {
 	}
 	
 	@PostMapping(value = "/daily")
-	public ResponseEntity<?> postDailyEntry(HttpSession sess, DailyInfoVO vo) {
+	public ResponseEntity<?> postDailyEntry(HttpSession sess, DailyInfoVO vo, List<MultipartFile> files) {
 		Map<String, Object> res = new HashMap<>();
 		try {
 			setUserInfo(sess, vo);
-			calendarService.postDailyInfo(vo);
+			calendarService.postDailyInfo(vo, files);
 			res.put("success", true);
 			return ResponseEntity.ok().body(res);
-		} catch (DataNotInsertedException | SessionNotFoundException  e) {
+		} catch (DataNotInsertedException 
+				| SessionNotFoundException 
+				| IllegalStateException 
+				| IOException  e) {
 			res.put("msg", e.getMessage());
 			e.printStackTrace();
 		}
@@ -76,14 +81,17 @@ public class CalendarController extends CommonController {
 	}
 	
 	@PatchMapping(value = "/daily")
-	public ResponseEntity<?> patchDailyEntry(HttpSession sess, DailyInfoVO vo) {
+	public ResponseEntity<?> patchDailyEntry(HttpSession sess, DailyInfoVO vo, List<MultipartFile> files) {
 		Map<String, Object> res = new HashMap<>();
 		try {
 			setUserInfo(sess, vo);
-			calendarService.patchDailyInfo(vo);
+			calendarService.patchDailyInfo(vo, files);
 			res.put("success", true);
 			return ResponseEntity.ok().body(res);
-		} catch (DataNotInsertedException | SessionNotFoundException  e) {
+		} catch (DataNotInsertedException 
+				| SessionNotFoundException 
+				| IllegalStateException 
+				| IOException  e) {
 			res.put("msg", e.getMessage());
 			e.printStackTrace();
 		}

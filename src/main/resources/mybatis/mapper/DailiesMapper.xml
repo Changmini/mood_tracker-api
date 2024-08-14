@@ -59,7 +59,39 @@
 		LEFT JOIN mood AS M ON MS.mood_level = M.`level`
 	</select>
 	
-	<insert id="postDaily" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<select id="getDailyInfoCount" parameterType="kr.co.moodtracker.vo.DailySearchVO"
+									resultType="hashmap">
+		SELECT COUNT(daily_id)
+		<choose>
+			<when test="byDate"> DS.`date` </when>
+			<when test="byMoodLevel"> MS.mood_level </when>
+			<otherwise> DS.`date` </otherwise>
+		</choose>
+		FROM (
+			SELECT daily_id
+				,note_id
+				,mood_id
+				,DATE_FORMAT(`date`, '%Y-%m-%d') as `date`
+			FROM dailies
+			WHERE user_id = #{userId}
+			<if test='startDate != null and !startDate.equals("") 
+				  and endDate != null and !endDate.equals("")'>
+			AND `date` <![CDATA[ >= ]]> #{startDate}
+			AND `date` <![CDATA[ <= ]]> #{endDate}
+			</if>
+		) AS DS LEFT JOIN notes AS NS ON DS.note_id = NS.note_id
+		LEFT JOIN moods AS MS ON DS.mood_id = MS.mood_id
+		LEFT JOIN mood AS M ON MS.mood_level = M.`level`
+		GROUP BY
+		<choose>
+			<when test="byDate"> DS.`date` </when>
+			<when test="byMoodLevel"> MS.mood_level </when>
+			<otherwise> DS.`date` </otherwise>
+		</choose>
+	</select>
+	
+	<insert id="postDaily" parameterType="kr.co.moodtracker.vo.DailyInfoVO"
+			useGeneratedKeys="true" keyProperty="dailyId">
 		INSERT INTO dailies (
 			user_id
 			,note_id

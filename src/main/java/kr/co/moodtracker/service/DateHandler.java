@@ -7,6 +7,7 @@ import java.util.List;
 
 import kr.co.moodtracker.exception.DataMissingException;
 import kr.co.moodtracker.vo.DailyInfoVO;
+import kr.co.moodtracker.vo.ImageVO;
 import kr.co.moodtracker.vo.SearchVO;
 
 public class DateHandler {
@@ -49,55 +50,69 @@ public class DateHandler {
 			int e = minusMonth.lengthOfMonth();
 			int s = e-(firstDateIndex-1);
 			LocalDate temp = minusMonth.withDayOfMonth(s);
-			vo.setStartDate(temp.getYear() 
-					+"-"+ String.format("%02d", temp.getMonthValue()) 
-					+"-"+ String.format("%02d", temp.getDayOfMonth()));
+			vo.setStartDate(yyyy_MM_dd(temp, "-"));
 		} else { // 당월 시작날짜
-			vo.setStartDate(targetDate.getYear() 
-					+"-"+ String.format("%02d", targetDate.getMonthValue()) 
-					+"-"+ String.format("%02d", targetDate.getDayOfMonth()));
+			LocalDate temp = targetDate.withDayOfMonth(1);
+			vo.setStartDate(yyyy_MM_dd(temp, "-"));
 		}
 		
 		if (lastDateIndex < dayOfWeeks.length-1) { // 다음 달의 끝날짜
 			LocalDate plusMonth = targetDate.plusMonths(1);
 			LocalDate temp = plusMonth.withDayOfMonth((dayOfWeeks.length-(lastDateIndex+1)));
-			vo.setEndDate(temp.getYear() 
-					+"-"+ String.format("%02d", temp.getMonthValue()) 
-					+"-"+ String.format("%02d", temp.getDayOfMonth()));
+			vo.setEndDate(yyyy_MM_dd(temp, "-"));
 		} else { // 당월 끝날짜
-			vo.setEndDate(targetDate.getYear() 
-					+"-"+ String.format("%02d", targetDate.getMonthValue()) 
-					+"-"+ String.format("%02d", targetDate.lengthOfMonth()));
+			LocalDate temp = targetDate.withDayOfMonth(targetDate.lengthOfMonth());
+			vo.setEndDate(yyyy_MM_dd(temp, "-"));
 		}
 	}
 	
-	public static List<DailyInfoVO> makeDateList(SearchVO vo, List<DailyInfoVO> dailies) {
-		LocalDate s = LocalDate.parse(vo.getStartDate());
-		LocalDate e = LocalDate.parse(vo.getEndDate());
+	public static List<DailyInfoVO> makeDateList(
+			SearchVO vo, List<DailyInfoVO> dailies, List<DailyInfoVO> images) {
+		LocalDate startDate = LocalDate.parse(vo.getStartDate());
+		LocalDate endDate = LocalDate.parse(vo.getEndDate());
 		List<DailyInfoVO> list = new ArrayList<DailyInfoVO>();
 		
-		LocalDate tempDate = s;
+		LocalDate nextDate = startDate;
+		int dailesSize = dailies.size();
 		int dailiesIndex = 0;
-		while(!tempDate.isAfter(e)) {
-			String date = tempDate.format(DateHandler.formatter);
-			String dailiesDate = null;
-			DailyInfoVO d = null;
-			DailyInfoVO ed = null;
-			if (dailies.size() > dailiesIndex) {
-				ed = dailies.get(dailiesIndex);
-				dailiesDate = ed.getDate();
-			}
-			
-			if (dailiesDate != null && date.equals(dailiesDate)) {
-				d = ed;
+		int imagesSize = images.size();
+		int imagesIndex = 0;
+		/* 캘린더에 사용될 날짜 세팅하기 */
+		while(!nextDate.isAfter(endDate)) {
+			String nDate = nextDate.format(formatter);
+			String tmpDate = null;
+			DailyInfoVO daily = null;
+			if (dailesSize > dailiesIndex// DB에 저장된 날짜정보 세팅 
+					&& imagesSize > imagesIndex
+					&& (daily = dailies.get(dailiesIndex)) != null
+					&& (tmpDate = daily.getDate()) != null
+					&& nDate.equals(tmpDate)) {
+				int dailyId = daily.getDailyId();// 이미지 정보 삽입 [Start]
+				DailyInfoVO image = images.get(imagesIndex);
+				if (image !=null && image.getDailyId() == dailyId) {
+					daily.setImageList(image.getImageList());
+					imagesIndex++;
+				}// 이미지 정보 삽입 [End]
+				list.add(daily);
 				dailiesIndex++;
-			} else {
-				d = new DailyInfoVO();
-				d.setDate(date);
+			} else {// 기본 날짜정보만 세팅
+				DailyInfoVO nw = new DailyInfoVO();
+				nw.setDate(nDate);
+				list.add(nw);
 			}
-			list.add(d);
-			tempDate = tempDate.plusDays(1);
+			nextDate = nextDate.plusDays(1);
 		}
 		return list;
+	}
+	
+	public static String today() {
+		return yyyy_MM_dd(LocalDate.now(), "");
+	}
+	
+	private static String yyyy_MM_dd(LocalDate date, String pattern) {
+		return (date.getYear() 
+			+pattern+ String.format("%02d", date.getMonthValue()) 
+			+pattern+ String.format("%02d", date.getDayOfMonth())
+		);
 	}
 }

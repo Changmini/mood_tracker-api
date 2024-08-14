@@ -1,5 +1,7 @@
 package kr.co.moodtracker.vo;
 
+import java.util.List;
+
 public class DailyInfoVO {
 	private int dailyId;
 	private int userId;
@@ -12,6 +14,7 @@ public class DailyInfoVO {
     private String description;
     private String createdAt;
     private String updatedAt;
+    private List<ImageVO> imageList;
     
 	public int getDailyId() {
 		return dailyId;
@@ -78,6 +81,12 @@ public class DailyInfoVO {
 	}
 	public void setUpdatedAt(String updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+	public List<ImageVO> getImageList() {
+		return imageList;
+	}
+	public void setImageList(List<ImageVO> imageList) {
+		this.imageList = imageList;
 	}
 	
 }

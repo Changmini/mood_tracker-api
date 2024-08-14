@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.moodtracker.mapper.ImagesMapper">
+
+    <!-- dailyInfoMap를 매핑하는 ResultMap -->
+    <resultMap id="dailyInfoMap" type="kr.co.moodtracker.vo.DailyInfoVO">
+        <id column="daily_id" property="dailyId"/>
+        <result column="date" property="date"/>
+        <!-- List<CustomVO> 매핑 -->
+        <collection property="imageList" ofType="kr.co.moodtracker.vo.ImageVO">
+	        <id column="image_id" property="imageId"/>
+	        <result column="image_path" property="imagePath"/>
+        </collection>
+    </resultMap>
+	<select id="getImageInfoList" parameterType="kr.co.moodtracker.vo.DailySearchVO"
+									resultMap="dailyInfoMap">
+		SELECT I.image_id 
+			,DS.daily_id
+			,SUBSTRING(I.image_path, #{startAtPosition}) AS image_path
+			,DS.`date`
+		FROM (
+			SELECT daily_id
+				,DATE_FORMAT(`date`, '%Y-%m-%d') as `date`
+			FROM dailies
+			WHERE user_id = #{userId}
+			AND `date` <![CDATA[ >= ]]> 
+				<if test='startDate != null and !startDate.equals("")'> #{startDate} </if>
+			AND `date` <![CDATA[ <= ]]> 
+				<if test='endDate != null and !endDate.equals("")'> #{endDate} </if>
+		) AS DS LEFT JOIN images AS I ON DS.daily_id = I.daily_id
+		ORDER BY DS.`date` ASC
+	</select>
+	
+	
+	<insert id="postImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+		INSERT INTO images (
+			daily_id
+			,user_id
+			,image_path
+		) VALUES 
+		<foreach collection="imageList" item="item" separator=",">
+		(
+			#{dailyId}
+		    ,#{userId}
+		    ,#{item.imagePath}
+		)			
+		</foreach>
+	</insert>
+	
+	<update id="patchImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+		<foreach collection="imageList" item="item" separator=";">
+		UPDATE images
+		SET image_path = #{item.aftImagePath}
+		WHERE image_id = #{imageId}
+		AND user_id = #{userId}
+		</foreach>
+	</update>
+	
+	<delete id="deleteImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+		DELETE FROM images
+		WHERE image_id = #{imageId}
+		AND user_id = #{userId}
+	</delete>
+
+</mapper>
