@@ -61,9 +61,9 @@ public class CalendarService {
 		if (files != null && files.size() > 0) {
 			List<ImageVO> imageList = new ArrayList<>();
 			for (MultipartFile f : files) {
-				String abs = FileHandler.saveFile(f, vo.getUserId());
+				String path = FileHandler.saveFile(f, vo.getUserId());
 				ImageVO ivo = new ImageVO();
-				ivo.setImagePath(abs);
+				ivo.setImagePath(path);
 				imageList.add(ivo);
 			}
 			vo.setImageList(imageList);
@@ -82,15 +82,23 @@ public class CalendarService {
 		
 	}
 	
-	public void patchDailyInfo(DailyInfoVO vo, List<MultipartFile> files) 
+	public void patchDailyInfo(DailyInfoVO vo
+			, List<MultipartFile> files, List<Integer> preImageId) 
 			throws DataNotInsertedException, IllegalStateException, IOException {
-		if (files != null && files.size() > 0) {
+		int filesSize = 0;
+		int imageIdSize = 0;
+		if (files != null && preImageId != null
+				&& (filesSize=files.size()) > 0 
+				&& (imageIdSize=preImageId.size()) > 0) {
 			List<ImageVO> imageList = new ArrayList<>();
-			for (MultipartFile f : files) {
-				String abs = FileHandler.saveFile(f, vo.getUserId());
-				ImageVO ivo = new ImageVO();
-				ivo.setAftImagePath(abs);
-				imageList.add(ivo);
+			for (int i = 0; i < filesSize; i++) {
+				ImageVO image = new ImageVO();
+				String path = FileHandler.saveFile(files.get(i), vo.getUserId());
+				image.setImagePath(path);
+				if (i < imageIdSize) {
+					image.setImageId(preImageId.get(i));
+				}
+				imageList.add(image);
 			}
 			vo.setImageList(imageList);
 		}

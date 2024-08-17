@@ -7,18 +7,18 @@ import java.nio.file.FileSystemException;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileHandler {
-	private static final String OS = System.getProperty("os.name")
-			.toLowerCase().contains("win") ? "C:" : ""; 
-	private static final String DIRECTORY = "/data";
+	public static final boolean IS_WINDOWS = System.getProperty("os.name")
+			.toLowerCase().contains("win");
+	private static final String DIRECTORY = IS_WINDOWS ? "C:/data" : "/data";
 	
-	public static String rootPath() { return (OS + DIRECTORY); }
+	public static String rootPath() { return DIRECTORY; }
 	
 	public static File makeDirectory(String targetPath) throws FileSystemException{
 		File f = null;
 		if (targetPath.startsWith("/"))
-			f = new File(OS + DIRECTORY + targetPath);			
+			f = new File(DIRECTORY + targetPath);			
 		else
-			f = new File(OS + DIRECTORY + "/" + targetPath);
+			f = new File(DIRECTORY + "/" + targetPath);
 		if (!f.isDirectory() && !f.mkdirs()) { 
 			throw new FileSystemException("부모 디렉토리 생성에 실패했습니다.");
 		}
@@ -27,7 +27,7 @@ public class FileHandler {
 	
 	public static String saveFile(MultipartFile file, int userId) 
 			throws IllegalStateException, IOException {
-		String filename = file.getOriginalFilename();
+		String filename = removeExtension(file.getOriginalFilename());
 		if (filename.equals("")) 
 			return "";
 		String targetPath = DateHandler.today() 
@@ -37,7 +37,15 @@ public class FileHandler {
 				+".png";
 		File f = FileHandler.makeDirectory(targetPath);
 		file.transferTo(f);
-		return f.getAbsolutePath();
+		return f.getAbsolutePath().replaceAll("\\\\", "/");
 	}
+	
+	public static String removeExtension(String fileName) {
+        int lastIndex = fileName.lastIndexOf('.');
+        if (lastIndex != -1) {
+            fileName = fileName.substring(0, lastIndex);
+        }
+        return fileName;
+    }
 	
 }

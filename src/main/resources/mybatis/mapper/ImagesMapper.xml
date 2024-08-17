@@ -16,7 +16,7 @@
 									resultMap="dailyInfoMap">
 		SELECT I.image_id 
 			,DS.daily_id
-			,SUBSTRING(I.image_path, #{startAtPosition}) AS image_path
+			,SUBSTRING(I.image_path, #{startAtPosition}+1) AS image_path
 			,DS.`date`
 		FROM (
 			SELECT daily_id
@@ -28,7 +28,7 @@
 			AND `date` <![CDATA[ <= ]]> 
 				<if test='endDate != null and !endDate.equals("")'> #{endDate} </if>
 		) AS DS LEFT JOIN images AS I ON DS.daily_id = I.daily_id
-		ORDER BY DS.`date` ASC
+		ORDER BY DS.`date`, I.image_id ASC
 	</select>
 	
 	
@@ -50,8 +50,8 @@
 	<update id="patchImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
 		<foreach collection="imageList" item="item" separator=";">
 		UPDATE images
-		SET image_path = #{item.aftImagePath}
-		WHERE image_id = #{imageId}
+		SET image_path = #{item.imagePath}
+		WHERE image_Id = #{item.imageId}
 		AND user_id = #{userId}
 		</foreach>
 	</update>

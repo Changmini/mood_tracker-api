@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -81,11 +82,13 @@ public class CalendarController extends CommonController {
 	}
 	
 	@PatchMapping(value = "/daily")
-	public ResponseEntity<?> patchDailyEntry(HttpSession sess, DailyInfoVO vo, List<MultipartFile> files) {
+	public ResponseEntity<?> patchDailyEntry(
+			HttpSession sess, DailyInfoVO vo, List<MultipartFile> files
+			, @RequestParam("preImageId") List<Integer> preImageId) {
 		Map<String, Object> res = new HashMap<>();
 		try {
 			setUserInfo(sess, vo);
-			calendarService.patchDailyInfo(vo, files);
+			calendarService.patchDailyInfo(vo, files, preImageId);
 			res.put("success", true);
 			return ResponseEntity.ok().body(res);
 		} catch (DataNotInsertedException 

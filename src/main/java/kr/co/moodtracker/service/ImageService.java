@@ -15,8 +15,8 @@ public class ImageService {
 	public byte[] getImage(String base64, UserVO user) 
 			throws ImageLoadException, IOException {
 		String imagePath = ImageHandler.base64ToPath(base64);
-		String[] pathArr = imagePath.split("\\\\");
-		if (pathArr.length > 3)
+		String[] pathArr = imagePath.split("\\/");
+		if (pathArr.length < 4)
 			throw new ImageLoadException("올바르지 않은 파일경로입니다.");
 		if (user.getUserId() != Integer.valueOf(pathArr[2]))
 			throw new ImageLoadException("접근 불가능한 사용자입니다.");
@@ -24,7 +24,6 @@ public class ImageService {
 				new File(FileHandler.rootPath() + imagePath))) {
 			return fis.readAllBytes();
 		}
-		
 	}
 	
 }

@@ -2,9 +2,8 @@ package kr.co.moodtracker.vo;
 
 public class ImageVO {
 	private int imageId;
-	private String befImagePath;
-	private String aftImagePath;
 	private String imagePath;
+	private String preImagePath;
 	
 	public int getImageId() {
 		return imageId;
@@ -12,23 +11,16 @@ public class ImageVO {
 	public void setImageId(int imageId) {
 		this.imageId = imageId;
 	}
-	public String getBefImagePath() {
-		return befImagePath;
-	}
-	public void setBefImagePath(String befImagePath) {
-		this.befImagePath = befImagePath;
-	}
-	public String getAftImagePath() {
-		return aftImagePath;
-	}
-	public void setAftImagePath(String aftImagePath) {
-		this.aftImagePath = aftImagePath;
-	}
 	public String getImagePath() {
 		return imagePath;
 	}
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 	}
-	
+	public String getPreImagePath() {
+		return preImagePath;
+	}
+	public void setPreImagePath(String preImagePath) {
+		this.preImagePath = preImagePath;
+	}
 }
