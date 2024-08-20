@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.moodtracker.exception.DataMissingException;
+import kr.co.moodtracker.exception.DataNotDeletedException;
 import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.mapper.DailiesMapper;
 import kr.co.moodtracker.mapper.ImagesMapper;
@@ -91,13 +92,12 @@ public class CalendarService {
 				&& (filesSize=files.size()) > 0 
 				&& (imageIdSize=preImageId.size()) > 0) {
 			List<ImageVO> imageList = new ArrayList<>();
-			for (int i = 0; i < filesSize; i++) {
-				ImageVO image = new ImageVO();
+			for (int i = 0; i < filesSize && i < imageIdSize; i++) {
 				String path = FileHandler.saveFile(files.get(i), vo.getUserId());
+				if (path == null) continue;
+				ImageVO image = new ImageVO();
 				image.setImagePath(path);
-				if (i < imageIdSize) {
-					image.setImageId(preImageId.get(i));
-				}
+				image.setImageId(preImageId.get(i));
 				imageList.add(image);
 			}
 			vo.setImageList(imageList);
@@ -108,15 +108,15 @@ public class CalendarService {
 	}
 	
 	@Transactional(rollbackFor = { Exception.class })
-	public void deleteDailyInfo(DailyInfoVO vo) throws DataNotInsertedException {
+	public void deleteDailyInfo(DailyInfoVO vo) throws DataNotDeletedException {
 		int cnt = notesMapper.deleteNote(vo);
-		if (cnt == 0) throw new DataNotInsertedException("삭제 데이터의 noteId 정보가 일치한지 확인이 필요합니다.");
+		if (cnt == 0) throw new DataNotDeletedException("삭제 데이터의 noteId 정보가 일치한지 확인이 필요합니다.");
 		cnt = moodsMapper.deleteMood(vo);
-		if (cnt == 0) throw new DataNotInsertedException("삭제 데이터의 moodId 정보가 일치한지 확인이 필요합니다.");
+		if (cnt == 0) throw new DataNotDeletedException("삭제 데이터의 moodId 정보가 일치한지 확인이 필요합니다.");
 		cnt = dailiesMapper.deleteDaily(vo);
-		if (cnt == 0) throw new DataNotInsertedException("삭제 데이터의 dailyId 정보가 일치한지 확인이 필요합니다.");
-		cnt = imagesMapper.deleteImage(vo);
-		if (cnt == 0) throw new DataNotInsertedException("삭제 데이터의 imageId 정보가 일치한지 확인이 필요합니다.");
+		if (cnt == 0) throw new DataNotDeletedException("삭제 데이터의 dailyId 정보가 일치한지 확인이 필요합니다.");
+		cnt = imagesMapper.deleteAllImage(vo);
+		if (cnt == 0) throw new DataNotDeletedException("삭제 데이터의 imageId 정보가 일치한지 확인이 필요합니다.");
 	}
 	
 }// class

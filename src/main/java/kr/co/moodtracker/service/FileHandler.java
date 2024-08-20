@@ -29,7 +29,7 @@ public class FileHandler {
 			throws IllegalStateException, IOException {
 		String filename = removeExtension(file.getOriginalFilename());
 		if (filename.equals("")) 
-			return "";
+			return null;
 		String targetPath = DateHandler.today() 
 				+ "/" + userId
 				+ "/" + System.currentTimeMillis()

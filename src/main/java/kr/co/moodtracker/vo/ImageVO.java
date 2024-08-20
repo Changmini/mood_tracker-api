@@ -3,7 +3,6 @@ package kr.co.moodtracker.vo;
 public class ImageVO {
 	private int imageId;
 	private String imagePath;
-	private String preImagePath;
 	
 	public int getImageId() {
 		return imageId;
@@ -16,11 +15,5 @@ public class ImageVO {
 	}
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
-	}
-	public String getPreImagePath() {
-		return preImagePath;
-	}
-	public void setPreImagePath(String preImagePath) {
-		this.preImagePath = preImagePath;
 	}
 }

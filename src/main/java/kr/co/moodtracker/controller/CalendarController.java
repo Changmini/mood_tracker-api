@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
 import kr.co.moodtracker.exception.DataMissingException;
+import kr.co.moodtracker.exception.DataNotDeletedException;
 import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.service.CalendarService;
@@ -110,7 +111,7 @@ public class CalendarController extends CommonController {
 			calendarService.deleteDailyInfo(vo);
 			res.put("success", true);
 			return ResponseEntity.ok().body(res);
-		} catch (DataNotInsertedException | SessionNotFoundException  e) {
+		} catch (DataNotDeletedException | SessionNotFoundException  e) {
 			res.put("msg", e.getMessage());
 			e.printStackTrace();
 		}

@@ -56,10 +56,18 @@
 		</foreach>
 	</update>
 	
-	<delete id="deleteImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<delete id="deleteAllImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
 		DELETE FROM images
-		WHERE image_id = #{imageId}
+		WHERE image_id = #{dailyId}
 		AND user_id = #{userId}
+	</delete>
+	
+	<delete id="deleteImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+		<foreach collection="imageList" item="item" separator=";">
+		DELETE FROM images
+		WHERE image_id = #{item.imageId}
+		AND user_id = #{userId}
+		</foreach>
 	</delete>
 
 </mapper>

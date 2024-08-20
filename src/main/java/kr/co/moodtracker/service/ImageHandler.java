@@ -3,8 +3,10 @@ package kr.co.moodtracker.service;
 import java.util.Base64;
 import java.util.List;
 
+import kr.co.moodtracker.exception.ImageLoadException;
 import kr.co.moodtracker.vo.DailyInfoVO;
 import kr.co.moodtracker.vo.ImageVO;
+import kr.co.moodtracker.vo.UserVO;
 
 public class ImageHandler {
 	
@@ -29,6 +31,17 @@ public class ImageHandler {
 			}// if
 		}// foreach-dailies
 		
+	}
+	
+	public static String validateBase64ToPathConversion(String base64, int userId) 
+			throws ImageLoadException {
+		String imagePath = base64ToPath(base64);
+		String[] pathArr = imagePath.split("\\/");
+		if (pathArr.length < 4)
+			throw new ImageLoadException("올바르지 않은 파일경로입니다.");
+		if (userId != Integer.valueOf(pathArr[2]))
+			throw new ImageLoadException("접근 불가능한 사용자입니다.");
+		return imagePath;
 	}
 	
 	public static String pathToBase64(String path) {
