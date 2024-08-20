@@ -31,50 +31,37 @@ public class CalendarController extends CommonController {
 	CalendarService calendarService;
 	
 	@GetMapping(value = "/calendar/{date}")
-	public ResponseEntity<?> getCalendarInfo(HttpSession sess, DailySearchVO vo) {
+	public ResponseEntity<?> getCalendarInfo(HttpSession sess, DailySearchVO vo) 
+			throws SessionNotFoundException, DataMissingException {
 		Map<String, Object> res = new HashMap<>();
-		List<DailyInfoVO> list;
-		try {
-			setUserInfo(sess, vo);
-			list = calendarService.getDailyInfoOfTheMonth(vo);
-			res.put("dailyInfoList", list);
-			res.put("success", true);
-		} catch (DataMissingException | SessionNotFoundException e) {
-			res.put("msg", e.getMessage());
-			e.printStackTrace();
-		} 
-		res.put("success", false);
+		setUserInfo(sess, vo);
+		List<DailyInfoVO> list = calendarService.getDailyInfoOfTheMonth(vo);
+		res.put("dailyInfoList", list);
+		res.put("success", true);
 		return ResponseEntity.ok().body(res);
 	}
 	
 	@GetMapping(value = "/daily")
-	public ResponseEntity<?> timeline(HttpSession sess, DailySearchVO vo) {
+	public ResponseEntity<?> timeline(HttpSession sess, DailySearchVO vo) 
+			throws SessionNotFoundException, DataMissingException {
 		Map<String, Object> res = new HashMap<>();
-		try {
-			setUserInfo(sess, vo);
-			res.put("dailyInfoList", calendarService.getDailyInfoList(vo));
-			res.put("success", true);
-			return ResponseEntity.ok().body(res);
-		} catch (DataMissingException | SessionNotFoundException  e) {
-			res.put("msg", e.getMessage());
-			e.printStackTrace();
-		}
-		res.put("success", false);
+		setUserInfo(sess, vo);
+		res.put("dailyInfoList", calendarService.getDailyInfoList(vo));
+		res.put("success", true);
 		return ResponseEntity.ok().body(res);
 	}
 	
 	@PostMapping(value = "/daily")
-	public ResponseEntity<?> postDailyEntry(HttpSession sess, DailyInfoVO vo, List<MultipartFile> files) {
+	public ResponseEntity<?> postDailyEntry(
+			HttpSession sess, DailyInfoVO vo, List<MultipartFile> files) 
+					throws SessionNotFoundException, DataNotInsertedException {
 		Map<String, Object> res = new HashMap<>();
 		try {
 			setUserInfo(sess, vo);
 			calendarService.postDailyInfo(vo, files);
 			res.put("success", true);
 			return ResponseEntity.ok().body(res);
-		} catch (DataNotInsertedException 
-				| SessionNotFoundException 
-				| IllegalStateException 
-				| IOException  e) {
+		} catch (IllegalStateException | IOException  e) {
 			res.put("msg", e.getMessage());
 			e.printStackTrace();
 		}
@@ -85,17 +72,15 @@ public class CalendarController extends CommonController {
 	@PatchMapping(value = "/daily")
 	public ResponseEntity<?> patchDailyEntry(
 			HttpSession sess, DailyInfoVO vo, List<MultipartFile> files
-			, @RequestParam("preImageId") List<Integer> preImageId) {
+			, @RequestParam("preImageId") List<Integer> preImageId) 
+					throws SessionNotFoundException, DataNotInsertedException {
 		Map<String, Object> res = new HashMap<>();
 		try {
 			setUserInfo(sess, vo);
 			calendarService.patchDailyInfo(vo, files, preImageId);
 			res.put("success", true);
 			return ResponseEntity.ok().body(res);
-		} catch (DataNotInsertedException 
-				| SessionNotFoundException 
-				| IllegalStateException 
-				| IOException  e) {
+		} catch (IllegalStateException | IOException  e) {
 			res.put("msg", e.getMessage());
 			e.printStackTrace();
 		}
@@ -104,18 +89,12 @@ public class CalendarController extends CommonController {
 	}
 	
 	@DeleteMapping(value = "/daily")
-	public ResponseEntity<?> deleteDailyEntry(HttpSession sess, DailyInfoVO vo) {
+	public ResponseEntity<?> deleteDailyEntry(HttpSession sess, DailyInfoVO vo) 
+			throws SessionNotFoundException, DataNotDeletedException {
 		Map<String, Object> res = new HashMap<>();
-		try {
-			setUserInfo(sess, vo);
-			calendarService.deleteDailyInfo(vo);
-			res.put("success", true);
-			return ResponseEntity.ok().body(res);
-		} catch (DataNotDeletedException | SessionNotFoundException  e) {
-			res.put("msg", e.getMessage());
-			e.printStackTrace();
-		}
-		res.put("success", false);
+		setUserInfo(sess, vo);
+		calendarService.deleteDailyInfo(vo);
+		res.put("success", true);
 		return ResponseEntity.ok().body(res);
 	}
 

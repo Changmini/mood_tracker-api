@@ -35,13 +35,13 @@ public class ImageService {
 		}
 	}
 
-	public void deleteImage(List<Integer> preImageId, int userId) 
+	public void deleteImage(List<Integer> imageId, int userId) 
 			throws DataNotDeletedException, DataMissingException {
-		if (preImageId == null || preImageId.size() == 0) 
+		if (!(imageId != null && imageId.size() > 0)) 
 			throw new DataMissingException("삭제할 이미지를 선택해주십시오.");
 		DailyInfoVO vo = new DailyInfoVO();
 		List<ImageVO> imgList = new ArrayList<>();
-		for (Integer id : preImageId) {
+		for (Integer id : imageId) {
 			ImageVO img = new ImageVO();
 			img.setImageId(id);
 			imgList.add(img);			

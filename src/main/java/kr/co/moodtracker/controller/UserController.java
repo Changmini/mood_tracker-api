@@ -25,7 +25,7 @@ public class UserController {
 	UserService userService;
 	
 	@GetMapping("/user")
-	public ResponseEntity<?> loginStatus(HttpSession sess) {
+	public ResponseEntity<?> userInfo(HttpSession sess) {
 		Map<String, Object> result = new HashMap<>();
 		UserVO user = (UserVO) sess.getAttribute("USER");
 		if (user != null) {

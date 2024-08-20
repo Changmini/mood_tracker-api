@@ -62,12 +62,13 @@
 		AND user_id = #{userId}
 	</delete>
 	
-	<delete id="deleteImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<update id="deleteImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
 		<foreach collection="imageList" item="item" separator=";">
-		DELETE FROM images
+		UPDATE images
+		SET image_path = ''
 		WHERE image_id = #{item.imageId}
 		AND user_id = #{userId}
 		</foreach>
-	</delete>
+	</update>
 
 </mapper>

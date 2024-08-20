@@ -32,7 +32,8 @@ public class ImageController extends CommonController {
 	ImageService imageService;
 	
 	@GetMapping(value = "/image")
-	public ResponseEntity<?> getImage(String path, HttpSession sess) {
+	public ResponseEntity<?> getImage(String path, HttpSession sess) 
+			throws SessionNotFoundException, ImageLoadException {
 		Map<String, Object> result = new HashMap<>();
 		try {
 			UserVO user = setUserInfo(sess);
@@ -41,26 +42,22 @@ public class ImageController extends CommonController {
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_PNG_VALUE) // 이미지 타입에 맞게 설정
                     .body(resource);
-		} catch (SessionNotFoundException | ImageLoadException | IOException e) {
-			e.printStackTrace();
-			result.put("msg", e.getMessage());
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			result.put("msg", ioe.getMessage());
 			result.put("success", false);
 		}
 		return ResponseEntity.ok().body(result);
 	}
 	
 	@DeleteMapping(value = "/image")
-	public ResponseEntity<?> deleteImage(List<Integer> preImageId, HttpSession sess) {
+	public ResponseEntity<?> deleteImage(
+			@RequestParam("imageId") List<Integer> imageId, HttpSession sess) 
+					throws SessionNotFoundException, DataNotDeletedException, DataMissingException {
 		Map<String, Object> result = new HashMap<>();
-		try {
-			UserVO user = setUserInfo(sess);
-			imageService.deleteImage(preImageId, user.getUserId());
-            result.put("success", true);
-		} catch (SessionNotFoundException | DataNotDeletedException	| DataMissingException e) {
-			e.printStackTrace();
-			result.put("msg", e.getMessage());
-			result.put("success", false);
-		}
+		UserVO user = setUserInfo(sess);
+		imageService.deleteImage(imageId, user.getUserId());
+        result.put("success", true);
 		return ResponseEntity.ok().body(result);
 	}
 
