@@ -23,10 +23,12 @@
 				,DATE_FORMAT(`date`, '%Y-%m-%d') as `date`
 			FROM dailies
 			WHERE user_id = #{userId}
-			AND `date` <![CDATA[ >= ]]> 
-				<if test='startDate != null and !startDate.equals("")'> #{startDate} </if>
-			AND `date` <![CDATA[ <= ]]> 
-				<if test='endDate != null and !endDate.equals("")'> #{endDate} </if>
+			<if test='startDate != null and !startDate.equals("")'>
+				AND `date` <![CDATA[ >= ]]> #{startDate}
+			</if>
+			<if test='endDate != null and !endDate.equals("")'>
+				AND `date` <![CDATA[ <= ]]> #{endDate}
+			</if>
 		) AS DS LEFT JOIN images AS I ON DS.daily_id = I.daily_id
 		ORDER BY DS.`date`, I.image_id ASC
 	</select>

@@ -37,6 +37,15 @@ public class LoginController {
 		return ResponseEntity.ok().body(result);
 	}
 	
+	@PostMapping("/logout")
+	public ResponseEntity<?> logout(HttpSession sess) {
+		Map<String, Object> result = new HashMap<>();
+		sess.removeAttribute("USER");
+		result.put("success", false);
+		result.put("msg", "로그아웃 되었습니다.");
+		return ResponseEntity.ok().body(result);
+	}
+	
 	@GetMapping("/login/status")
 	public ResponseEntity<?> loginStatus(HttpSession sess) {
 		Map<String, Object> result = new HashMap<>();
