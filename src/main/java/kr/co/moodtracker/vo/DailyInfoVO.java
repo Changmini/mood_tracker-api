@@ -14,6 +14,7 @@ public class DailyInfoVO {
     private String description;
     private String createdAt;
     private String updatedAt;
+    /*----------------------------*/
     private List<ImageVO> imageList;
     
 	public int getDailyId() {

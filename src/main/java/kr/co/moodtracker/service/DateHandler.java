@@ -83,13 +83,12 @@ public class DateHandler {
 					&& (daily = dailies.get(dailiesIndex)) != null
 					&& (tmpDate = daily.getDate()) != null
 					&& nDate.equals(tmpDate)) {
-				list.add(daily);
 				dailiesIndex++;
 			} else {// 기본 날짜정보만 세팅
-				DailyInfoVO nw = new DailyInfoVO();
-				nw.setDate(nDate);
-				list.add(nw);
+				daily = new DailyInfoVO();
+				daily.setDate(nDate);
 			}
+			list.add(daily);
 			nextDate = nextDate.plusDays(1);
 		}
 		return list;
