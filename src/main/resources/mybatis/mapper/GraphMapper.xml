@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.moodtracker.mapper.GraphMapper">
+	
+	<select id="getMoodLevelData" 
+			parameterType="kr.co.moodtracker.vo.DailySearchVO" resultType="hashMap">
+		SELECT substring(D.`date`,1,7) AS 'label'
+		    ,CASE
+				WHEN DAYOFWEEK(D.`date`) = 1
+				THEN 'sunday'
+				WHEN DAYOFWEEK(D.`date`) = 2
+				THEN 'monday'
+		        WHEN DAYOFWEEK(D.`date`) = 3
+				THEN 'tuesday'
+				WHEN DAYOFWEEK(D.`date`) = 4
+				THEN 'wednesday'
+		        WHEN DAYOFWEEK(D.`date`) = 5
+				THEN 'thursday'
+				WHEN DAYOFWEEK(D.`date`) = 6
+				THEN 'friday'
+		        WHEN DAYOFWEEK(D.`date`) = 7
+				THEN 'saturday'
+			END AS 'week'
+			,DAYOFWEEK(D.`date`) AS 'weekNum'
+			,M.mood_level AS 'moodLevel'
+		FROM moods AS M LEFT JOIN dailies AS D
+		ON M.mood_id = D.mood_id
+		WHERE M.user_id = #{userId}
+		AND D.`date` <![CDATA[ >= ]]> #{startDate}
+		AND D.`date` <![CDATA[ <= ]]> #{endDate}
+		ORDER BY D.`date` DESC
+	</select>
+
+</mapper>
