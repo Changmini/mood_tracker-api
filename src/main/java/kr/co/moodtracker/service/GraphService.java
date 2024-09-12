@@ -43,9 +43,6 @@ public class GraphService {
 			if (!label.equals(preLabel)) {
 				preLabel = label;// 이전 라벨과 현재 라벨 비교
 				data = new Integer[7];
-				Integer tmpLevel = data[weekNum-1];
-				tmpLevel = ((tmpLevel != null ? tmpLevel : 0) + level);
-				data[weekNum-1] = tmpLevel;
 				dataset = new HashMap<>();
 				dataset.put("label", label); // month (월)
 				dataset.put("data", data); // 요일별 mood_level 합산값
