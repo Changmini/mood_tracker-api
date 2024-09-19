@@ -5,22 +5,7 @@
 	<select id="getMoodLevelData" 
 			parameterType="kr.co.moodtracker.vo.DailySearchVO" resultType="hashMap">
 		SELECT substring(D.`date`,1,7) AS 'label'
-		    ,CASE
-				WHEN DAYOFWEEK(D.`date`) = 1
-				THEN 'sunday'
-				WHEN DAYOFWEEK(D.`date`) = 2
-				THEN 'monday'
-		        WHEN DAYOFWEEK(D.`date`) = 3
-				THEN 'tuesday'
-				WHEN DAYOFWEEK(D.`date`) = 4
-				THEN 'wednesday'
-		        WHEN DAYOFWEEK(D.`date`) = 5
-				THEN 'thursday'
-				WHEN DAYOFWEEK(D.`date`) = 6
-				THEN 'friday'
-		        WHEN DAYOFWEEK(D.`date`) = 7
-				THEN 'saturday'
-			END AS 'week'
+		    ,substring(D.`date`,9,2) AS 'dayOfMonth'
 			,DAYOFWEEK(D.`date`) AS 'weekNum'
 			,M.mood_level AS 'moodLevel'
 		FROM moods AS M LEFT JOIN dailies AS D
