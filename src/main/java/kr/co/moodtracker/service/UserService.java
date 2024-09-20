@@ -3,8 +3,10 @@ package kr.co.moodtracker.service;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.mapper.UsersMapper;
 import kr.co.moodtracker.vo.UserVO;
 
@@ -34,6 +36,17 @@ public class UserService {
 		if (!(user != null && user.getUserId() > 0))
 			return null;
 		return user;
+	}
+
+	public void postUser(UserVO vo) throws DataNotInsertedException {
+		try {
+			userMapper.postUser(vo);
+		} catch (DuplicateKeyException e) {
+			throw new DataNotInsertedException("중복된 아이디 값입니다.");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			throw new DataNotInsertedException("새 계정 생성에 실패했습니다.");
+		}
 	}
 	
 }

@@ -11,5 +11,12 @@
 		AND	username = #{username}
 		AND password_hash = #{password}
 	</select>
+	
+	<select id="postUser" parameterType="kr.co.moodtracker.vo.UserVO">
+		INSERT users (username, password_hash, email) 
+		VALUES ( 
+			#{username}, #{password}, #{email} 
+		)
+	</select>
 
 </mapper>
