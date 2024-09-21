@@ -10,13 +10,22 @@ import kr.co.moodtracker.vo.UserVO;
 
 public class ImageHandler {
 	
+	/**
+	 * <pre>
+	 *   파라미터 dailies에 images 정보를 삽입하는 함수.
+	 *   isAsc의 값이 true면 오름차순, false면 내림차순이다.
+	 * </pre>
+	 * @param images
+	 * @param dailies
+	 * @param isAsc
+	 */
 	public static void insertImageDataIntoDailyInfo(
-			List<DailyInfoVO> images, List<DailyInfoVO> dailies) {
+			List<DailyInfoVO> images, List<DailyInfoVO> dailies, boolean isAsc) {
 		int dailiesSize = dailies.size();
 		int imagesSize = images.size();
 		if (dailies == null || images == null || dailiesSize < 1 || imagesSize < 1)
 			return ;// 비교 데이터가 없음
-		int imagesIndex = 0;
+		int imagesIndex = isAsc ? 0 : imagesSize-1;
 		for (DailyInfoVO daily : dailies) {
 			int dailyId = daily.getDailyId();
 			DailyInfoVO image = images.get(imagesIndex);
@@ -27,7 +36,7 @@ public class ImageHandler {
 					img.setImagePath(pathToBase64(path));
 				}
 				daily.setImageList(imageList);
-				imagesIndex++;
+				imagesIndex = imagesIndex + (isAsc ? 1 : -1);
 			}// if
 		}// foreach-dailies
 		

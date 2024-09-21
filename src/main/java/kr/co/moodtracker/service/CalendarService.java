@@ -40,7 +40,7 @@ public class CalendarService {
 		List<DailyInfoVO> dailies = dailiesMapper.getDailyInfoOfTheMonth(vo);
 		vo.setStartAtPosition(FileHandler.rootPath().length());// 이미지 파일의 루트경로 길이 파악
 		List<DailyInfoVO> images =  imagesMapper.getImageInfoList(vo);
-		ImageHandler.insertImageDataIntoDailyInfo(images, dailies);
+		ImageHandler.insertImageDataIntoDailyInfo(images, dailies, true);
 		List<DailyInfoVO> dailyInfoList = DateHandler.makeDateList(vo, dailies);
 		if (dailyInfoList.size() < 1) return Collections.emptyList();
 		return dailyInfoList;
@@ -51,7 +51,7 @@ public class CalendarService {
 		List<DailyInfoVO> dailies = dailiesMapper.getDailyInfoList(vo);
 		vo.setStartAtPosition(FileHandler.rootPath().length());// 이미지 파일의 루트경로 길이 파악
 		List<DailyInfoVO> images =  imagesMapper.getImageInfoList(vo);
-		ImageHandler.insertImageDataIntoDailyInfo(images, dailies);
+		ImageHandler.insertImageDataIntoDailyInfo(images, dailies, false);
 		if (dailies.size() < 1) return Collections.emptyList();
 		return dailies;
 	}
