@@ -88,6 +88,7 @@ public class CalendarService {
 			throws DataNotInsertedException, IllegalStateException, IOException {
 		int filesSize = 0;
 		int imageIdSize = 0;
+		int numberOfImagesInserted = 0;
 		if (files != null && preImageId != null
 				&& (filesSize=files.size()) > 0 
 				&& (imageIdSize=preImageId.size()) > 0) {
@@ -100,11 +101,14 @@ public class CalendarService {
 				image.setImageId(preImageId.get(i));
 				imageList.add(image);
 			}
+			numberOfImagesInserted = imageList.size();
 			vo.setImageList(imageList);
 		}
 		notesMapper.patchNote(vo);
 		moodsMapper.patchMood(vo);
-		imagesMapper.patchImage(vo);
+		if (numberOfImagesInserted > 0) {
+			imagesMapper.patchImage(vo);
+		}
 	}
 	
 	@Transactional(rollbackFor = { Exception.class })

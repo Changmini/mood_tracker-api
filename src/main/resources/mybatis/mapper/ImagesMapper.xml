@@ -52,7 +52,14 @@
 	<update id="patchImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
 		<foreach collection="imageList" item="item" separator=";">
 		UPDATE images
-		SET image_path = #{item.imagePath}
+		SET image_path = <choose>
+			<when test="item.imagePath == null || item.imagePath == ''">
+				null
+			</when>
+			<otherwise>
+				#{item.imagePath}
+			</otherwise>
+		</choose>
 		WHERE image_Id = #{item.imageId}
 		AND user_id = #{userId}
 		</foreach>
@@ -67,7 +74,7 @@
 	<update id="deleteImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
 		<foreach collection="imageList" item="item" separator=";">
 		UPDATE images
-		SET image_path = ''
+		SET image_path = null
 		WHERE image_id = #{item.imageId}
 		AND user_id = #{userId}
 		</foreach>
