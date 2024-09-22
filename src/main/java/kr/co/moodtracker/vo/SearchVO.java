@@ -1,5 +1,7 @@
 package kr.co.moodtracker.vo;
 
+import java.util.List;
+
 public class SearchVO {
 	private int year;
 	private int month;
@@ -16,6 +18,7 @@ public class SearchVO {
 	private int startAtPosition;
     private int offset;
     private int limit=10;
+    private List<Integer> ids;
 	
 	public int getYear() {
 		return year;
@@ -82,6 +85,12 @@ public class SearchVO {
 	}
 	public void setLimit(int limit) {
 		this.limit = limit;
+	}
+	public List<Integer> getIds() {
+		return ids;
+	}
+	public void setIds(List<Integer> ids) {
+		this.ids = ids;
 	}
 	
 }

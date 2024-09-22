@@ -23,11 +23,35 @@
 				,DATE_FORMAT(`date`, '%Y-%m-%d') as `date`
 			FROM dailies
 			WHERE user_id = #{userId}
+			<choose>
+				<when test='startDate != null and !startDate.equals("")
+						and endDate != null and !endDate.equals("")'>
+					AND `date` <![CDATA[ >= ]]> #{startDate}
+					AND `date` <![CDATA[ <= ]]> #{endDate}
+				</when>
+				<when test='ids != null and ids.size != 0'>
+					AND daily_id IN
+					<foreach collection="ids" item="id" 
+							open="(" separator="," close=")">
+						#{id}
+					</foreach>
+				</when>
+				<otherwise>
+					AND null
+				</otherwise>
+			</choose>
 			<if test='startDate != null and !startDate.equals("")'>
 				AND `date` <![CDATA[ >= ]]> #{startDate}
 			</if>
 			<if test='endDate != null and !endDate.equals("")'>
 				AND `date` <![CDATA[ <= ]]> #{endDate}
+			</if>
+			<if test="ids != null and ids.size != 0">
+				AND daily_id IN
+				<foreach collection="ids" item="id" 
+						open="(" separator="," close=")">
+					#{id}
+				</foreach>
 			</if>
 		) AS DS LEFT JOIN images AS I ON DS.daily_id = I.daily_id
 		ORDER BY DS.`date`, I.image_id ASC

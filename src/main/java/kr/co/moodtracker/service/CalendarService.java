@@ -50,6 +50,11 @@ public class CalendarService {
 		if (vo.getLimit() > 30) throw new DataMissingException("한번에 너무 많은 데이터를 요청할 수 없습니다.");
 		List<DailyInfoVO> dailies = dailiesMapper.getDailyInfoList(vo);
 		vo.setStartAtPosition(FileHandler.rootPath().length());// 이미지 파일의 루트경로 길이 파악
+		List<Integer> ids = new ArrayList<>();// daily_id 수집
+		for (DailyInfoVO d : dailies) {
+			ids.add(d.getDailyId());
+		}
+		vo.setIds(ids);// 이미지를 daily_id 목록으로 검색
 		List<DailyInfoVO> images =  imagesMapper.getImageInfoList(vo);
 		ImageHandler.insertImageDataIntoDailyInfo(images, dailies, false);
 		if (dailies.size() < 1) return Collections.emptyList();
