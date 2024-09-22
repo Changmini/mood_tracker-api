@@ -42,7 +42,14 @@ public class UserService {
 		try {
 			userMapper.postUser(vo);
 		} catch (DuplicateKeyException e) {
-			throw new DataNotInsertedException("중복된 아이디 값입니다.");
+			String err = e.getMessage();
+			String msg = null;
+			if (err.contains("users.username")) {
+				msg = "사용할 수 없는 아이디입니다.";
+			} else if (err.contains("users.nickname")) {
+				msg = "사용할 수 없는 닉네임입니다.";
+			}
+			throw new DataNotInsertedException(msg);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			throw new DataNotInsertedException("새 계정 생성에 실패했습니다.");

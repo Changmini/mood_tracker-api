@@ -13,9 +13,9 @@
 	</select>
 	
 	<select id="postUser" parameterType="kr.co.moodtracker.vo.UserVO">
-		INSERT users (username, password_hash, email) 
+		INSERT users (username, password_hash, nickname, email) 
 		VALUES ( 
-			#{username}, #{password}, #{email} 
+			#{username}, #{password}, #{nickname}, #{email} 
 		)
 	</select>
 
