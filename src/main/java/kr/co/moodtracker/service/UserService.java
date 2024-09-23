@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.mapper.UsersMapper;
@@ -37,16 +38,18 @@ public class UserService {
 			return null;
 		return user;
 	}
-
+	
+	@Transactional(rollbackFor = {Exception.class})
 	public void postUser(UserVO vo) throws DataNotInsertedException {
 		try {
 			userMapper.postUser(vo);
+			userMapper.postUserProfile(vo);
 		} catch (DuplicateKeyException e) {
 			String err = e.getMessage();
 			String msg = null;
 			if (err.contains("users.username")) {
 				msg = "사용할 수 없는 아이디입니다.";
-			} else if (err.contains("users.nickname")) {
+			} else if (err.contains("user_profile.nickname")) {
 				msg = "사용할 수 없는 닉네임입니다.";
 			}
 			throw new DataNotInsertedException(msg);

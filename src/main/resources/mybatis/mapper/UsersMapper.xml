@@ -12,11 +12,21 @@
 		AND password_hash = #{password}
 	</select>
 	
-	<select id="postUser" parameterType="kr.co.moodtracker.vo.UserVO">
-		INSERT users (username, password_hash, nickname, email) 
-		VALUES ( 
-			#{username}, #{password}, #{nickname}, #{email} 
+	<insert id="postUser" parameterType="kr.co.moodtracker.vo.UserVO"
+			useGeneratedKeys="true" keyProperty="userId">
+		INSERT users (
+			username, password_hash, email 
+		) VALUES ( 
+			#{username}, #{password}, #{email} 
 		)
-	</select>
+	</insert>
+	
+	<insert id="postUserProfile" parameterType="kr.co.moodtracker.vo.UserVO">
+		INSERT user_profile (
+			user_id, nickname, image_path, `description`
+		) VALUES ( 
+			#{userId}, #{nickname}, null, null 
+		)
+	</insert>
 
 </mapper>

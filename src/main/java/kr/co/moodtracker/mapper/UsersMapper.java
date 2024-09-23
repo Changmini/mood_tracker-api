@@ -12,5 +12,7 @@ public interface UsersMapper {
 	public UserVO getUser(Map<String, String> vo);
 
 	public void postUser(UserVO vo);
+	
+	public void postUserProfile(UserVO vo);
 
 }
