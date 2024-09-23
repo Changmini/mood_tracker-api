@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import kr.co.moodtracker.exception.DataMissingException;
 import kr.co.moodtracker.exception.DataNotDeletedException;
 import kr.co.moodtracker.exception.ImageLoadException;
+import kr.co.moodtracker.handler.FileHandler;
+import kr.co.moodtracker.handler.ImageHandler;
 import kr.co.moodtracker.mapper.ImagesMapper;
 import kr.co.moodtracker.vo.DailyInfoVO;
 import kr.co.moodtracker.vo.ImageVO;

@@ -1,4 +1,4 @@
-package kr.co.moodtracker.service;
+package kr.co.moodtracker.handler;
 
 import java.util.ArrayList;
 import java.util.Base64;
