@@ -57,7 +57,7 @@ public class ImageHandler {
 	public static String pathToBase64(String path) {
 		if (path == null) 
 			return path;
-		return  Base64.getEncoder().encodeToString(path.getBytes());
+		return Base64.getEncoder().encodeToString(path.getBytes());
 	}
 	
 	public static String base64ToPath(String base64) {

@@ -1,14 +1,20 @@
 package kr.co.moodtracker.service;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.moodtracker.exception.DataNotInsertedException;
+import kr.co.moodtracker.exception.DataNotUpdatedException;
+import kr.co.moodtracker.handler.FileHandler;
+import kr.co.moodtracker.handler.ImageHandler;
 import kr.co.moodtracker.mapper.UsersMapper;
+import kr.co.moodtracker.vo.ProfileVO;
 import kr.co.moodtracker.vo.UserVO;
 
 @Service
@@ -56,6 +62,40 @@ public class UserService {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			throw new DataNotInsertedException("새 계정 생성에 실패했습니다.");
+		}
+	}
+	
+	public ProfileVO getUserProfile(int userId) {
+		ProfileVO profile = userMapper.getUserProfile(userId);
+		/* 프로필 사진 경로에 대한 전처리 */
+		String imagePath = profile.getImagePath();
+		if (imagePath != null && !imagePath.equals("")) {
+			imagePath = ImageHandler.pathToBase64(
+					imagePath.replace(FileHandler.rootPath(), ""));
+			profile.setImagePath(imagePath);
+		}
+		return profile;
+	}
+
+	public void patchUserProfile(int userId, UserVO vo) 
+			throws DataNotUpdatedException {
+		vo.setUserId(userId);
+		int cnt = userMapper.patchUserProfile(vo);
+		if (cnt == 0) {
+			throw new DataNotUpdatedException("프로필 업데이트 실패");
+		}
+	}
+	
+	public void putUserProfileImage(MultipartFile file, int userId, UserVO vo) 
+			throws DataNotUpdatedException, IllegalStateException, IOException {
+		vo.setUserId(userId);
+		if (file != null && !file.isEmpty()) {
+			String filepath = FileHandler.saveFile(file, userId, "profile");
+			vo.setImagePath(filepath);
+		}
+		int cnt = userMapper.putUserProfileImage(vo);
+		if (cnt == 0) {
+			throw new DataNotUpdatedException("프로필 사진 업데이트 실패");
 		}
 	}
 	

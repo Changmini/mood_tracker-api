@@ -27,10 +27,14 @@ public class FileHandler {
 	
 	public static String saveFile(MultipartFile file, int userId) 
 			throws IllegalStateException, IOException {
+		return saveFile(file, userId, DateHandler.today());
+	}
+	public static String saveFile(MultipartFile file, int userId, String basicFolder) 
+			throws IllegalStateException, IOException {
 		String filename = removeExtension(file.getOriginalFilename());
 		if (filename.equals("")) 
 			return null;
-		String targetPath = DateHandler.today() 
+		String targetPath = basicFolder 
 				+ "/" + userId
 				+ "/" + System.currentTimeMillis()
 				+ "_" + filename

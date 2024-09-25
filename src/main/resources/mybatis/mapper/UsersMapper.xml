@@ -25,8 +25,34 @@
 		INSERT user_profile (
 			user_id, nickname, image_path, `description`
 		) VALUES ( 
-			#{userId}, #{nickname}, null, null 
+			#{userId}, #{nickname}, null, "" 
 		)
 	</insert>
+	
+	<select id="getUserProfile" parameterType="int" resultType="kr.co.moodtracker.vo.ProfileVO">
+		SELECT user_profile_id
+		    ,nickname
+		    ,image_path
+		    ,`description`
+		    ,session_status
+		    ,sharing_calendar
+		FROM user_profile
+		WHERE user_id = #{userId}
+	</select>
+	
+	<update id="patchUserProfile" parameterType="kr.co.moodtracker.vo.UserVO">
+		UPDATE user_profile
+		SET `description` = #{description}
+			,sesstion_status = #{sessionStatus}
+		    ,sharing_calendar = #{sharingCalendar}
+		WHERE user_id = #{userId}
+	</update>
+	
+	<update id="putUserProfileImage" parameterType="kr.co.moodtracker.vo.UserVO">
+		UPDATE user_profile
+		SET image_path = #{imagePath}
+		WHERE user_id = #{userId}
+	</update>
+	
 
 </mapper>
