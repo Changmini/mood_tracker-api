@@ -86,17 +86,20 @@ public class UserService {
 		}
 	}
 	
-	public void putUserProfileImage(MultipartFile file, int userId, UserVO vo) 
+	public String putUserProfileImage(MultipartFile file, int userId, UserVO vo) 
 			throws DataNotUpdatedException, IllegalStateException, IOException {
 		vo.setUserId(userId);
+		String base64 = null;
 		if (file != null && !file.isEmpty()) {
 			String filepath = FileHandler.saveFile(file, userId, "profile");
 			vo.setImagePath(filepath);
+			base64 = ImageHandler.pathToBase64(filepath);
 		}
 		int cnt = userMapper.putUserProfileImage(vo);
 		if (cnt == 0) {
 			throw new DataNotUpdatedException("프로필 사진 업데이트 실패");
 		}
+		return base64;
 	}
 	
 }

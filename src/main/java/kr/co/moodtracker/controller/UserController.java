@@ -87,7 +87,8 @@ public class UserController extends CommonController {
 		Map<String, Object> result = new HashMap<>();
 		UserVO user = setUserInfo(sess);
 		try {
-			userService.putUserProfileImage(file, user.getUserId(), vo);
+			String base64 = userService.putUserProfileImage(file, user.getUserId(), vo);
+			result.put("path", base64);
 			result.put("success", true);
 		} catch (DataNotUpdatedException e) {
 			result.put("msg", e.getMessage());

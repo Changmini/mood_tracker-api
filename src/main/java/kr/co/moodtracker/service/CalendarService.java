@@ -41,7 +41,6 @@ public class CalendarService {
 	public List<DailyInfoVO> getDailyInfoOfTheMonth(DailySearchVO vo) throws DataMissingException {
 		DateHandler.determineDateRange(vo);
 		List<DailyInfoVO> dailies = dailiesMapper.getDailyInfoOfTheMonth(vo);
-		vo.setStartAtPosition(FileHandler.rootPath().length());// 이미지 파일의 루트경로 길이 파악
 		List<DailyInfoVO> images =  imagesMapper.getImageInfoList(vo);
 		ImageHandler.insertImageDataIntoDailyInfo(images, dailies, true);
 		List<DailyInfoVO> dailyInfoList = DateHandler.makeDateList(vo, dailies);
@@ -52,7 +51,6 @@ public class CalendarService {
 	public List<DailyInfoVO> getDailyInfoList(DailySearchVO vo) throws DataMissingException {
 		if (vo.getLimit() > 30) throw new DataMissingException("한번에 너무 많은 데이터를 요청할 수 없습니다.");
 		List<DailyInfoVO> dailies = dailiesMapper.getDailyInfoList(vo);
-		vo.setStartAtPosition(FileHandler.rootPath().length());// 이미지 파일의 루트경로 길이 파악
 		List<Integer> ids = new ArrayList<>();// daily_id 수집
 		for (DailyInfoVO d : dailies) {
 			ids.add(d.getDailyId());

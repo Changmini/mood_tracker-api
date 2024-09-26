@@ -16,7 +16,7 @@
 									resultMap="dailyInfoMap">
 		SELECT I.image_id 
 			,DS.daily_id
-			,SUBSTRING(I.image_path, #{startAtPosition}+1) AS image_path
+			,I.image_path
 			,DS.`date`
 		FROM (
 			SELECT daily_id

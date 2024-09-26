@@ -1,13 +1,11 @@
 package kr.co.moodtracker.handler;
 
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
 import kr.co.moodtracker.exception.ImageLoadException;
 import kr.co.moodtracker.vo.DailyInfoVO;
 import kr.co.moodtracker.vo.ImageVO;
-import kr.co.moodtracker.vo.UserVO;
 
 public class ImageHandler {
 	
@@ -40,7 +38,6 @@ public class ImageHandler {
 				imagesIndex = imagesIndex + (isAsc ? 1 : -1);
 			}// if
 		}// foreach-dailies
-		
 	}
 	
 	public static String validateBase64ToPathConversion(String base64, int userId) 
@@ -57,7 +54,11 @@ public class ImageHandler {
 	public static String pathToBase64(String path) {
 		if (path == null) 
 			return path;
-		return Base64.getEncoder().encodeToString(path.getBytes());
+		return Base64.getEncoder()
+				.encodeToString(removeRootPath(path).getBytes());
+	}
+	public static String removeRootPath(String imagePath) {
+		return imagePath.substring(FileHandler.rootPath().length());
 	}
 	
 	public static String base64ToPath(String base64) {
