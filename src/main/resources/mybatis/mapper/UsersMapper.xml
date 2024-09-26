@@ -43,7 +43,7 @@
 	<update id="patchUserProfile" parameterType="kr.co.moodtracker.vo.UserVO">
 		UPDATE user_profile
 		SET `description` = #{description}
-			,sesstion_status = #{sessionStatus}
+			,session_status = #{sessionStatus}
 		    ,sharing_calendar = #{sharingCalendar}
 		WHERE user_id = #{userId}
 	</update>

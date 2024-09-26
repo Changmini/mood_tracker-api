@@ -40,4 +40,13 @@ public class ExceptionController {
 		return ResponseEntity.ok().body(result); 
 	}
 	
+	@ExceptionHandler(value = {Exception.class})
+	public ResponseEntity<?> Error(Exception e) {
+		e.printStackTrace();
+		Map<String, Object> result = new HashMap<>();
+		result.put("msg", "서버 오류: 관리자에게 문의해주세요.");
+		result.put("success", false);
+		return ResponseEntity.ok().body(result); 
+	}
+	
 }

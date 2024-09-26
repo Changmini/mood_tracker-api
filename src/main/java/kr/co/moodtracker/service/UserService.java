@@ -70,8 +70,7 @@ public class UserService {
 		/* 프로필 사진 경로에 대한 전처리 */
 		String imagePath = profile.getImagePath();
 		if (imagePath != null && !imagePath.equals("")) {
-			imagePath = ImageHandler.pathToBase64(
-					imagePath.replace(FileHandler.rootPath(), ""));
+			imagePath = ImageHandler.pathToBase64(imagePath);
 			profile.setImagePath(imagePath);
 		}
 		return profile;

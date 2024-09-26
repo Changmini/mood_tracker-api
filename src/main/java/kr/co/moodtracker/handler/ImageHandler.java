@@ -58,6 +58,7 @@ public class ImageHandler {
 				.encodeToString(removeRootPath(path).getBytes());
 	}
 	public static String removeRootPath(String imagePath) {
+		// 보안상 서버의 전체 파일경로를 공개하면 안될 것 같아서..
 		return imagePath.substring(FileHandler.rootPath().length());
 	}
 	
