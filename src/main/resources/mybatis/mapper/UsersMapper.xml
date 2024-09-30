@@ -54,5 +54,10 @@
 		WHERE user_id = #{userId}
 	</update>
 	
+	<select id="getUserProfileId" parameterType="String" resultType="int">
+		SELECT user_profile_id
+		FROM user_profile
+		WHERE nickname = #{nickname}
+	</select>
 
 </mapper>

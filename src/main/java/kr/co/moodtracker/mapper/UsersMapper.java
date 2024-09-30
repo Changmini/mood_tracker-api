@@ -21,5 +21,7 @@ public interface UsersMapper {
 	public int patchUserProfile(UserVO vo);
 
 	public int putUserProfileImage(UserVO vo);
+	
+	public int getUserProfileId(String nickname);
 
 }

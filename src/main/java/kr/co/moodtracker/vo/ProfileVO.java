@@ -1,18 +1,18 @@
 package kr.co.moodtracker.vo;
 
 public class ProfileVO {
-	private int user_profile_id;
+	private int userProfileId;
 	private String nickname;
 	private String imagePath;
 	private String description;
 	private String sessionStatus;
 	private String sharingCalendar;
 	
-	public int getUser_profile_id() {
-		return user_profile_id;
+	public int getUserProfileId() {
+		return userProfileId;
 	}
-	public void setUser_profile_id(int user_profile_id) {
-		this.user_profile_id = user_profile_id;
+	public void setUserProfileId(int userProfileId) {
+		this.userProfileId = userProfileId;
 	}
 	public String getNickname() {
 		return nickname;

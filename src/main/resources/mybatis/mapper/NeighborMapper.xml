@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.moodtracker.mapper.MoodsMapper">
+	
+	<select id="getNeighbors" parameterType="int" 
+							  resultType="kr.co.moodtracker.vo.NeighborVO">
+		SELECT UP.nickname
+			,UP.image_path
+		    ,UP.`description`
+		    ,N.neighbor_id
+		    ,N.requester
+		    ,N.synchronize
+		    ,N.accept_follow
+		    ,N.external_access
+		FROM (
+			SELECT neighbor_id
+				,guest_profile_id
+		        ,requester
+		        ,synchronize
+				,accept_follow
+				,external_access
+			FROM neighbor
+			WHERE host_profile_id = (
+				SELECT user_profile_id
+				FROM user_profile
+				WHERE user_id = #{userId}
+			)
+		) AS N LEFT JOIN user_profile AS UP
+			ON N.guest_profile_id = UP.user_profile_id
+	</select>
+	
+	<insert id="postNeighbor" parameterType="kr.co.moodtracker.vo.NeighborVO">
+		INSERT INTO neighbor (
+			host_profile_id
+		    , guest_profile_id
+		    , requester
+		    , synchronize
+		    , accept_follow
+		    , external_access
+		) VALUES (
+			<!-- 팔로우를 요청한 사람 -->
+			#{hostProfileId}
+		    , #{guestProfileId}
+		    , 'Y'
+		    , 'N'
+		    , 'Y'
+		    , 'Y'
+		), (
+			<!-- 팔로우를 요청받은 사람 -->
+			#{guestProfileId}
+		    , #{hostProfileId}
+		    , 'N'
+		    , 'N'
+		    , 'N'
+		    , 'N'
+		)
+	</insert>
+	
+	<select id="getGuestProfileId" parameterType="kr.co.moodtracker.vo.NeighborVO"
+									resultType="int">
+		SELECT guest_profile_id
+		FROM neighbor
+		WHERE host_profile_id = (
+			SELECT user_profile_id
+			FROM user_profile
+			WHERE user_id = #{userId}
+		)
+		AND neighbor_id = #{neighborId}
+	</select>
+	
+	<update id="setHostSynchronize" parameterType="kr.co.moodtracker.vo.NeighborVO">
+		UPDATE neighbor
+		SET synchronize = #{synchronize}
+			,update_at = NOW()
+		WHERE host_profile_id = (
+			SELECT user_profile_id
+			FROM user_profile
+			WHERE user_id = #{userId}
+		)
+		AND guest_profile_id = #{guestProfileId}
+	</update>
+	<update id="setGuestSynchronize" parameterType="kr.co.moodtracker.vo.NeighborVO">
+		UPDATE neighbor
+		SET synchronize = #{synchronize}
+			,update_at = NOW()
+		WHERE guest_profile_id = (
+			SELECT user_profile_id
+			FROM user_profile
+			WHERE user_id = #{userId}
+		)
+		AND host_profile_id = #{guestProfileId}
+	</update>
+	
+	
+	<update id="patchNeighbor" parameterType="kr.co.moodtracker.vo.NeighborVO">
+		UPDATE neighbor
+		<!-- 'Y' or 'N'-->
+		SET accept_follow = #{acceptFollow}
+			,external_access = #{externalAccess}
+			,update_at = NOW()
+		WHERE host_profile_id = (
+			SELECT user_profile_id
+			FROM user_profile
+			WHERE user_id = #{userId}
+		)
+	</update>
+
+
+	<delete id="deleteHostNeighbor" parameterType="kr.co.moodtracker.vo.NeighborVO">
+		DELETE FROM neighbor
+		WHERE host_profile_id = (
+			SELECT user_profile_id
+			FROM user_profile
+			WHERE user_id = #{userId}
+		)
+		AND guest_profile_id = #{guestProfileId}
+	</delete>
+	<delete id="deleteGuestNeighbor" parameterType="kr.co.moodtracker.vo.NeighborVO">
+		DELETE FROM neighbor
+		WHERE guest_profile_id = (
+			SELECT user_profile_id
+			FROM user_profile
+			WHERE user_id = #{userId}
+		)
+		AND host_profile_id = #{guestProfileId}
+	</delete>
+
+</mapper>
