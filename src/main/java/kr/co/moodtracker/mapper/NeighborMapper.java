@@ -2,12 +2,9 @@ package kr.co.moodtracker.mapper;
 
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
-
 import kr.co.moodtracker.vo.NeighborVO;
 import kr.co.moodtracker.vo.SearchNeighborVO;
 
-@Repository
 public interface NeighborMapper {
 
 	public List<NeighborVO> getNeighbors(int userId);

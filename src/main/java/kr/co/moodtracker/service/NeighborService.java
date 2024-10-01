@@ -2,6 +2,7 @@ package kr.co.moodtracker.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,8 +16,10 @@ import kr.co.moodtracker.vo.SearchNeighborVO;
 @Service
 public class NeighborService {
 	
+	@Autowired
 	UsersMapper usersMapper;
 	
+	@Autowired
 	NeighborMapper neighborMapper;
 	
 	public List<NeighborVO> getNeighbors(int userId)  {
