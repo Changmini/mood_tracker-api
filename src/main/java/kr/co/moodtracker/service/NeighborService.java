@@ -2,6 +2,7 @@ package kr.co.moodtracker.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.moodtracker.exception.DataNotInsertedException;
@@ -11,6 +12,7 @@ import kr.co.moodtracker.mapper.UsersMapper;
 import kr.co.moodtracker.vo.NeighborVO;
 import kr.co.moodtracker.vo.SearchNeighborVO;
 
+@Service
 public class NeighborService {
 	
 	UsersMapper usersMapper;
