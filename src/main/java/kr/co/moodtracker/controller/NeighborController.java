@@ -72,7 +72,7 @@ public class NeighborController extends CommonController {
 		return ResponseEntity.ok().body(result);
 	}
 	
-	@DeleteMapping("/neighbor/")
+	@DeleteMapping("/neighbor")
 	public ResponseEntity<?> deleteNeighbor(HttpSession sess, SearchNeighborVO vo) 
 			throws SessionNotFoundException {
 		Map<String, Object> result = new HashMap<>();

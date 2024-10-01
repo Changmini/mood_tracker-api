@@ -76,7 +76,7 @@
 	<update id="setHostSynchronize" parameterType="kr.co.moodtracker.vo.NeighborVO">
 		UPDATE neighbor
 		SET synchronize = #{synchronize}
-			,update_at = NOW()
+			,updated_at = NOW()
 		WHERE host_profile_id = (
 			SELECT user_profile_id
 			FROM user_profile
@@ -87,7 +87,7 @@
 	<update id="setGuestSynchronize" parameterType="kr.co.moodtracker.vo.NeighborVO">
 		UPDATE neighbor
 		SET synchronize = #{synchronize}
-			,update_at = NOW()
+			,updated_at = NOW()
 		WHERE guest_profile_id = (
 			SELECT user_profile_id
 			FROM user_profile
@@ -102,7 +102,7 @@
 		<!-- 'Y' or 'N'-->
 		SET accept_chat = #{acceptChat}
 			,external_access = #{externalAccess}
-			,update_at = NOW()
+			,updated_at = NOW()
 		WHERE host_profile_id = (
 			SELECT user_profile_id
 			FROM user_profile

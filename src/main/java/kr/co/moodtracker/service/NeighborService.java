@@ -55,7 +55,7 @@ public class NeighborService {
 		int guestProfileId = neighborMapper.getGuestProfileId(vo);
 		vo.setGuestProfileId(guestProfileId);
 		neighborMapper.setHostSynchronize(vo);
-		neighborMapper.setHostSynchronize(vo);
+		neighborMapper.setGuestSynchronize(vo);
 	}
 	
 	public void patchNeighbor(int userId, SearchNeighborVO vo) {
