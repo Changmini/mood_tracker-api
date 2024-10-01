@@ -36,12 +36,17 @@ public class NeighborService {
 	
 	public void postNeighbor(int userId, SearchNeighborVO vo) 
 			throws DataNotInsertedException {
-		vo.setUserId(userId);
+		if (vo.getNickname().trim().equals(""))
+			throw new DataNotInsertedException("요청할 별칭을 입력해주세요");
 		int guestProfileId = usersMapper.getUserProfileId(vo.getNickname());
+		if (userId == guestProfileId)
+			throw new DataNotInsertedException("본인의 별칭으로 요청할 수 없습니다.");
+		vo.setUserId(userId);
 		vo.setGuestProfileId(guestProfileId);
+		
 		int cnt = neighborMapper.postNeighbor(vo);
 		if (cnt < 1) 
-			throw new DataNotInsertedException("팔로우 요청이 실해했습니다.");
+			throw new DataNotInsertedException("이웃맺기 요청이 실해했습니다.");
 	}
 	
 	@Transactional(rollbackFor = Exception.class)

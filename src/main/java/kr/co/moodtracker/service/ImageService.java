@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,20 +15,33 @@ import kr.co.moodtracker.exception.ImageLoadException;
 import kr.co.moodtracker.handler.FileHandler;
 import kr.co.moodtracker.handler.ImageHandler;
 import kr.co.moodtracker.mapper.ImagesMapper;
+import kr.co.moodtracker.mapper.UsersMapper;
 import kr.co.moodtracker.vo.DailyInfoVO;
 import kr.co.moodtracker.vo.ImageVO;
-import kr.co.moodtracker.vo.UserVO;
 
 @Service
 public class ImageService {
 	
 	@Autowired
 	ImagesMapper imagesMapper;
+	
+	@Autowired
+	UsersMapper usersMapper;
 
 	public byte[] getImage(String base64, int userId) 
 			throws ImageLoadException, IOException {
 		String imagePath = 
-				ImageHandler.validateBase64ToPathConversion(base64, userId);
+				ImageHandler.convertBase64AndCheckAccessRights(base64, userId);
+		try (FileInputStream fis = new FileInputStream(
+				new File(FileHandler.rootPath() + imagePath))) {
+			return fis.readAllBytes();
+		}
+	}
+	
+	public byte[] getProfileImage(String base64, int userId) 
+			throws ImageLoadException, IOException {
+		String imagePath = 
+				ImageHandler.convertBase64AndCheckProfileImage(base64, userId);
 		try (FileInputStream fis = new FileInputStream(
 				new File(FileHandler.rootPath() + imagePath))) {
 			return fis.readAllBytes();

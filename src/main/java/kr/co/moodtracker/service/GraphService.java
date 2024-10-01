@@ -22,8 +22,8 @@ public class GraphService {
 		vo.setUserId(userId);
 		Map<String, Map<?,?>> graphData = new HashMap<>();
 		/* 라벨링 */
-		ChartVO line = new ChartVO(DateHandler.dayOfWeeks);
-		ChartVO bar = new ChartVO(DateHandler.dayOfMonth);
+		ChartVO line = new ChartVO(DateHandler.DAY_OF_WEEKS);
+		ChartVO bar = new ChartVO(DateHandler.DAY_OF_WEEKS);
 		
 		/* 데이터셋 */		
 		List<Map<String,Object>> metadata = graphMapper.getMoodLevelData(vo);

@@ -9,6 +9,9 @@ import kr.co.moodtracker.vo.ImageVO;
 
 public class ImageHandler {
 	
+	private static final int PROFILE = 1;
+	private static final int USER_ID = 2;
+	
 	/**
 	 * <pre>
 	 *   파라미터 dailies에 images 정보를 삽입하는 함수.
@@ -40,14 +43,21 @@ public class ImageHandler {
 		}// foreach-dailies
 	}
 	
-	public static String validateBase64ToPathConversion(String base64, int userId) 
+	public static String convertBase64AndCheckAccessRights(String base64, int userId) 
 			throws ImageLoadException {
 		String imagePath = base64ToPath(base64);
 		String[] pathArr = imagePath.split("\\/");
-		if (pathArr.length < 4)
-			throw new ImageLoadException("올바르지 않은 파일경로입니다.");
-		if (userId != Integer.valueOf(pathArr[2]))
+		if (Integer.valueOf(pathArr[USER_ID]) != userId)
 			throw new ImageLoadException("접근 불가능한 사용자입니다.");
+		return imagePath;
+	}
+	
+	public static String convertBase64AndCheckProfileImage(String base64, int userId) 
+			throws ImageLoadException {
+		String imagePath = base64ToPath(base64);
+		String[] pathArr = imagePath.split("\\/");
+		if (!pathArr[PROFILE].equals("profile"))
+			throw new ImageLoadException("접근 불가능한 이미지 유형입니다.");
 		return imagePath;
 	}
 	

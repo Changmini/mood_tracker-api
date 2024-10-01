@@ -10,14 +10,14 @@
 		    ,N.neighbor_id
 		    ,N.requester
 		    ,N.synchronize
-		    ,N.accept_follow
+		    ,N.accept_chat
 		    ,N.external_access
 		FROM (
 			SELECT neighbor_id
 				,guest_profile_id
 		        ,requester
 		        ,synchronize
-				,accept_follow
+				,accept_chat
 				,external_access
 			FROM neighbor
 			WHERE host_profile_id = (
@@ -30,12 +30,17 @@
 	</select>
 	
 	<insert id="postNeighbor" parameterType="kr.co.moodtracker.vo.NeighborVO">
+		<selectKey keyProperty="hostProfileId" resultType="int" order="BEFORE">
+			SELECT user_profile_id
+			FROM user_profile
+			WHERE user_id = #{userId}
+		</selectKey>
 		INSERT INTO neighbor (
 			host_profile_id
 		    , guest_profile_id
 		    , requester
 		    , synchronize
-		    , accept_follow
+		    , accept_chat
 		    , external_access
 		) VALUES (
 			<!-- 팔로우를 요청한 사람 -->
@@ -95,7 +100,7 @@
 	<update id="patchNeighbor" parameterType="kr.co.moodtracker.vo.NeighborVO">
 		UPDATE neighbor
 		<!-- 'Y' or 'N'-->
-		SET accept_follow = #{acceptFollow}
+		SET accept_chat = #{acceptChat}
 			,external_access = #{externalAccess}
 			,update_at = NOW()
 		WHERE host_profile_id = (

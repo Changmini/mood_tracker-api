@@ -11,11 +11,11 @@ import kr.co.moodtracker.vo.ImageVO;
 import kr.co.moodtracker.vo.SearchVO;
 
 public class DateHandler {
-	public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	public static final String[] dayOfWeeks = {
+	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	public static final String[] DAY_OF_WEEKS = {
 			"SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"
 		};
-	public static final int[] dayOfMonth = {
+	public static final int[] DAY_OF_MONTH = {
 			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
 		};
 	
@@ -26,8 +26,8 @@ public class DateHandler {
 		} else if (vo.getDate() != null && !vo.getDate().equals("")) {
 			String date = vo.getDate();
 			int len = date.length();
-			if (len == 7) targetDate = LocalDate.parse(date+"-01", formatter); 
-			else if (len == 10) targetDate = LocalDate.parse(date, formatter);
+			if (len == 7) targetDate = LocalDate.parse(date+"-01", FORMATTER); 
+			else if (len == 10) targetDate = LocalDate.parse(date, FORMATTER);
 		} else { 
 			targetDate = LocalDate.now();
 		}
@@ -43,9 +43,9 @@ public class DateHandler {
 		
 		int firstDateIndex = 0;
 		int lastDateIndex = 0;
-		for (int i=0; i<dayOfWeeks.length; i++) {
-			if (firstDayOfWeek.equals(dayOfWeeks[i])) firstDateIndex = i;
-			if (lastDayOfWeek.equals(dayOfWeeks[i])) lastDateIndex = i;
+		for (int i=0; i<DAY_OF_WEEKS.length; i++) {
+			if (firstDayOfWeek.equals(DAY_OF_WEEKS[i])) firstDateIndex = i;
+			if (lastDayOfWeek.equals(DAY_OF_WEEKS[i])) lastDateIndex = i;
 		}
 		
 		if (firstDateIndex > 0) { // 이전 달의 시작날짜
@@ -59,9 +59,9 @@ public class DateHandler {
 			vo.setStartDate(yyyy_MM_dd(temp, "-"));
 		}
 		
-		if (lastDateIndex < dayOfWeeks.length-1) { // 다음 달의 끝날짜
+		if (lastDateIndex < DAY_OF_WEEKS.length-1) { // 다음 달의 끝날짜
 			LocalDate plusMonth = targetDate.plusMonths(1);
-			LocalDate temp = plusMonth.withDayOfMonth((dayOfWeeks.length-(lastDateIndex+1)));
+			LocalDate temp = plusMonth.withDayOfMonth((DAY_OF_WEEKS.length-(lastDateIndex+1)));
 			vo.setEndDate(yyyy_MM_dd(temp, "-"));
 		} else { // 당월 끝날짜
 			LocalDate temp = targetDate.withDayOfMonth(targetDate.lengthOfMonth());
@@ -79,7 +79,7 @@ public class DateHandler {
 		int dailiesIndex = 0;
 		/* 캘린더에 사용될 날짜 세팅하기 */
 		while(!nextDate.isAfter(endDate)) {
-			String nDate = nextDate.format(formatter);
+			String nDate = nextDate.format(FORMATTER);
 			String tmpDate = null;
 			DailyInfoVO daily = null;
 			if (dailesSize > dailiesIndex// DB에 저장된 날짜정보 세팅

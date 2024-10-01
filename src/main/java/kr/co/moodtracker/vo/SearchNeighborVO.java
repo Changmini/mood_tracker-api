@@ -6,7 +6,7 @@ public class SearchNeighborVO {
 	private int guestProfileId;
 	private String requester;
 	private String synchronize;
-	private String acceptFollow;
+	private String acceptChat;
 	private String externalAccess;
 	private String createdAt;
 	private String updatedAt;
@@ -45,11 +45,11 @@ public class SearchNeighborVO {
 	public void setSynchronize(String synchronize) {
 		this.synchronize = synchronize;
 	}
-	public String getAcceptFollow() {
-		return acceptFollow;
+	public String getAcceptChat() {
+		return acceptChat;
 	}
-	public void setAcceptFollow(String acceptFollow) {
-		this.acceptFollow = acceptFollow;
+	public void setAcceptChat(String acceptChat) {
+		this.acceptChat = acceptChat;
 	}
 	public String getExternalAccess() {
 		return externalAccess;
