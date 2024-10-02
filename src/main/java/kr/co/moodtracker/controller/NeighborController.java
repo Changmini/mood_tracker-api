@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpSession;
 import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.exception.SessionNotFoundException;
+import kr.co.moodtracker.service.CalendarService;
 import kr.co.moodtracker.service.NeighborService;
 import kr.co.moodtracker.vo.NeighborVO;
 import kr.co.moodtracker.vo.SearchNeighborVO;
@@ -26,6 +27,9 @@ public class NeighborController extends CommonController {
 	
 	@Autowired
 	NeighborService neighborService;
+	
+	@Autowired
+	CalendarService calendarService;
 	
 	@GetMapping("/neighbors")
 	public ResponseEntity<?> getNeighbors(HttpSession sess) 
@@ -78,6 +82,16 @@ public class NeighborController extends CommonController {
 		Map<String, Object> result = new HashMap<>();
 		UserVO user = setUserInfo(sess);
 		neighborService.deleteNeighbor(user.getUserId(), vo);
+		result.put("success", true);
+		return ResponseEntity.ok().body(result);
+	}
+	
+	@GetMapping("/neighbor/{neighborId}/calendar")
+	public ResponseEntity<?> getNeighborCalendar(HttpSession sess, SearchNeighborVO vo) 
+			throws SessionNotFoundException {
+		Map<String, Object> result = new HashMap<>();
+		UserVO user = setUserInfo(sess);
+		
 		result.put("success", true);
 		return ResponseEntity.ok().body(result);
 	}

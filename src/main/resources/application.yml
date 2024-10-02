@@ -9,8 +9,6 @@ spring:
   multipart:
    maxFileSize: 10MB
    maxRequestSize: 20MB
- websocket:
-  enabled: true
 
 # MySQL DB 정보
  datasource:
