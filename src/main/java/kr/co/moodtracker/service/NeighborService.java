@@ -51,6 +51,8 @@ public class NeighborService {
 	
 	@Transactional(rollbackFor = Exception.class)
 	public void synchronize(int userId, SearchNeighborVO vo) {
+		/* 본인이 요청받은 사람일 경우에만 동기화를 시킬 수 있도록
+		 * 조건문을 추가해야 될 듯... */
 		vo.setUserId(userId);
 		int guestProfileId = neighborMapper.getGuestProfileId(vo);
 		vo.setGuestProfileId(guestProfileId);
