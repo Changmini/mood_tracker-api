@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.vo.DailyInfoVO;
 import kr.co.moodtracker.vo.DailySearchVO;
+import kr.co.moodtracker.vo.SearchNeighborVO;
 import kr.co.moodtracker.vo.UserVO;
 
 public class CommonController {
@@ -22,6 +23,14 @@ public class CommonController {
 	}
 	
 	protected void setUserInfo(HttpSession session, DailyInfoVO vo
+			) throws SessionNotFoundException {
+		UserVO user = (UserVO) session.getAttribute("USER");
+		if (user == null)
+			throw new SessionNotFoundException("로그인이 필요합니다.");
+		vo.setUserId(user.getUserId());
+	}
+	
+	protected void setUserInfo(HttpSession session, SearchNeighborVO vo
 			) throws SessionNotFoundException {
 		UserVO user = (UserVO) session.getAttribute("USER");
 		if (user == null)

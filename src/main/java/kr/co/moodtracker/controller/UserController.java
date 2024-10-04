@@ -43,15 +43,10 @@ public class UserController extends CommonController {
 	}
 	
 	@PostMapping("/user")
-	public ResponseEntity<?> createAccount(UserVO vo) {
+	public ResponseEntity<?> createAccount(UserVO vo) throws DataNotInsertedException {
 		Map<String, Object> result = new HashMap<>();
-		try {
-			userService.postUser(vo);
-			result.put("success", true);
-		} catch(DataNotInsertedException e) {
-			result.put("msg", e.getMessage());
-			result.put("success", false);
-		}
+		userService.postUser(vo);
+		result.put("success", true);
 		return ResponseEntity.ok().body(result);
 	}
 	
@@ -68,31 +63,23 @@ public class UserController extends CommonController {
 	
 	@PatchMapping("/user/profile")
 	public ResponseEntity<?> patchUserProfile(HttpSession sess, UserVO vo) 
-			throws SessionNotFoundException {
+			throws SessionNotFoundException, DataNotUpdatedException {
 		Map<String, Object> result = new HashMap<>();
 		UserVO user = setUserInfo(sess);
-		try {
-			userService.patchUserProfile(user.getUserId(), vo);
-			result.put("success", true);
-		} catch (DataNotUpdatedException e) {
-			result.put("msg", e.getMessage());
-			result.put("success", false);
-		}
+		userService.patchUserProfile(user.getUserId(), vo);
+		result.put("success", true);
 		return ResponseEntity.ok().body(result);
 	}
 	
 	@PutMapping("/user/profile/image")
 	public ResponseEntity<?> patchUserProfile(HttpSession sess, MultipartFile file, UserVO vo) 
-			throws SessionNotFoundException {
+			throws SessionNotFoundException, DataNotUpdatedException {
 		Map<String, Object> result = new HashMap<>();
 		UserVO user = setUserInfo(sess);
 		try {
 			String base64 = userService.putUserProfileImage(file, user.getUserId(), vo);
 			result.put("path", base64);
 			result.put("success", true);
-		} catch (DataNotUpdatedException e) {
-			result.put("msg", e.getMessage());
-			result.put("success", false);
 		} catch (IllegalStateException | IOException e1) {
 			e1.printStackTrace();
 			result.put("msg", "서버 이상으로 인한 프로필 이미지 등록 실패");

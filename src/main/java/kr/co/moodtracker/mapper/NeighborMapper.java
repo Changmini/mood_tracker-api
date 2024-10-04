@@ -20,5 +20,7 @@ public interface NeighborMapper {
 	
 	public int deleteHostNeighbor(SearchNeighborVO vo);
 	public int deleteGuestNeighbor(SearchNeighborVO vo);
+	
+	public Integer getNeighborUserId(SearchNeighborVO vo);
 
 }

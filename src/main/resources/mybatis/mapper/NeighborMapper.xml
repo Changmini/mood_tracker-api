@@ -29,7 +29,7 @@
 			ON N.guest_profile_id = UP.user_profile_id
 	</select>
 	
-	<insert id="postNeighbor" parameterType="kr.co.moodtracker.vo.NeighborVO">
+	<insert id="postNeighbor" parameterType="kr.co.moodtracker.vo.SearchNeighborVO">
 		<selectKey keyProperty="hostProfileId" resultType="int" order="BEFORE">
 			SELECT user_profile_id
 			FROM user_profile
@@ -61,7 +61,7 @@
 		)
 	</insert>
 	
-	<select id="getGuestProfileId" parameterType="kr.co.moodtracker.vo.NeighborVO"
+	<select id="getGuestProfileId" parameterType="kr.co.moodtracker.vo.SearchNeighborVO"
 									resultType="int">
 		SELECT guest_profile_id
 		FROM neighbor
@@ -73,7 +73,7 @@
 		AND neighbor_id = #{neighborId}
 	</select>
 	
-	<update id="setHostSynchronize" parameterType="kr.co.moodtracker.vo.NeighborVO">
+	<update id="setHostSynchronize" parameterType="kr.co.moodtracker.vo.SearchNeighborVO">
 		UPDATE neighbor
 		SET synchronize = #{synchronize}
 			,updated_at = NOW()
@@ -84,7 +84,7 @@
 		)
 		AND guest_profile_id = #{guestProfileId}
 	</update>
-	<update id="setGuestSynchronize" parameterType="kr.co.moodtracker.vo.NeighborVO">
+	<update id="setGuestSynchronize" parameterType="kr.co.moodtracker.vo.SearchNeighborVO">
 		UPDATE neighbor
 		SET synchronize = #{synchronize}
 			,updated_at = NOW()
@@ -97,12 +97,24 @@
 	</update>
 	
 	
-	<update id="patchNeighbor" parameterType="kr.co.moodtracker.vo.NeighborVO">
+	<update id="patchNeighbor" parameterType="kr.co.moodtracker.vo.SearchNeighborVO">
 		UPDATE neighbor
 		<!-- 'Y' or 'N'-->
-		SET accept_chat = #{acceptChat}
-			,external_access = #{externalAccess}
-			,updated_at = NOW()
+		SET <choose>
+				 <when test='acceptChat != null and !acceptChat.equals("")
+				 		 and externalAccess != null and !externalAccess.equals("")'>
+					accept_chat = #{acceptChat}
+					, external_access = #{externalAccess} 
+				 </when>
+				<when test='acceptChat != null and !acceptChat.equals("")'>
+					accept_chat = #{acceptChat}
+				</when>
+				<when test='externalAccess != null and !externalAccess.equals("")'>
+					external_access = #{externalAccess}
+				</when>
+				<otherwise></otherwise>
+			</choose>
+			, updated_at = NOW()
 		WHERE host_profile_id = (
 			SELECT user_profile_id
 			FROM user_profile
@@ -111,7 +123,7 @@
 	</update>
 
 
-	<delete id="deleteHostNeighbor" parameterType="kr.co.moodtracker.vo.NeighborVO">
+	<delete id="deleteHostNeighbor" parameterType="kr.co.moodtracker.vo.SearchNeighborVO">
 		DELETE FROM neighbor
 		WHERE host_profile_id = (
 			SELECT user_profile_id
@@ -120,7 +132,7 @@
 		)
 		AND guest_profile_id = #{guestProfileId}
 	</delete>
-	<delete id="deleteGuestNeighbor" parameterType="kr.co.moodtracker.vo.NeighborVO">
+	<delete id="deleteGuestNeighbor" parameterType="kr.co.moodtracker.vo.SearchNeighborVO">
 		DELETE FROM neighbor
 		WHERE guest_profile_id = (
 			SELECT user_profile_id
@@ -129,5 +141,24 @@
 		)
 		AND host_profile_id = #{guestProfileId}
 	</delete>
+	
+	<select id="getNeighborUserId" parameterType="kr.co.moodtracker.vo.SearchNeighborVO"
+								resultType="Integer">
+		SELECT UP.user_id
+		FROM (
+			SELECT guest_profile_id
+			FROM neighbor
+			WHERE host_profile_id = (
+				SELECT user_profile_id
+				FROM user_profile
+				WHERE user_id = #{userId}
+		    )
+		    AND neighbor_id = #{neighborId}
+		    AND synchronize = 'Y'
+		    AND external_access = 'Y'
+		) AS N LEFT JOIN user_profile AS UP 
+		  ON N.guest_profile_id = UP.user_profile_id
+		WHERE sharing_calendar = 'Y'
+	</select>
 
 </mapper>

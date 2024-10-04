@@ -27,8 +27,8 @@ public class GraphController extends CommonController {
 			throws SessionNotFoundException {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			UserVO user = setUserInfo(sess);
-			Map<?,?> graphData = graphService.getMoodLevelData(user.getUserId(), vo);
+			setUserInfo(sess, vo);
+			Map<?,?> graphData = graphService.getMoodLevelData(vo);
 			result.put("graph", graphData);
 			result.put("success", true);
             return ResponseEntity.ok().body(result);

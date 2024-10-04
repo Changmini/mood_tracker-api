@@ -1,6 +1,6 @@
 package kr.co.moodtracker.vo;
 
-public class SearchNeighborVO {
+public class SearchNeighborVO extends SearchVO {
 	private int neighborId;
 	private int hostProfileId;
 	private int guestProfileId;

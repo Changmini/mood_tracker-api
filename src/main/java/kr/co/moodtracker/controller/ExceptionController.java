@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import kr.co.moodtracker.exception.DataMissingException;
 import kr.co.moodtracker.exception.DataNotDeletedException;
+import kr.co.moodtracker.exception.DataNotInsertedException;
+import kr.co.moodtracker.exception.DataNotUpdatedException;
 import kr.co.moodtracker.exception.ImageLoadException;
 import kr.co.moodtracker.exception.SessionNotFoundException;
 
@@ -31,7 +33,11 @@ public class ExceptionController {
 		return ResponseEntity.ok().body(result); 
 	}
 	
-	@ExceptionHandler(value = {DataNotDeletedException.class, DataMissingException.class})
+	@ExceptionHandler(value = {
+			DataNotDeletedException.class
+			, DataNotInsertedException.class
+			, DataNotUpdatedException.class
+			, DataMissingException.class})
 	public ResponseEntity<?> dataError(Exception e) {
 		e.printStackTrace();
 		Map<String, Object> result = new HashMap<>();

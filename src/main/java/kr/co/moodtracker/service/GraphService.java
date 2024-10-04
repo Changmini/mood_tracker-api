@@ -18,8 +18,7 @@ public class GraphService {
 	@Autowired
 	GraphMapper graphMapper;
 
-	public Map<?,?> getMoodLevelData(int userId, DailySearchVO vo) {
-		vo.setUserId(userId);
+	public Map<?,?> getMoodLevelData(DailySearchVO vo) {
 		Map<String, Map<?,?>> graphData = new HashMap<>();
 		/* 라벨링 */
 		ChartVO line = new ChartVO(DateHandler.DAY_OF_WEEKS);
