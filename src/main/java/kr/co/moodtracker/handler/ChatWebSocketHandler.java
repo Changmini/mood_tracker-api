@@ -44,16 +44,20 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 		String time = param.get("time").toString();
 		String sender = param.get("sender").toString();
 		String content = param.get("content").toString();
-		Set<WebSocketSession> roomSessions = null;
 		String roomId = roomNameOfSession.get(session);
-		if (roomId == null) {
-			roomId = makeRoomId(neighborId); 
-			roomSessions = chatRooms.getOrDefault(roomId, new HashSet<>());
+		roomId = roomId==null ? makeRoomId(neighborId) : roomId; 
+		
+		Set<WebSocketSession> roomSessions = chatRooms.get(roomId);
+		if (roomSessions == null) {
+			roomSessions = new HashSet<>();
+			roomSessions.add(session);
+			chatRooms.put(roomId, roomSessions);
+			roomNameOfSession.put(session, roomId);
+		} else if (!roomSessions.contains(session)) {
 			roomSessions.add(session);
 			roomNameOfSession.put(session, roomId);
-		} else {
-			roomSessions = chatRooms.getOrDefault(roomId, new HashSet<>());
 		}
+		
 		JSONObject res = new JSONObject();
 		res.put("time", time);
 		res.put("sender", sender);
