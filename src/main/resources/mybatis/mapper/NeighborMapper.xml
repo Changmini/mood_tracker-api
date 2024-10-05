@@ -160,5 +160,12 @@
 		  ON N.guest_profile_id = UP.user_profile_id
 		WHERE sharing_calendar = 'Y'
 	</select>
+	
+	<select id="getGroupProfileId" parameterType="Long" resultType="HashMap">
+		SELECT host_profile_id
+			, guest_profile_id
+		FROM neighbor
+		WHERE neighbor_id = #{neighborId}
+	</select>
 
 </mapper>

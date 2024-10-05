@@ -1,6 +1,7 @@
 package kr.co.moodtracker.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import kr.co.moodtracker.vo.NeighborVO;
 import kr.co.moodtracker.vo.SearchNeighborVO;
@@ -22,5 +23,7 @@ public interface NeighborMapper {
 	public int deleteGuestNeighbor(SearchNeighborVO vo);
 	
 	public Integer getNeighborUserId(SearchNeighborVO vo);
+	
+	public List<Map<String,Integer>> getGroupProfileId(Long neighborId);
 
 }
