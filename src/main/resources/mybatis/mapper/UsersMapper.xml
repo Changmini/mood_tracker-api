@@ -3,13 +3,20 @@
 <mapper namespace="kr.co.moodtracker.mapper.UsersMapper">
 	
 	<select id="getUser" parameterType="hashMap" resultType="kr.co.moodtracker.vo.UserVO">
-		SELECT user_id
-			,username
-			,email
-		FROM users
-		WHERE 1=1
-		AND	username = #{username}
-		AND password_hash = #{password}
+		SELECT U.user_id
+			,U.username
+		    ,U.email
+		    ,UP.nickname
+		FROM (
+			SELECT user_id
+				,username
+				,email
+			FROM users
+			WHERE 1=1
+			AND	username = #{username}
+			AND password_hash = #{password}
+		) AS U LEFT JOIN user_profile AS UP
+			ON U.user_id = UP.user_id
 	</select>
 	
 	<insert id="postUser" parameterType="kr.co.moodtracker.vo.UserVO"

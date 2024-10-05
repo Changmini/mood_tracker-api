@@ -31,8 +31,7 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		// 새로운 클라이언트 연결 시 로직 (예: 그룹 가입)
-
+		// 새로운 클라이언트 연결 시
 	}
 
 	@Override
@@ -45,14 +44,16 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 		String time = param.get("time").toString();
 		String sender = param.get("sender").toString();
 		String content = param.get("content").toString();
-		String roomId = roomNameOfSession.isEmpty() ? null : roomNameOfSession.get(session); 
+		Set<WebSocketSession> roomSessions = null;
+		String roomId = roomNameOfSession.get(session);
 		if (roomId == null) {
 			roomId = makeRoomId(neighborId); 
-			Set<WebSocketSession> roomSessions = chatRooms.getOrDefault(roomId, new HashSet<>());
+			roomSessions = chatRooms.getOrDefault(roomId, new HashSet<>());
 			roomSessions.add(session);
 			roomNameOfSession.put(session, roomId);
+		} else {
+			roomSessions = chatRooms.getOrDefault(roomId, new HashSet<>());
 		}
-		Set<WebSocketSession> roomSessions = chatRooms.getOrDefault(roomId, new HashSet<>());
 		JSONObject res = new JSONObject();
 		res.put("time", time);
 		res.put("sender", sender);
@@ -70,16 +71,12 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 
 	@Override
 	public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-		// 에러 처리 로직
-
+		// 에러 처리
 	}
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
 		// 연결 종료 시 로직
-        // 예를 들어, 세션을 그룹에서 제거하는 로직 추가
-		if (roomNameOfSession.isEmpty())
-			return ;
 		String roomId = roomNameOfSession.get(session);
 		if (roomId == null)
 			return ;
@@ -93,10 +90,10 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 		return false;
 	}
 	
-	private String makeRoomId(Long neighborId) {
+	private String makeRoomId(Long neighborId) throws Exception {
+		if (neighborId == null || neighborId < 1)
+			throw new Exception("이웃이 아닌 사람과 채팅을 시도할 수 없습니다.");
 		List<Map<String,Integer>> profileIds = neighborMapper.getGroupProfileId(neighborId);
-		if (profileIds == null)
-			return null; // 이웃이 아닌 사람과 채팅을 시도할 수 없습니다.
 		for (Map<String, Integer> map : profileIds) {
 			Integer x = (Integer) map.get("host_profile_id");
 			Integer y = (Integer) map.get("guest_profile_id");
@@ -105,7 +102,7 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 			return "couple-" + (x+y);
 			
 		}
-		return null;
+		throw new Exception("잘못된 데이터입니다. 관리자에게 문의하십시오.");
 	}// makeRoomId method
 
 }

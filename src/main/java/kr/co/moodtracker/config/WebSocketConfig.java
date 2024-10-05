@@ -1,5 +1,6 @@
 package kr.co.moodtracker.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -14,9 +15,13 @@ import kr.co.moodtracker.handler.ChatWebSocketHandler;
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 	
+	@Autowired
+	ChatWebSocketHandler chatWebSocketHandler;
+	
 	@Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new ChatWebSocketHandler(), "/ws/chat").setAllowedOrigins("*");
+        registry.addHandler(chatWebSocketHandler, "/chat")
+        	.setAllowedOrigins("*");
     }
 	
 }

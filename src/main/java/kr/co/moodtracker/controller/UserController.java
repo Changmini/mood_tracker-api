@@ -35,6 +35,7 @@ public class UserController extends CommonController {
 		if (user != null) {
 			result.put("username", user.getUsername());
 			result.put("email", user.getEmail());
+			result.put("nickname", user.getNickname());
 			result.put("success", true);
 		} else {
 			result.put("success", false);
