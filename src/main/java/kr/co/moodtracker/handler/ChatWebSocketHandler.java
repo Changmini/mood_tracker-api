@@ -33,9 +33,18 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		// 새로운 클라이언트 연결 시
+		Long neighborId = Long.valueOf(session.getUri().getQuery().split("&")[0].split("=")[1]);
+		String sender = (String) session.getUri().getQuery().split("&")[1].split("=")[1];
+		
+		String roomName = getRoomName(session, neighborId);
+		if (createChatRoom(roomName)) {// 채팅방 생성
+			neighborMapper.notifyNeighborsChatroomActive(neighborId);// 상대방에게 채팅방 개설을 알리기
+		}
+		joinUser(neighborId, sender, roomName, session); // 채팅방에 사용자 등록
+		
 		JSONObject msg = new JSONObject();
 		msg.put("content", "채팅방에 입장하셨습니다.");
-		session.sendMessage(new TextMessage(msg.toJSONString()));
+		session.sendMessage(new TextMessage(msg.toJSONString()));// 본인한테 메시지 보내기
 	}
 
 	@Override
@@ -49,8 +58,6 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 		String content = param.get("content").toString();
 		
 		String roomName = getRoomName(self, neighborId);
-		createChatRoom(roomName); // 채팅방 생성
-		joinUser(roomName, sender, self); // 채팅방에 사용자 등록
 		chatting(CHAT_ROOMS.get(roomName), self, time, sender, content); // 채팅방에 메시지 보내기
 	}
 
@@ -97,10 +104,11 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 	 * </pre>
 	 * @param roomName
 	 */
-	private void createChatRoom(String roomName) {
+	private boolean createChatRoom(String roomName) {
 		if (CHAT_ROOMS.containsKey(roomName))
-			return ;
+			return false;
 		CHAT_ROOMS.put(roomName, new HashSet<WebSocketSession>());
+		return true;
 	};
 
 	/**
@@ -113,8 +121,9 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 	 * @throws Exception
 	 */
 	private boolean joinUser(
-				String roomName
+				Long neighborId
 				, String sender
+				, String roomName
 				, WebSocketSession user
 			) throws Exception {
 		if (roomName == null || roomName.trim().equals("") || user == null)
@@ -126,8 +135,9 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 			return false;
 		chatRoom.add(user);
 		CHAT_INFO.put(user, new ChatInfo.Builder()
-				.roomName(roomName)
+				.neighborId(neighborId)
 				.sender(sender)
+				.roomName(roomName)
 				.build());
 		return true;
 	};
@@ -144,6 +154,8 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 	 */
 	private void leaveUser(WebSocketSession user) throws Exception {
 		ChatInfo info = CHAT_INFO.get(user);
+		if (info == null) 
+			throw new Exception("등록되지 않은 사용자입니다: leaveUser");
 		String roomName = info.getRoomName(); 
 		if (roomName == null || roomName.trim().equals("") || user == null) {
 			throw new Exception("알 수 없는 채팅방 또는 사용자입니다: leaveUser() Parameter Error");
@@ -151,6 +163,7 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 		Set<WebSocketSession> chatRoom = CHAT_ROOMS.get(roomName);
 		chatRoom.remove(user);// 채팅방 나가기
 		CHAT_INFO.remove(user);// 채팅방 정보 삭제
+		neighborMapper.leaveChatroom(info.getNeighborId());// DB chatroom_active='N'
 		if (chatRoom.isEmpty()) {// user.len == 0
 			CHAT_ROOMS.remove(roomName);// 채팅방 삭제
 		} else {// user.len > 0

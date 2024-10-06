@@ -25,5 +25,8 @@ public interface NeighborMapper {
 	public Integer getNeighborUserId(SearchNeighborVO vo);
 	
 	public List<Map<String,Integer>> getGroupProfileId(Long neighborId);
+	
+	public int notifyNeighborsChatroomActive(Long neighborId);
+	public int leaveChatroom(Long neighborId);
 
 }

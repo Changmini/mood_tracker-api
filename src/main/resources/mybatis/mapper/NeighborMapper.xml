@@ -10,15 +10,15 @@
 		    ,N.neighbor_id
 		    ,N.requester
 		    ,N.synchronize
-		    ,N.accept_chat
-		    ,N.external_access
+		    ,N.chatroom_active
+		    ,N.cal_ext_access
 		FROM (
 			SELECT neighbor_id
 				,guest_profile_id
 		        ,requester
 		        ,synchronize
-				,accept_chat
-				,external_access
+				,chatroom_active
+				,cal_ext_access
 			FROM neighbor
 			WHERE host_profile_id = (
 				SELECT user_profile_id
@@ -40,15 +40,15 @@
 		    , guest_profile_id
 		    , requester
 		    , synchronize
-		    , accept_chat
-		    , external_access
+		    , chatroom_active
+		    , cal_ext_access
 		) VALUES (
 			<!-- 팔로우를 요청한 사람 -->
 			#{hostProfileId}
 		    , #{guestProfileId}
 		    , 'Y'
 		    , 'N'
-		    , 'Y'
+		    , 'N'
 		    , 'Y'
 		), (
 			<!-- 팔로우를 요청받은 사람 -->
@@ -101,16 +101,16 @@
 		UPDATE neighbor
 		<!-- 'Y' or 'N'-->
 		SET <choose>
-				 <when test='acceptChat != null and !acceptChat.equals("")
-				 		 and externalAccess != null and !externalAccess.equals("")'>
-					accept_chat = #{acceptChat}
-					, external_access = #{externalAccess} 
-				 </when>
-				<when test='acceptChat != null and !acceptChat.equals("")'>
-					accept_chat = #{acceptChat}
+				<when test='chatroomActive != null and !chatroomActive.equals("")
+				 		 and calExtAccess != null and !calExtAccess.equals("")'>
+					chatroom_active = #{chatroomActive}
+					, cal_ext_access = #{calExtAccess} 
 				</when>
-				<when test='externalAccess != null and !externalAccess.equals("")'>
-					external_access = #{externalAccess}
+				<when test='chatroomActive != null and !chatroomActive.equals("")'>
+					chatroom_active = #{chatroomActive}
+				</when>
+				<when test='calExtAccess != null and !calExtAccess.equals("")'>
+					cal_ext_access = #{calExtAccess}
 				</when>
 				<otherwise></otherwise>
 			</choose>
@@ -155,7 +155,7 @@
 		    )
 		    AND neighbor_id = #{neighborId}
 		    AND synchronize = 'Y'
-		    AND external_access = 'Y'
+		    AND cal_ext_access = 'Y'
 		) AS N LEFT JOIN user_profile AS UP 
 		  ON N.guest_profile_id = UP.user_profile_id
 		WHERE sharing_calendar = 'Y'
@@ -167,5 +167,23 @@
 		FROM neighbor
 		WHERE neighbor_id = #{neighborId}
 	</select>
+	
+	<update id="notifyNeighborsChatroomActive" parameterType="Long">
+		UPDATE neighbor
+		SET chatroom_active = 'Y'
+		WHERE host_profile_id = (
+			<!-- MySQL은 서브쿼리 사용에 제한이 었어서 코드가 이상해짐 -->
+			SELECT T.id FROM (
+				SELECT guest_profile_id AS id
+				FROM neighbor
+				WHERE neighbor_id = #{neighborId}
+			) AS T
+		)
+	</update>
+	<update id="leaveChatroom" parameterType="Long">
+		UPDATE neighbor
+		SET chatroom_active = 'N'
+		WHERE neighbor_id = #{neighborId}
+	</update>
 
 </mapper>
