@@ -17,6 +17,7 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import kr.co.moodtracker.enums.MessageType;
 import kr.co.moodtracker.mapper.NeighborMapper;
 import kr.co.moodtracker.vo.ChatInfo;
 
@@ -42,9 +43,12 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 		}
 		joinUser(neighborId, sender, roomName, session); // 채팅방에 사용자 등록
 		
-		JSONObject msg = new JSONObject();
-		msg.put("content", "채팅방에 입장하셨습니다.");
-		session.sendMessage(new TextMessage(msg.toJSONString()));// 본인한테 메시지 보내기
+		chatting(CHAT_ROOMS.get(roomName)
+				, session
+				, MessageType.OTHER
+				, null
+				, null
+				, "채팅방에 입장하셨습니다."); // 채팅방에 메시지 보내기
 	}
 
 	@Override
@@ -58,7 +62,12 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 		String content = param.get("content").toString();
 		
 		String roomName = getRoomName(self, neighborId);
-		chatting(CHAT_ROOMS.get(roomName), self, time, sender, content); // 채팅방에 메시지 보내기
+		chatting(CHAT_ROOMS.get(roomName)
+				, self
+				, MessageType.OTHER
+				, time
+				, sender
+				, content); // 채팅방에 메시지 보내기
 	}
 
 	@Override
@@ -166,9 +175,11 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 		neighborMapper.leaveChatroom(info.getNeighborId());// DB chatroom_active='N'
 		if (chatRoom.isEmpty()) {// user.len == 0
 			CHAT_ROOMS.remove(roomName);// 채팅방 삭제
+			neighborMapper.notifyEndOfChatroom(info.getNeighborId());
 		} else {// user.len > 0
 			chatting(chatRoom
 					, null
+					, MessageType.OTHER
 					, "채팅 종료"
 					, info.getSender()
 					, info.getSender()+"님이 채팅방을 나갔습니다."
@@ -189,23 +200,30 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 	public void chatting(
 				Set<WebSocketSession> ChatRoom
 				, WebSocketSession self
+				, MessageType type
 				, String time
 				, String sender
 				, String content
 			) {
-		JSONObject msg = new JSONObject();
-		msg.put("time", time);
-		msg.put("sender", sender);
-		msg.put("content", content);
-		ChatRoom.forEach(user -> {
-			if (!user.isOpen() || user.equals(self))
-				return ; // skip
-			try {
-				user.sendMessage(new TextMessage(msg.toJSONString()));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
+		try {
+			JSONObject msg = new JSONObject();
+			msg.put("time", time);
+			msg.put("sender", sender);
+			msg.put("content", content);
+			if (type == MessageType.ME) {
+				synchronized (self) {
+					self.sendMessage(new TextMessage(msg.toJSONString()));// 본인한테 메시지 보내기					
+				} 
+			} else if (type == MessageType.OTHER) {
+				for (WebSocketSession user : ChatRoom) {
+					if (!user.isOpen() || user.equals(self))
+						continue;
+					synchronized (user) {
+						user.sendMessage(new TextMessage(msg.toJSONString()));
+					}
+				}// for
+			}// if-else
+		} catch (IOException e) { e.printStackTrace(); }
 	}
 	
 	/**
@@ -227,7 +245,6 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 			if (x==null || y==null || x==0 || y==0)
 				return null; // 서버 이상으로 채팅을 시도할 수 없습니다.
 			return "couple-" + (x+y);
-			
 		}
 		throw new Exception("잘못된 데이터입니다. 관리자에게 문의하십시오: makeRoomId()");
 	}// makeRoomId method
