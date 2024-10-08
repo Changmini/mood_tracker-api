@@ -45,7 +45,7 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 		
 		chatting(CHAT_ROOMS.get(roomName)
 				, session
-				, MessageType.OTHER
+				, MessageType.ME
 				, null
 				, null
 				, "채팅방에 입장하셨습니다."); // 채팅방에 메시지 보내기
@@ -164,11 +164,12 @@ public class ChatWebSocketHandler implements WebSocketHandler {
 	private void leaveUser(WebSocketSession user) throws Exception {
 		ChatInfo info = CHAT_INFO.get(user);
 		if (info == null) 
-			throw new Exception("등록되지 않은 사용자입니다: leaveUser");
+			throw new Exception("사용자의 채팅방 정보를 읽을 수 없습니다.: leaveUser");
+		
 		String roomName = info.getRoomName(); 
-		if (roomName == null || roomName.trim().equals("") || user == null) {
+		if (roomName == null || roomName.trim().equals("") || user == null)
 			throw new Exception("알 수 없는 채팅방 또는 사용자입니다: leaveUser() Parameter Error");
-		}
+
 		Set<WebSocketSession> chatRoom = CHAT_ROOMS.get(roomName);
 		chatRoom.remove(user);// 채팅방 나가기
 		CHAT_INFO.remove(user);// 채팅방 정보 삭제

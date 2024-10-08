@@ -179,6 +179,14 @@
 				WHERE neighbor_id = #{neighborId}
 			) AS T
 		)
+		AND guest_profile_id = (
+			<!-- MySQL은 서브쿼리 사용에 제한이 었어서 코드가 이상해짐 -->
+			SELECT T.id FROM (
+				SELECT host_profile_id AS id
+				FROM neighbor
+				WHERE neighbor_id = #{neighborId}
+			) AS T
+		)
 	</update>
 	<update id="notifyEndOfChatroom" parameterType="Long">
 		UPDATE neighbor
@@ -187,6 +195,14 @@
 			<!-- MySQL은 서브쿼리 사용에 제한이 었어서 코드가 이상해짐 -->
 			SELECT T.id FROM (
 				SELECT guest_profile_id AS id
+				FROM neighbor
+				WHERE neighbor_id = #{neighborId}
+			) AS T
+		)
+		AND guest_profile_id = (
+			<!-- MySQL은 서브쿼리 사용에 제한이 었어서 코드가 이상해짐 -->
+			SELECT T.id FROM (
+				SELECT host_profile_id AS id
 				FROM neighbor
 				WHERE neighbor_id = #{neighborId}
 			) AS T
