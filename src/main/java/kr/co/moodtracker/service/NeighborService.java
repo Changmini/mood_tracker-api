@@ -80,7 +80,7 @@ public class NeighborService {
 			throw new SettingDataException("검색에 필요한 정보가 없습니다.");
 		Integer neighborUserId = neighborMapper.getNeighborUserId(vo);
 		if (neighborUserId == null || neighborUserId == 0)
-			throw new ZeroDataException("존재하지 않는 이웃 사용자입니다.");
+			throw new ZeroDataException("접근할 수 없는 이웃입니다.");
 		DailySearchVO ds = new DailySearchVO();
 		ds.setDate(date);
 		ds.setUserId(neighborUserId);

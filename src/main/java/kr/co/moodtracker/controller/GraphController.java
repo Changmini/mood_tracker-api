@@ -23,17 +23,16 @@ public class GraphController extends CommonController {
 	GraphService graphService;
 	
 	@GetMapping("/mood-level-data")
-	public ResponseEntity<?> getMoodLevelData(HttpSession sess, DailySearchVO vo)
-			throws SessionNotFoundException {
+	public ResponseEntity<?> getMoodLevelData(
+			HttpSession sess
+			, DailySearchVO vo
+	) throws SessionNotFoundException, Exception
+	{
 		Map<String, Object> result = new HashMap<>();
-		try {
-			setUserInfo(sess, vo);
-			Map<?,?> graphData = graphService.getMoodLevelData(vo);
-			result.put("graph", graphData);
-			result.put("success", true);
-            return ResponseEntity.ok().body(result);
-		} catch(Exception e) { e.printStackTrace(); }
-		result.put("success", false);
+		setUserInfo(sess, vo);
+		Map<?,?> graphData = graphService.getMoodLevelData(vo);
+		result.put("graph", graphData);
+		result.put("success", true);
 		return ResponseEntity.ok().body(result);
 	}
 }

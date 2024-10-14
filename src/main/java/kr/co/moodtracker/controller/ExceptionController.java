@@ -1,5 +1,6 @@
 package kr.co.moodtracker.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +14,8 @@ import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.exception.DataNotUpdatedException;
 import kr.co.moodtracker.exception.ImageLoadException;
 import kr.co.moodtracker.exception.SessionNotFoundException;
+import kr.co.moodtracker.exception.SettingDataException;
+import kr.co.moodtracker.exception.ZeroDataException;
 
 @RestControllerAdvice
 public class ExceptionController {
@@ -37,7 +40,9 @@ public class ExceptionController {
 			DataNotDeletedException.class
 			, DataNotInsertedException.class
 			, DataNotUpdatedException.class
-			, DataMissingException.class})
+			, DataMissingException.class
+			, ZeroDataException.class
+			, SettingDataException.class})
 	public ResponseEntity<?> dataError(Exception e) {
 		e.printStackTrace();
 		Map<String, Object> result = new HashMap<>();
@@ -46,7 +51,10 @@ public class ExceptionController {
 		return ResponseEntity.ok().body(result); 
 	}
 	
-	@ExceptionHandler(value = {Exception.class})
+	@ExceptionHandler(value = {
+			Exception.class
+			, IllegalStateException.class
+			, IOException.class})
 	public ResponseEntity<?> Error(Exception e) {
 		e.printStackTrace();
 		Map<String, Object> result = new HashMap<>();

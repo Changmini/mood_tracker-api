@@ -31,8 +31,11 @@ public class CalendarController extends CommonController {
 	CalendarService calendarService;
 	
 	@GetMapping(value = "/calendar/{date}")
-	public ResponseEntity<?> getCalendarInfo(HttpSession sess, DailySearchVO vo) 
-			throws SessionNotFoundException, DataMissingException {
+	public ResponseEntity<?> getCalendarInfo(
+			HttpSession sess
+			, DailySearchVO vo
+	) throws SessionNotFoundException, DataMissingException 
+	{
 		Map<String, Object> res = new HashMap<>();
 		setUserInfo(sess, vo);
 		List<DailyInfoVO> list = calendarService.getDailyInfoOfTheMonth(vo);
@@ -42,8 +45,11 @@ public class CalendarController extends CommonController {
 	}
 	
 	@GetMapping(value = "/daily")
-	public ResponseEntity<?> timeline(HttpSession sess, DailySearchVO vo) 
-			throws SessionNotFoundException, DataMissingException {
+	public ResponseEntity<?> timeline(
+			HttpSession sess
+			, DailySearchVO vo
+	)throws SessionNotFoundException, DataMissingException 
+	{
 		Map<String, Object> res = new HashMap<>();
 		setUserInfo(sess, vo);
 		res.put("dailyInfoList", calendarService.getDailyInfoList(vo));
@@ -53,44 +59,38 @@ public class CalendarController extends CommonController {
 	
 	@PostMapping(value = "/daily")
 	public ResponseEntity<?> postDailyEntry(
-			HttpSession sess, DailyInfoVO vo, List<MultipartFile> files) 
-					throws SessionNotFoundException, DataNotInsertedException {
+			HttpSession sess
+			, DailyInfoVO vo
+			, List<MultipartFile> files
+	) throws SessionNotFoundException, DataNotInsertedException, IllegalStateException, IOException 
+	{
 		Map<String, Object> res = new HashMap<>();
-		try {
-			setUserInfo(sess, vo);
-			calendarService.postDailyInfo(vo, files);
-			res.put("success", true);
-			return ResponseEntity.ok().body(res);
-		} catch (IllegalStateException | IOException  e) {
-			res.put("msg", e.getMessage());
-			e.printStackTrace();
-		}
-		res.put("success", false);
+		setUserInfo(sess, vo);
+		calendarService.postDailyInfo(vo, files);
+		res.put("success", true);
 		return ResponseEntity.ok().body(res);
 	}
 	
 	@PatchMapping(value = "/daily")
 	public ResponseEntity<?> patchDailyEntry(
-			HttpSession sess, DailyInfoVO vo, List<MultipartFile> files
-			, @RequestParam("preImageId") List<Integer> preImageId) 
-					throws SessionNotFoundException, DataNotInsertedException {
+			HttpSession sess, DailyInfoVO vo
+			, List<MultipartFile> files
+			, @RequestParam("preImageId") List<Integer> preImageId
+	) throws SessionNotFoundException, DataNotInsertedException, IllegalStateException, IOException 
+	{
 		Map<String, Object> res = new HashMap<>();
-		try {
-			setUserInfo(sess, vo);
-			calendarService.patchDailyInfo(vo, files, preImageId);
-			res.put("success", true);
-			return ResponseEntity.ok().body(res);
-		} catch (IllegalStateException | IOException  e) {
-			res.put("msg", e.getMessage());
-			e.printStackTrace();
-		}
-		res.put("success", false);
+		setUserInfo(sess, vo);
+		calendarService.patchDailyInfo(vo, files, preImageId);
+		res.put("success", true);
 		return ResponseEntity.ok().body(res);
 	}
 	
 	@DeleteMapping(value = "/daily")
-	public ResponseEntity<?> deleteDailyEntry(HttpSession sess, DailyInfoVO vo) 
-			throws SessionNotFoundException, DataNotDeletedException {
+	public ResponseEntity<?> deleteDailyEntry(
+			HttpSession sess
+			, DailyInfoVO vo
+	) throws SessionNotFoundException, DataNotDeletedException 
+	{
 		Map<String, Object> res = new HashMap<>();
 		setUserInfo(sess, vo);
 		calendarService.deleteDailyInfo(vo);

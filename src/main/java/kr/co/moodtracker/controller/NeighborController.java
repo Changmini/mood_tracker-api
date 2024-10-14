@@ -37,8 +37,10 @@ public class NeighborController extends CommonController {
 	CalendarService calendarService;
 	
 	@GetMapping("/neighbors")
-	public ResponseEntity<?> getNeighbors(HttpSession sess) 
-			throws SessionNotFoundException {
+	public ResponseEntity<?> getNeighbors(
+			HttpSession sess
+	) throws SessionNotFoundException 
+	{
 		Map<String, Object> res = new HashMap<>();
 		UserVO user = setUserInfo(sess);
 		List<NeighborVO> neighbors =  neighborService.getNeighbors(user.getUserId());
@@ -47,8 +49,11 @@ public class NeighborController extends CommonController {
 	}
 	
 	@PostMapping("/neighbor/{nickname}")
-	public ResponseEntity<?> postNeighbor(HttpSession sess, SearchNeighborVO vo) 
-			throws SessionNotFoundException, DataNotInsertedException {
+	public ResponseEntity<?> postNeighbor(
+			HttpSession sess
+			, SearchNeighborVO vo
+	) throws SessionNotFoundException, DataNotInsertedException 
+	{
 		Map<String, Object> res = new HashMap<>();
 		setUserInfo(sess, vo);
 		neighborService.postNeighbor(vo);
@@ -57,8 +62,11 @@ public class NeighborController extends CommonController {
 	}
 	
 	@PatchMapping("/neighbor")
-	public ResponseEntity<?> patchNeighbor(HttpSession sess, SearchNeighborVO vo) 
-			throws SessionNotFoundException {
+	public ResponseEntity<?> patchNeighbor(
+			HttpSession sess
+			, SearchNeighborVO vo
+	) throws SessionNotFoundException 
+	{
 		Map<String, Object> res = new HashMap<>();
 		setUserInfo(sess, vo);
 		neighborService.patchNeighbor(vo);
@@ -67,8 +75,11 @@ public class NeighborController extends CommonController {
 	}
 	
 	@PatchMapping("/neighbor/synchronize")
-	public ResponseEntity<?> setSynchronize(HttpSession sess, SearchNeighborVO vo) 
-			throws SessionNotFoundException {
+	public ResponseEntity<?> setSynchronize(
+			HttpSession sess
+			, SearchNeighborVO vo
+	) throws SessionNotFoundException 
+	{
 		Map<String, Object> res = new HashMap<>();
 		setUserInfo(sess, vo);
 		neighborService.synchronize(vo);
@@ -77,8 +88,11 @@ public class NeighborController extends CommonController {
 	}
 	
 	@DeleteMapping("/neighbor")
-	public ResponseEntity<?> deleteNeighbor(HttpSession sess, SearchNeighborVO vo) 
-			throws SessionNotFoundException {
+	public ResponseEntity<?> deleteNeighbor(
+			HttpSession sess
+			, SearchNeighborVO vo
+	) throws SessionNotFoundException 
+	{
 		Map<String, Object> res = new HashMap<>();
 		setUserInfo(sess, vo);
 		neighborService.deleteNeighbor(vo);
@@ -87,19 +101,17 @@ public class NeighborController extends CommonController {
 	}
 	
 	@GetMapping("/neighbor/{neighborId}/calendar/{date}")
-	public ResponseEntity<?> getNeighborCalendar(HttpSession sess, SearchNeighborVO vo) 
-			throws SessionNotFoundException, DataMissingException {
+	public ResponseEntity<?> getNeighborCalendar(
+			HttpSession sess
+			, SearchNeighborVO vo
+	) throws SessionNotFoundException, DataMissingException, ZeroDataException, SettingDataException 
+	{
 		Map<String, Object> res = new HashMap<>();
 		setUserInfo(sess, vo);
-		try {
-			DailySearchVO ds = neighborService.getDailySearchVoOfNeighbor(vo);
-			List<DailyInfoVO> list = calendarService.getDailyInfoOfTheMonth(ds);
-			res.put("dailyInfoList", list);
-			res.put("success", true);
-		} catch (ZeroDataException | SettingDataException e) {
-			res.put("msg", e.getMessage());
-			res.put("success", false);
-		}
+		DailySearchVO ds = neighborService.getDailySearchVoOfNeighbor(vo);
+		List<DailyInfoVO> list = calendarService.getDailyInfoOfTheMonth(ds);
+		res.put("dailyInfoList", list);
+		res.put("success", true);
 		return ResponseEntity.ok().body(res);
 	}
 }

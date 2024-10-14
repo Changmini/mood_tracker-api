@@ -6,8 +6,8 @@ public class SearchNeighborVO extends SearchVO {
 	private int guestProfileId;
 	private String requester;
 	private String synchronize;
-	private String acceptChat;
-	private String externalAccess;
+	private String chatroomActive;
+	private String calExtAccess;
 	private String createdAt;
 	private String updatedAt;
 	/* 프로필 정보 */
@@ -45,17 +45,17 @@ public class SearchNeighborVO extends SearchVO {
 	public void setSynchronize(String synchronize) {
 		this.synchronize = synchronize;
 	}
-	public String getAcceptChat() {
-		return acceptChat;
+	public String getChatroomActive() {
+		return chatroomActive;
 	}
-	public void setAcceptChat(String acceptChat) {
-		this.acceptChat = acceptChat;
+	public void setChatroomActive(String chatroomActive) {
+		this.chatroomActive = chatroomActive;
 	}
-	public String getExternalAccess() {
-		return externalAccess;
+	public String getCalExtAccess() {
+		return calExtAccess;
 	}
-	public void setExternalAccess(String externalAccess) {
-		this.externalAccess = externalAccess;
+	public void setCalExtAccess(String calExtAccess) {
+		this.calExtAccess = calExtAccess;
 	}
 	public String getCreatedAt() {
 		return createdAt;
