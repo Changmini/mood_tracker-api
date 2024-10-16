@@ -12,7 +12,7 @@ public class CrossOrigin implements WebMvcConfigurer {
 		registry.addMapping("/**")
 	        .allowedOrigins("http://127.0.0.1:3000", "http://127.0.0.1:8080",
 	        				"http://localhost:3000", "http://localhost:8080",
-	        				"http://43.203.220.226:300"
+	        				"http://43.203.220.226:3000"
 	        )
 	        //.allowedOrigins("*")
 	        .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE")
