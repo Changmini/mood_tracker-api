@@ -9,16 +9,29 @@ spring:
   multipart:
    maxFileSize: 10MB
    maxRequestSize: 20MB
+ profiles:
+  active: prod
 
+---
 # MySQL DB 정보
+spring:
+ config:
+  activate:
+   on-profile: local
  datasource:
   url: jdbc:mysql://127.0.0.1:3306/moodtracker?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowMultiQueries=true
   driver-class-name: com.mysql.cj.jdbc.Driver
-  username: mtroot
-  password: mtroot
+  username: 
+  password: 
 
-# MyBatis 설정 정보
-#mybatis:
-#  config-location: classpath:mybatis/config/mybatis-config.xml
-#  mapper-locations: classpath:mybatis/mapper/*/*.xml
-#  type-aliases-package: kr.co.moodtracker
+---
+# MySQL DB 정보
+spring:
+ config:
+  activate:
+   on-profile: prod
+ datasource:
+  url: jdbc:mysql://moodtracker-db.c9qiamm62bch.ap-northeast-2.rds.amazonaws.com/moodtracker?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowMultiQueries=true
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  username: 
+  password:  
