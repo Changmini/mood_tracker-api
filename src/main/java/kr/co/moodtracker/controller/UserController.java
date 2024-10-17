@@ -93,7 +93,7 @@ public class UserController extends CommonController {
 		Map<String, Object> result = new HashMap<>();
 		UserVO user = setUserInfo(sess);
 		String base64 = userService.putUserProfileImage(file, user.getUserId(), vo);
-		result.put("path", base64);
+		result.put("imagePath", base64);
 		result.put("success", true);
 		return ResponseEntity.ok().body(result);
 	}
