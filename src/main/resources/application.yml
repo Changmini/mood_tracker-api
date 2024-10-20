@@ -34,4 +34,4 @@ spring:
   url: jdbc:mysql://moodtracker-db.c9qiamm62bch.ap-northeast-2.rds.amazonaws.com/moodtracker?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowMultiQueries=true
   driver-class-name: com.mysql.cj.jdbc.Driver
   username: 
-  password:  
+  password: 

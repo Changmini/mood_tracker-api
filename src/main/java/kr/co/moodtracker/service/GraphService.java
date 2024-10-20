@@ -22,7 +22,7 @@ public class GraphService {
 		Map<String, Map<?,?>> graphData = new HashMap<>();
 		/* 라벨링 */
 		ChartVO line = new ChartVO(DateHandler.DAY_OF_WEEKS);
-		ChartVO bar = new ChartVO(DateHandler.DAY_OF_WEEKS);
+		ChartVO bar = new ChartVO(DateHandler.DAY_OF_MONTH);
 		
 		/* 데이터셋 */		
 		List<Map<String,Object>> metadata = graphMapper.getMoodLevelData(vo);
