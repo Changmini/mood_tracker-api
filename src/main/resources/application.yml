@@ -11,7 +11,13 @@ spring:
    maxRequestSize: 20MB
  profiles:
   active: prod
-
+logging:
+ level:
+  root: info
+  #kr.co.moodtracker: debug
+ file:
+  name: "moodlogin.log"
+  
 ---
 # MySQL DB 정보
 spring:

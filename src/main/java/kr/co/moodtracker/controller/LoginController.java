@@ -3,6 +3,8 @@ package kr.co.moodtracker.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +26,8 @@ public class LoginController {
 	@Autowired
 	UserService userService;
 	
+	private static Logger logger = LoggerFactory.getLogger(LoginController.class);
+	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(HttpSession sess, @RequestParam Map<String,String> vo) {
 		Map<String, Object> result = new HashMap<>();
@@ -35,6 +39,7 @@ public class LoginController {
 		} else {
 			result.put("success", false);
 		}
+		logger.info("[LOGIN] - username: {} / conn: {}", user.getUsername(), result.get("success"));
 		return ResponseEntity.ok().body(result);
 	}
 	
