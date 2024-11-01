@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,6 +21,8 @@ import kr.co.moodtracker.exception.ZeroDataException;
 
 @RestControllerAdvice
 public class ExceptionController {
+	
+	private static Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 	
 	@ExceptionHandler(value = SessionNotFoundException.class)
 	public ResponseEntity<?> sessioNotFound(SessionNotFoundException e) {
@@ -44,8 +48,8 @@ public class ExceptionController {
 			, ZeroDataException.class
 			, SettingDataException.class})
 	public ResponseEntity<?> dataError(Exception e) {
-		e.printStackTrace();
 		Map<String, Object> result = new HashMap<>();
+		logger.info(e.getMessage());
 		result.put("msg", e.getMessage());
 		result.put("success", false);
 		return ResponseEntity.ok().body(result); 

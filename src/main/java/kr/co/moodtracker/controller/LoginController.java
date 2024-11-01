@@ -28,6 +28,11 @@ public class LoginController {
 	
 	private static Logger logger = LoggerFactory.getLogger(LoginController.class);
 	
+	@GetMapping("/")
+	private ResponseEntity<String> check() {
+		return ResponseEntity.ok("Hello Moodtracker");
+	}
+	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(HttpSession sess, @RequestParam Map<String,String> vo) {
 		Map<String, Object> result = new HashMap<>();
