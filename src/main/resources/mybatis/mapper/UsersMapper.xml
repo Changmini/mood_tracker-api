@@ -2,19 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.moodtracker.mapper.UsersMapper">
 	
-	<select id="getUser" parameterType="hashMap" resultType="kr.co.moodtracker.vo.UserVO">
+	<select id="findByUsername" parameterType="String" resultType="kr.co.moodtracker.vo.UserVO">
 		SELECT U.user_id
 			,U.username
+			,U.password
 		    ,U.email
 		    ,UP.nickname
 		FROM (
 			SELECT user_id
 				,username
+				,password_hash AS 'password'
 				,email
 			FROM users
 			WHERE 1=1
 			AND	username = #{username}
-			AND password_hash = #{password}
 		) AS U LEFT JOIN user_profile AS UP
 			ON U.user_id = UP.user_id
 	</select>

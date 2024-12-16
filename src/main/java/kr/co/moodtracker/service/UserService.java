@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,9 @@ public class UserService {
 	
 	@Autowired
 	UsersMapper userMapper;
+
+	@Autowired
+    private PasswordEncoder passwordEncoder;
 	
 	/**
 	 * <pre>
@@ -39,14 +43,16 @@ public class UserService {
 		boolean emptyPassword = !(password != null && !password.equals("")); 
 		if (emptyUsername || emptyPassword) 
 			return null;
-		UserVO user = userMapper.getUser(vo);
-		if (!(user != null && user.getUserId() > 0))
+		UserVO user = userMapper.findByUsername(username);
+		if (user == null || !passwordEncoder.matches(password, user.getPassword()))
 			return null;
 		return user;
 	}
 	
 	@Transactional(rollbackFor = {Exception.class})
 	public void postUser(UserVO vo) throws DataNotInsertedException {
+		String pwHash = passwordEncoder.encode(vo.getPassword());
+		vo.setPassword(pwHash);
 		try {
 			userMapper.postUser(vo);
 			userMapper.postUserProfile(vo);

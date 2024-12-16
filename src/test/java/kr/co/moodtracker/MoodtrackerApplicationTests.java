@@ -2,14 +2,17 @@ package kr.co.moodtracker;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
@@ -29,12 +32,36 @@ class MoodtrackerApplicationTests {
 	 * https://spring.io/guides/gs/testing-web
 	 */
 	
+	/**
+	 * "/"은 LoginController에 존재 
+	 * @throws Exception
+	 */
 	@Test
-	void contextLoads() throws Exception {
+	void defaultContext() throws Exception {
 		this.mockMvc.perform(get("/"))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(content().string(containsString("Hello Moodtracker")));
 	}
+	
+//	@Test
+//	void testLoginSuccess() throws Exception {
+//		String jsonRequest = "{ \"username\": \"test\", \"password\": \"test\" }";
+//		mockMvc.perform(post("/login")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(jsonRequest))
+//        .andExpect(status().isOk())  // HTTP 200 OK 응답 확인
+//        .andExpect(content().json("success"));  // 로그인 성공 메시지 확인
+//	}
 
+//	@Test
+//	public void testLoginFailure() throws Exception {
+//		// 잘못된 비밀번호로 로그인 시도
+//		String jsonRequest = "{ \"username\": \"wrong\", \"password\": \"wrongPassword\" }";
+//		
+//		mockMvc.perform(post("/login")
+//					.contentType(MediaType.APPLICATION_JSON)
+//					.content(jsonRequest))
+//				.andExpect(status().isUnauthorized());  // HTTP 401 Unauthorized 응답 확인
+//	}
 }
