@@ -17,33 +17,34 @@ public class CommonController {
 	protected void setUserInfo(HttpSession session, DailySearchVO vo
 			) throws SessionNotFoundException {
 		UserVO user = (UserVO) session.getAttribute("USER");
-		if (user == null)
-			throw new SessionNotFoundException("로그인이 필요합니다.");
+		checkNull(user);
 		vo.setUserId(user.getUserId());
 	}
 	
 	protected void setUserInfo(HttpSession session, DailyInfoVO vo
 			) throws SessionNotFoundException {
 		UserVO user = (UserVO) session.getAttribute("USER");
-		if (user == null)
-			throw new SessionNotFoundException("로그인이 필요합니다.");
+		checkNull(user);
 		vo.setUserId(user.getUserId());
 	}
 	
 	protected void setUserInfo(HttpSession session, SearchNeighborVO vo
 			) throws SessionNotFoundException {
 		UserVO user = (UserVO) session.getAttribute("USER");
-		if (user == null)
-			throw new SessionNotFoundException("로그인이 필요합니다.");
+		checkNull(user);
 		vo.setUserId(user.getUserId());
 	}
 	
 	protected UserVO setUserInfo(HttpSession session
 			) throws SessionNotFoundException {
 		UserVO user = (UserVO) session.getAttribute("USER");
-		if (user == null)
-			throw new SessionNotFoundException("로그인이 필요합니다.");
+		checkNull(user);
 		return user;
 	}
-
+	
+	private void checkNull(UserVO u) throws SessionNotFoundException {
+		if (u != null)
+			return ;
+		throw new SessionNotFoundException("로그인이 필요합니다.");
+	}
 }

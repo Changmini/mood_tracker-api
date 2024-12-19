@@ -2,10 +2,13 @@ package kr.co.moodtracker.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import kr.co.moodtracker.handler.DetectBrowserEnv;
+
 @Configuration
-public class CrossOrigin implements WebMvcConfigurer {
+public class MVCConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
@@ -19,6 +22,12 @@ public class CrossOrigin implements WebMvcConfigurer {
 	        .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE")
 	        .allowCredentials(true)
 	        .maxAge(3600);
+	}
+
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(new DetectBrowserEnv())
+				.addPathPatterns("/**");
 	}
 	
 }

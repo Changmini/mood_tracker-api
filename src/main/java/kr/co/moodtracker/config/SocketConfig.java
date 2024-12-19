@@ -13,7 +13,7 @@ import kr.co.moodtracker.handler.ChatWebSocketHandler;
 
 @Configuration
 @EnableWebSocket
-public class WebSocketConfig implements WebSocketConfigurer {
+public class SocketConfig implements WebSocketConfigurer {
 	
 	@Autowired
 	ChatWebSocketHandler chatWebSocketHandler;
