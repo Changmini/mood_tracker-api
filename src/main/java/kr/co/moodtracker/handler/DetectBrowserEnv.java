@@ -31,9 +31,16 @@ public class DetectBrowserEnv implements HandlerInterceptor {
 
         // User-Agent 정보
         String userAgent = request.getHeader("User-Agent");
-
+        
         String browser = "Unknown";
         String os = "Unknown";
+        
+        // 요청자 IP 주소, URL, 브라우저, 운영체제 정보 반환
+        if (userAgent == null) {
+        	return String.format(
+        			"IP: %s, Request URL: %s, Browser: %s, OS: %s"
+        			, ipAddress, requestURL, browser, os);
+        }
 
         // 브라우저 정보 감지
         if (userAgent.contains("Chrome")) {

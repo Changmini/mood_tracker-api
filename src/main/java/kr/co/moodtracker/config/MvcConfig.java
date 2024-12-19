@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import kr.co.moodtracker.handler.DetectBrowserEnv;
 
 @Configuration
-public class MVCConfig implements WebMvcConfigurer {
+public class MvcConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
