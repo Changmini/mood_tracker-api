@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +29,7 @@ public class UserController extends CommonController {
 	UserService userService;
 	
 	@GetMapping("/user")
-	public ResponseEntity<?> getUserInfo(
+	public ResponseEntity<?> getUser(
 			HttpSession sess
 	)
 	{
@@ -63,8 +62,8 @@ public class UserController extends CommonController {
 			HttpSession sess, UserVO vo
 	) throws SessionNotFoundException 
 	{
+		UserVO user = getUserInfo(sess);
 		Map<String, Object> result = new HashMap<>();
-		UserVO user = setUserInfo(sess);
 		ProfileVO profile = userService.getUserProfile(user.getUserId());
 		result.put("profile", profile);
 		result.put("success", profile != null ? true : false);
@@ -77,8 +76,8 @@ public class UserController extends CommonController {
 			, UserVO vo
 	) throws SessionNotFoundException, DataNotUpdatedException 
 	{
+		UserVO user = getUserInfo(sess);
 		Map<String, Object> result = new HashMap<>();
-		UserVO user = setUserInfo(sess);
 		userService.patchUserProfile(user.getUserId(), vo);
 		result.put("success", true);
 		return ResponseEntity.ok().body(result);
@@ -91,8 +90,8 @@ public class UserController extends CommonController {
 			, UserVO vo
 	) throws SessionNotFoundException, DataNotUpdatedException, IllegalStateException, IOException 
 	{
+		UserVO user = getUserInfo(sess);
 		Map<String, Object> result = new HashMap<>();
-		UserVO user = setUserInfo(sess);
 		String base64 = userService.putUserProfileImage(file, user.getUserId(), vo);
 		result.put("imagePath", base64);
 		result.put("success", true);

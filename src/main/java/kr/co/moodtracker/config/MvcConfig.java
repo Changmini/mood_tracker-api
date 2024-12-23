@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import kr.co.moodtracker.handler.DetectBrowserEnv;
+import kr.co.moodtracker.handler.SessionCheckInterceptor;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
@@ -19,7 +20,8 @@ public class MvcConfig implements WebMvcConfigurer {
 	        				,"http://3.38.99.65:3000"
 	        )
 	        //.allowedOrigins("*")
-	        .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE")
+	        .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS")
+	        .allowedHeaders("*")
 	        .allowCredentials(true)
 	        .maxAge(3600);
 	}
@@ -28,6 +30,14 @@ public class MvcConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new DetectBrowserEnv())
 				.addPathPatterns("/**");
+		
+		registry.addInterceptor(new SessionCheckInterceptor())
+				.addPathPatterns("/**")
+				.excludePathPatterns(
+						"/"
+						,"/login"
+						,"/login/status"
+						,"/user");
 	}
 	
 }

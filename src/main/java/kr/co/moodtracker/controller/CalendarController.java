@@ -36,8 +36,8 @@ public class CalendarController extends CommonController {
 			, DailySearchVO vo
 	) throws SessionNotFoundException, DataMissingException 
 	{
+		setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		setUserInfo(sess, vo);
 		List<DailyInfoVO> list = calendarService.getDailyInfoOfTheMonth(vo);
 		res.put("dailyInfoList", list);
 		res.put("success", true);
@@ -50,8 +50,8 @@ public class CalendarController extends CommonController {
 			, DailySearchVO vo
 	)throws SessionNotFoundException, DataMissingException 
 	{
+		setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		setUserInfo(sess, vo);
 		res.put("dailyInfoList", calendarService.getDailyInfoList(vo));
 		res.put("success", true);
 		return ResponseEntity.ok().body(res);
@@ -64,8 +64,8 @@ public class CalendarController extends CommonController {
 			, List<MultipartFile> files
 	) throws SessionNotFoundException, DataNotInsertedException, IllegalStateException, IOException 
 	{
+		setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		setUserInfo(sess, vo);
 		calendarService.postDailyInfo(vo, files);
 		res.put("success", true);
 		return ResponseEntity.ok().body(res);
@@ -78,8 +78,8 @@ public class CalendarController extends CommonController {
 			, @RequestParam("preImageId") List<Integer> preImageId
 	) throws SessionNotFoundException, DataNotInsertedException, IllegalStateException, IOException 
 	{
+		setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		setUserInfo(sess, vo);
 		calendarService.patchDailyInfo(vo, files, preImageId);
 		res.put("success", true);
 		return ResponseEntity.ok().body(res);
@@ -91,8 +91,8 @@ public class CalendarController extends CommonController {
 			, DailyInfoVO vo
 	) throws SessionNotFoundException, DataNotDeletedException 
 	{
+		setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		setUserInfo(sess, vo);
 		calendarService.deleteDailyInfo(vo);
 		res.put("success", true);
 		return ResponseEntity.ok().body(res);

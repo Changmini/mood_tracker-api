@@ -41,8 +41,8 @@ public class NeighborController extends CommonController {
 			HttpSession sess
 	) throws SessionNotFoundException 
 	{
+		UserVO user = getUserInfo(sess);
 		Map<String, Object> res = new HashMap<>();
-		UserVO user = setUserInfo(sess);
 		List<NeighborVO> neighbors =  neighborService.getNeighbors(user.getUserId());
 		res.put("neighbors", neighbors);
 		return ResponseEntity.ok().body(res);
@@ -54,8 +54,8 @@ public class NeighborController extends CommonController {
 			, SearchNeighborVO vo
 	) throws SessionNotFoundException, DataNotInsertedException 
 	{
+		setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		setUserInfo(sess, vo);
 		neighborService.postNeighbor(vo);
 		res.put("success", true);
 		return ResponseEntity.ok().body(res);
@@ -67,8 +67,8 @@ public class NeighborController extends CommonController {
 			, SearchNeighborVO vo
 	) throws SessionNotFoundException 
 	{
+		setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		setUserInfo(sess, vo);
 		neighborService.patchNeighbor(vo);
 		res.put("success", true);
 		return ResponseEntity.ok().body(res);
@@ -80,8 +80,8 @@ public class NeighborController extends CommonController {
 			, SearchNeighborVO vo
 	) throws SessionNotFoundException 
 	{
+		setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		setUserInfo(sess, vo);
 		neighborService.synchronize(vo);
 		res.put("success", true);
 		return ResponseEntity.ok().body(res);
@@ -93,8 +93,8 @@ public class NeighborController extends CommonController {
 			, SearchNeighborVO vo
 	) throws SessionNotFoundException 
 	{
+		setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		setUserInfo(sess, vo);
 		neighborService.deleteNeighbor(vo);
 		res.put("success", true);
 		return ResponseEntity.ok().body(res);
@@ -106,8 +106,8 @@ public class NeighborController extends CommonController {
 			, SearchNeighborVO vo
 	) throws SessionNotFoundException, DataMissingException, ZeroDataException, SettingDataException 
 	{
+		setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		setUserInfo(sess, vo);
 		DailySearchVO ds = neighborService.getDailySearchVoOfNeighbor(vo);
 		List<DailyInfoVO> list = calendarService.getDailyInfoOfTheMonth(ds);
 		res.put("dailyInfoList", list);

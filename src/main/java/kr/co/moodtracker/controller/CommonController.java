@@ -7,44 +7,39 @@ import kr.co.moodtracker.vo.DailySearchVO;
 import kr.co.moodtracker.vo.SearchNeighborVO;
 import kr.co.moodtracker.vo.UserVO;
 
-public class CommonController {
-	/**
-	 * <pre>로그인 상태 확인</pre>
-	 * @param session
-	 * @param vo
-	 * @throws SessionNotFoundException
-	 */
-	protected void setUserInfo(HttpSession session, DailySearchVO vo
+abstract class CommonController {
+	
+	protected void setUserId(HttpSession session, DailySearchVO vo
 			) throws SessionNotFoundException {
-		UserVO user = (UserVO) session.getAttribute("USER");
-		checkNull(user);
-		vo.setUserId(user.getUserId());
+		UserVO u = getAttributeUser(session);
+		vo.setUserId(u.getUserId());
 	}
 	
-	protected void setUserInfo(HttpSession session, DailyInfoVO vo
+	protected void setUserId(HttpSession session, DailyInfoVO vo
 			) throws SessionNotFoundException {
-		UserVO user = (UserVO) session.getAttribute("USER");
-		checkNull(user);
-		vo.setUserId(user.getUserId());
+		UserVO u = getAttributeUser(session);
+		vo.setUserId(u.getUserId());
 	}
 	
-	protected void setUserInfo(HttpSession session, SearchNeighborVO vo
+	protected void setUserId(HttpSession session, SearchNeighborVO vo
 			) throws SessionNotFoundException {
-		UserVO user = (UserVO) session.getAttribute("USER");
-		checkNull(user);
-		vo.setUserId(user.getUserId());
+		UserVO u = getAttributeUser(session);
+		vo.setUserId(u.getUserId());
 	}
 	
-	protected UserVO setUserInfo(HttpSession session
+	protected int getUserId(HttpSession session
 			) throws SessionNotFoundException {
-		UserVO user = (UserVO) session.getAttribute("USER");
-		checkNull(user);
-		return user;
+		UserVO u = getAttributeUser(session);
+		return u.getUserId();
 	}
 	
-	private void checkNull(UserVO u) throws SessionNotFoundException {
-		if (u != null)
-			return ;
-		throw new SessionNotFoundException("로그인이 필요합니다.");
+	protected UserVO getUserInfo(HttpSession session
+			) throws SessionNotFoundException {
+		UserVO u = getAttributeUser(session);
+		return u;
+	}
+	
+	private UserVO getAttributeUser(HttpSession session) {
+		return (UserVO) session.getAttribute("USER");
 	}
 }

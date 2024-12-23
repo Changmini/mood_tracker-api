@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpSession;
 import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.service.GraphService;
 import kr.co.moodtracker.vo.DailySearchVO;
-import kr.co.moodtracker.vo.UserVO;
 
 @RequestMapping("/graph")
 @RestController
@@ -28,8 +27,8 @@ public class GraphController extends CommonController {
 			, DailySearchVO vo
 	) throws SessionNotFoundException, Exception
 	{
+		setUserId(sess, vo);
 		Map<String, Object> result = new HashMap<>();
-		setUserInfo(sess, vo);
 		Map<?,?> graphData = graphService.getMoodLevelData(vo);
 		result.put("graph", graphData);
 		result.put("success", true);
