@@ -10,7 +10,7 @@ import kr.co.moodtracker.controller.ExceptionController;
 import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.vo.UserVO;
 
-public class SessionCheckInterceptor implements HandlerInterceptor {
+public class SessionCheckHandler implements HandlerInterceptor {
 	
 	private static Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 	
@@ -35,6 +35,13 @@ public class SessionCheckInterceptor implements HandlerInterceptor {
 		UserVO u = (UserVO) req.getSession().getAttribute("USER");
 		if (u == null) {
 			logger.info("User not logged in(비로그인 접속)");
+			/**
+			 * 예외를 던지면 CrossOrigin 문제가 발생할 수 있음.
+			 * 이유) Controller에서 response가 request 헤더를 보고 세팅이 되는데
+			 *      예외처리로 인해 Controller로 도달하지 못하면서 문제가 발생함.
+			 *      
+			 *      그래서 [return false VS 예외처리]를 고민해 보길...
+			 */
 			throw new SessionNotFoundException("로그인이 필요합니다.");
 		}
 		return true;
