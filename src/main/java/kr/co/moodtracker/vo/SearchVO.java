@@ -13,7 +13,7 @@ public class SearchVO {
 	private String endDate;
 	
 	private String title;
-	private String content;
+	private String content; // noteContent만 검색하는 용도가 아닌 확장성을 고려한 이름 선정
 	
     private int offset;
     private int limit=10;

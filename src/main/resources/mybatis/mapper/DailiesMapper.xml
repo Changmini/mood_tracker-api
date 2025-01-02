@@ -57,6 +57,13 @@
 		) AS DS LEFT JOIN notes AS NS ON DS.note_id = NS.note_id
 		LEFT JOIN moods AS MS ON DS.mood_id = MS.mood_id
 		LEFT JOIN mood AS M ON MS.mood_level = M.`level`
+		WHERE 1=1
+		<if test='title != null and !title.equals("")'>
+		AND NS.note_title LIKE '%${title}%'
+		</if>
+		<if test='content != null and !content.equals("")'>
+		AND NS.note_content LIKE '%${content}%'
+		</if>
 	</select>
 	
 	<select id="getDailyInfoCount" parameterType="kr.co.moodtracker.vo.DailySearchVO"
