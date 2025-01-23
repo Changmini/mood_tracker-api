@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -34,12 +35,11 @@ public class MvcConfig implements WebMvcConfigurer {
 	) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
-
 	
-	/*
-	 * 요청 -> CORS 설정 적용 -> 인터셉터 적용 -> 컨트롤러
+	/**
+	 * CORS를 적용할 Origins 등록
+	 * Request >> CORS 설정 적용 >> 인터셉터 적용 >> Controller
 	 */
-
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
@@ -55,6 +55,9 @@ public class MvcConfig implements WebMvcConfigurer {
 	        .maxAge(3600);
 	}
 	
+	/**
+	 * 로킹, 세션체크 관련 인터셉터 등록
+	 */
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new DetectBrowserEnv())
@@ -81,6 +84,7 @@ public class MvcConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/js/**").addResourceLocations("/js/");
 	}
 	
+	
 	/* **************************************************************** */
 	/* THYMELEAF-SPECIFIC ARTIFACTS */
 	/* TemplateResolver <- TemplateEngine <- ViewResolver */
@@ -97,7 +101,7 @@ public class MvcConfig implements WebMvcConfigurer {
 		templateResolver.setTemplateMode(TemplateMode.HTML);
 		// Template cache is true by default. Set to false if you want
 		// templates to be automatically updated when modified.
-		templateResolver.setCacheable(true);
+		templateResolver.setCacheable(false);
 		return templateResolver;
 	}
 	

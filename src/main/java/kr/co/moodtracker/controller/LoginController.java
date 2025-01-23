@@ -36,7 +36,9 @@ public class LoginController {
 	}
 	@GetMapping("/index")
 	private ModelAndView indexPage() {
-		return new ModelAndView("index");
+		ModelAndView mv = new ModelAndView("index");
+		mv.addObject("server", "active");
+		return mv;
 	}
 	
 	@PostMapping("/login")
