@@ -25,7 +25,7 @@ public class SessionCheckHandler implements HandlerInterceptor {
 			HttpServletRequest req
 			, HttpServletResponse res
 			, Object handler
-	) throws Exception 
+	) throws SessionNotFoundException 
 	{
 		// OPTIONS 요청은 로그인 확인을 건너뛴다.
 	    if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
