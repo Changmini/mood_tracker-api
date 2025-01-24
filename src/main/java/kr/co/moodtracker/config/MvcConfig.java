@@ -3,11 +3,8 @@ package kr.co.moodtracker.config;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -20,8 +17,6 @@ import kr.co.moodtracker.handler.DetectBrowserEnv;
 import kr.co.moodtracker.handler.SessionCheckHandler;
 
 @Configuration
-@EnableWebMvc
-@ComponentScan
 public class MvcConfig implements WebMvcConfigurer {
 		
 	private ApplicationContext applicationContext;
@@ -75,13 +70,16 @@ public class MvcConfig implements WebMvcConfigurer {
 	
 	/* ******************************************************************* */
 	/* GENERAL CONFIGURATION ARTIFACTS */
-	/* Static Resources, i18n Messages, Formatters (Conversion Service) */
+	/* Static Resources */
 	/* ******************************************************************* */
 	@Override
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/images/**").addResourceLocations("/images/");
-		registry.addResourceHandler("/css/**").addResourceLocations("/css/");
-		registry.addResourceHandler("/js/**").addResourceLocations("/js/");
+//		registry.addResourceHandler("/images/**")
+//				.addResourceLocations("classpath:/static/images/");
+//		registry.addResourceHandler("/css/**")
+//				.addResourceLocations("classpath:/static/css/");
+		registry.addResourceHandler("/js/**")
+				.addResourceLocations("classpath:/static/js/");
 	}
 	
 	

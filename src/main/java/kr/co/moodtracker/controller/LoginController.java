@@ -31,9 +31,9 @@ public class LoginController {
 	private static Logger logger = LoggerFactory.getLogger(LoginController.class);
 	
 	@GetMapping("/")
-	private ResponseEntity<String> check() {
-		return ResponseEntity.ok("Hello Moodtracker");
-	}
+	private ResponseEntity<String> check() 
+	{ return ResponseEntity.ok("Hello Moodtracker"); }
+	
 	@GetMapping("/index")
 	private ModelAndView indexPage() {
 		ModelAndView mv = new ModelAndView("index");
