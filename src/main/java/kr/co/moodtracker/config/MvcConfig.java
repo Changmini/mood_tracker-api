@@ -62,9 +62,9 @@ public class MvcConfig implements WebMvcConfigurer {
 				.addPathPatterns("/**")
 				.excludePathPatterns(
 						"/"
-						,"/index","/index.html"
-						,"/login"
-						,"/login/status"
+						,"/js/**","/css/**","/images/**"
+						,"/index"
+						,"/login", "/login/status"
 						,"/user");
 	}
 	
@@ -74,12 +74,16 @@ public class MvcConfig implements WebMvcConfigurer {
 	/* ******************************************************************* */
 	@Override
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-//		registry.addResourceHandler("/images/**")
-//				.addResourceLocations("classpath:/static/images/");
-//		registry.addResourceHandler("/css/**")
-//				.addResourceLocations("classpath:/static/css/");
+		/* thymeleaf에서는 th:src="@{/js/test.js}" 속성으로 접근
+		 * 404 or MIME error와 같은 문제는
+		 *   파일을 못 찾거나 접근이 막혔을(=interceptor 등으로) 때 발생. 
+		 * */
 		registry.addResourceHandler("/js/**")
 				.addResourceLocations("classpath:/static/js/");
+		registry.addResourceHandler("/css/**")
+				.addResourceLocations("classpath:/static/css/");
+		registry.addResourceHandler("/images/**")
+				.addResourceLocations("classpath:/static/images/");
 	}
 	
 	
