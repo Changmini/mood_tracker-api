@@ -15,7 +15,7 @@
 		)
 	</insert>
 	
-	<update id="patchNote" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<update id="putNote" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
 		UPDATE notes
 		SET	note_title = #{noteTitle}
 			,note_content = #{noteContent}

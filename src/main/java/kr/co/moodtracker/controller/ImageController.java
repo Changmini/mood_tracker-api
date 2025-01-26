@@ -31,7 +31,7 @@ public class ImageController extends CommonController {
 	
 	@GetMapping(value = "/image")
 	public ResponseEntity<?> getImage(
-			String path
+			@RequestParam("path") String path
 			, HttpSession sess
 	) throws SessionNotFoundException, ImageLoadException, IOException 
 	{
@@ -44,7 +44,7 @@ public class ImageController extends CommonController {
 	
 	@GetMapping(value = "/profile-image")
 	public ResponseEntity<?> getProfileImage(
-			String path
+			@RequestParam("path") String path
 			, HttpSession sess
 	) throws SessionNotFoundException, ImageLoadException, IOException
 	{

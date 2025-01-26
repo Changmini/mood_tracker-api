@@ -73,7 +73,7 @@
 		</foreach>
 	</insert>
 	
-	<update id="patchImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<update id="putImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
 		<foreach collection="imageList" item="item" separator=";">
 		UPDATE images
 		SET image_path = <choose>

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,7 +62,7 @@ public class CalendarController extends CommonController {
 	public ResponseEntity<?> postDailyEntry(
 			HttpSession sess
 			, DailyInfoVO vo
-			, List<MultipartFile> files
+			, @RequestParam("files") List<MultipartFile> files
 	) throws SessionNotFoundException, DataNotInsertedException, IllegalStateException, IOException 
 	{
 		setUserId(sess, vo);
@@ -71,16 +72,17 @@ public class CalendarController extends CommonController {
 		return ResponseEntity.ok().body(res);
 	}
 	
-	@PatchMapping(value = "/daily")
+	@PutMapping(value = "/daily")
 	public ResponseEntity<?> patchDailyEntry(
-			HttpSession sess, DailyInfoVO vo
-			, List<MultipartFile> files
+			HttpSession sess
+			, DailyInfoVO vo
+			, @RequestParam("files") List<MultipartFile> files
 			, @RequestParam("preImageId") List<Integer> preImageId
 	) throws SessionNotFoundException, DataNotInsertedException, IllegalStateException, IOException 
 	{
 		setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		calendarService.patchDailyInfo(vo, files, preImageId);
+		calendarService.putDailyInfo(vo, files, preImageId);
 		res.put("success", true);
 		return ResponseEntity.ok().body(res);
 	}

@@ -11,7 +11,7 @@ public interface ImagesMapper {
 
 	public int postImage(DailyInfoVO vo);
 
-	public int patchImage(DailyInfoVO vo);
+	public int putImage(DailyInfoVO vo);
 
 	public int deleteAllImage(DailyInfoVO vo);
 	

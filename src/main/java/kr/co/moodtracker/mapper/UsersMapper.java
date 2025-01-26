@@ -7,9 +7,11 @@ public interface UsersMapper {
 
 	public UserVO findByUsername(String username);
 
-	public void postUser(UserVO vo);
+	public int postUser(UserVO vo);
 	
-	public void postUserProfile(UserVO vo);
+	public int patchUser(UserVO vo);
+	
+	public int postUserProfile(UserVO vo);
 	
 	public ProfileVO getUserProfile(int userId);
 

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.moodtracker.handler.DateHandler;
 import kr.co.moodtracker.mapper.GraphMapper;
@@ -18,6 +19,7 @@ public class GraphService {
 	@Autowired
 	GraphMapper graphMapper;
 
+	@Transactional(readOnly = true)
 	public Map<?,?> getMoodLevelData(DailySearchVO vo) {
 		Map<String, Map<?,?>> graphData = new HashMap<>();
 		/* 라벨링 */

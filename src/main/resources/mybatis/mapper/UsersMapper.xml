@@ -29,6 +29,29 @@
 		)
 	</insert>
 	
+	<update id="patchUser" parameterType="kr.co.moodtracker.vo.UserVO"
+			useGeneratedKeys="true" keyProperty="userId">
+		UPDATE users
+		SET
+		<if test='username != null AND username.equals("")'>
+			username = #{username}				
+			<if test='password != null AND !password.equals("")
+				OR email != null AND !email.equals("")'>
+				,
+			</if>
+		</if>
+		<if test='password != null AND !password.equals("")'>
+			password_hash = #{password}
+			<if test='email != null AND !email.equals("")'>
+				,
+			</if>		
+		</if>
+		<if test='email != null AND !email.equals("")'>
+			email = #{email}		
+		</if>
+		WHERE user_id = #{userId}
+	</update>
+	
 	<insert id="postUserProfile" parameterType="kr.co.moodtracker.vo.UserVO">
 		INSERT user_profile (
 			user_id, nickname, image_path, `description`
@@ -50,9 +73,23 @@
 	
 	<update id="patchUserProfile" parameterType="kr.co.moodtracker.vo.UserVO">
 		UPDATE user_profile
-		SET `description` = #{description}
-			,session_status = #{sessionStatus}
-		    ,sharing_calendar = #{sharingCalendar}
+		SET 
+		<if test="description != null">
+			`description` = #{description}				
+			<if test='sessionStatus != null AND !sessionStatus.equals("")
+				OR sharingCalendar != null AND !sharingCalendar.equals("")'>
+				,
+			</if>
+		</if>
+		<if test='sessionStatus != null AND !sessionStatus.equals("")'>
+			`session_status` = #{sessionStatus}
+			<if test='sharingCalendar != null AND !sharingCalendar.equals("")'>
+				,
+			</if>		
+		</if>
+		<if test='sharingCalendar != null AND !sharingCalendar.equals("")'>
+			`sharing_calendar` = #{sharingCalendar}				
+		</if>
 		WHERE user_id = #{userId}
 	</update>
 	

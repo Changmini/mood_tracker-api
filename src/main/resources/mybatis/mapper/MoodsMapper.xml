@@ -13,7 +13,7 @@
 		)
 	</insert>
 	
-	<update id="patchMood" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<update id="putMood" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
 		UPDATE moods
 		SET mood_level = #{moodLevel}
 		WHERE mood_id = #{moodId}

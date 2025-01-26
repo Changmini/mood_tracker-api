@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,6 +58,17 @@ public class UserController extends CommonController {
 		return ResponseEntity.ok().body(result);
 	}
 	
+	@PatchMapping("/user")
+	public ResponseEntity<?> patchUser(
+			UserVO vo
+	) throws DataNotUpdatedException 
+	{
+		Map<String, Object> result = new HashMap<>();
+		userService.patchUser(vo);
+		result.put("success", true);
+		return ResponseEntity.ok().body(result);
+	}
+	
 	@GetMapping("/user/profile")
 	public ResponseEntity<?> getUserProfile(
 			HttpSession sess, UserVO vo
@@ -86,7 +98,7 @@ public class UserController extends CommonController {
 	@PutMapping("/user/profile/image")
 	public ResponseEntity<?> patchUserProfile(
 			HttpSession sess
-			, MultipartFile file
+			, @RequestParam("file") MultipartFile file
 			, UserVO vo
 	) throws SessionNotFoundException, DataNotUpdatedException, IllegalStateException, IOException 
 	{

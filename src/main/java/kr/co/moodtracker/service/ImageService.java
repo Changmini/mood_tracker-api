@@ -15,7 +15,6 @@ import kr.co.moodtracker.exception.ImageLoadException;
 import kr.co.moodtracker.handler.FileHandler;
 import kr.co.moodtracker.handler.ImageHandler;
 import kr.co.moodtracker.mapper.ImagesMapper;
-import kr.co.moodtracker.mapper.UsersMapper;
 import kr.co.moodtracker.vo.DailyInfoVO;
 import kr.co.moodtracker.vo.ImageVO;
 
@@ -24,9 +23,6 @@ public class ImageService {
 	
 	@Autowired
 	ImagesMapper imagesMapper;
-	
-	@Autowired
-	UsersMapper usersMapper;
 
 	public byte[] getImage(String base64, int userId) 
 			throws ImageLoadException, IOException {

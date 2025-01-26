@@ -36,6 +36,7 @@ public class UserService {
 	 * @param vo
 	 * @return custom ValueObject
 	 */
+	@Transactional(readOnly = true)
 	public UserVO getUser(Map<String, String> vo) {
 		String username = vo.get("username");
 		String password = vo.get("password");
@@ -70,7 +71,29 @@ public class UserService {
 			throw new DataNotInsertedException("새 계정 생성에 실패했습니다.");
 		}
 	}
+
+	public void patchUser(UserVO vo) throws DataNotUpdatedException {
+		String pwHash = passwordEncoder.encode(vo.getPassword());
+		vo.setPassword(pwHash);
+		try {
+			userMapper.patchUser(vo);
+			userMapper.patchUserProfile(vo);
+		} catch (DuplicateKeyException e) {
+			String err = e.getMessage();
+			String msg = null;
+			if (err.contains("users.username")) {
+				msg = "사용할 수 없는 아이디입니다.";
+			} else if (err.contains("user_profile.nickname")) {
+				msg = "사용할 수 없는 닉네임입니다.";
+			}
+			throw new DataNotUpdatedException(msg);
+		} catch (Exception otherError) {
+			otherError.printStackTrace();
+			throw new DataNotUpdatedException("개인정보 수정에 실패했습니다.");
+		}
+	}
 	
+	@Transactional(readOnly = true)
 	public ProfileVO getUserProfile(int userId) {
 		ProfileVO profile = userMapper.getUserProfile(userId);
 		/* 프로필 사진 경로에 대한 전처리 */

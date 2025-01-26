@@ -38,6 +38,7 @@ public class CalendarService {
 	
 	static final int MAX_LIST_COUNT = 10;
 	
+	@Transactional(readOnly = true)
 	public List<DailyInfoVO> getDailyInfoOfTheMonth(DailySearchVO vo) throws DataMissingException {
 		DateHandler.determineDateRange(vo);
 		List<DailyInfoVO> dailies = dailiesMapper.getDailyInfoOfTheMonth(vo);
@@ -48,6 +49,7 @@ public class CalendarService {
 		return dailyInfoList;
 	}
 	
+	@Transactional(readOnly = true)
 	public List<DailyInfoVO> getDailyInfoList(DailySearchVO vo) throws DataMissingException {
 		if (vo.getLimit() > 30) throw new DataMissingException("한번에 너무 많은 데이터를 요청할 수 없습니다.");
 		List<DailyInfoVO> dailies = dailiesMapper.getDailyInfoList(vo);
@@ -89,7 +91,7 @@ public class CalendarService {
 		
 	}
 	
-	public void patchDailyInfo(DailyInfoVO vo
+	public void putDailyInfo(DailyInfoVO vo
 			, List<MultipartFile> files, List<Integer> preImageId) 
 			throws DataNotInsertedException, IllegalStateException, IOException {
 		int filesSize = 0;
@@ -110,10 +112,10 @@ public class CalendarService {
 			numberOfImagesInserted = imageList.size();
 			vo.setImageList(imageList);
 		}
-		notesMapper.patchNote(vo);
-		moodsMapper.patchMood(vo);
+		notesMapper.putNote(vo);
+		moodsMapper.putMood(vo);
 		if (numberOfImagesInserted > 0) {
-			imagesMapper.patchImage(vo);
+			imagesMapper.putImage(vo);
 		}
 	}
 	

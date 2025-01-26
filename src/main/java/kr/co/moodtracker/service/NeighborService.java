@@ -25,6 +25,7 @@ public class NeighborService {
 	@Autowired
 	NeighborMapper neighborMapper;
 	
+	@Transactional(readOnly = true)
 	public List<NeighborVO> getNeighbors(int userId)  {
 		List<NeighborVO> neighbors = neighborMapper.getNeighbors(userId);
 		for (NeighborVO n : neighbors) {
@@ -73,6 +74,7 @@ public class NeighborService {
 		neighborMapper.deleteGuestNeighbor(vo);
 	}
 	
+	@Transactional(readOnly = true)
 	public DailySearchVO getDailySearchVoOfNeighbor(SearchNeighborVO vo) 
 			throws ZeroDataException, SettingDataException {
 		String date = vo.getDate();
