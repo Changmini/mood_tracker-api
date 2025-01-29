@@ -14,9 +14,16 @@ spring:
 logging:
  level:
   root: info
-  #kr.co.moodtracker: debug
+#  sql: "org.springframework.jdbc.core"
+#  kr.co.moodtracker: debug
  file:
   name: "moodlogin.log"
+#  path: ""
+ pattern:
+  console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%5p] %clr([%X{traceId:-},%X{spanId:-}]) [${PID:-}] --- [%10thread] %clr(%logger{36}) -> %msg %n"
+ logback:
+  rollingpolicy:
+   file-name-pattern: "${LOG_FILE}.%d{yyyy-MM-dd}_%i.zip"
   
 ---
 # MySQL DB 정보
