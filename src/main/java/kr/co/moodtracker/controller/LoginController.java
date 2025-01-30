@@ -47,7 +47,6 @@ public class LoginController {
 		UserVO user = userService.getUser(vo);
 		if (user != null) {
 			sess.setAttribute("USER", user);
-			result.put("nickname", user.getNickname());
 			result.put("success", true);
 		} else {
 			result.put("success", false);

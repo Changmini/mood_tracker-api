@@ -2,6 +2,8 @@ server:
  port: 80
  servlet:
   context-path: /mood
+  session:
+   timeout: 3600
   encoding:
    charset: UTF-8
 spring:
