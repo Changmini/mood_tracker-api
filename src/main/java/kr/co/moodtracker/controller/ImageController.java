@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,6 @@ import kr.co.moodtracker.exception.DataNotDeletedException;
 import kr.co.moodtracker.exception.ImageLoadException;
 import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.service.ImageService;
-import kr.co.moodtracker.vo.UserVO;
 
 @Controller
 public class ImageController extends CommonController {
@@ -35,11 +35,10 @@ public class ImageController extends CommonController {
 			, HttpSession sess
 	) throws SessionNotFoundException, ImageLoadException, IOException 
 	{
-		byte[] imageData = imageService.getImage(path, getUserId(sess));
-        ByteArrayResource resource = new ByteArrayResource(imageData);
+		InputStreamResource imageData = imageService.getImage(path, getUserId(sess));
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_PNG_VALUE) // 이미지 타입에 맞게 설정
-                .body(resource);
+                .body(imageData);
 	}
 	
 	@GetMapping(value = "/profile-image")

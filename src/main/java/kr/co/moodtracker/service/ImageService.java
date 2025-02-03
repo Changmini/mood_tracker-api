@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
 import kr.co.moodtracker.exception.DataMissingException;
@@ -24,14 +25,19 @@ public class ImageService {
 	@Autowired
 	ImagesMapper imagesMapper;
 
-	public byte[] getImage(String base64, int userId) 
+	public InputStreamResource getImage(String base64, int userId) 
 			throws ImageLoadException, IOException {
 		String imagePath = 
 				ImageHandler.convertBase64AndCheckAccessRights(base64, userId);
-		try (FileInputStream fis = new FileInputStream(
-				new File(FileHandler.rootPath() + imagePath))) {
-			return fis.readAllBytes();
-		}
+		/**
+		 * InputStreamResource를 사용하여 
+		 * ResponseEntity .body(isr)에 해당 객체를 잘 전달하면,
+		 * 메모리 누수는 없다
+		 * ps. 자동으로 InputSream이 닫히도록 설계되어 있는 것 같다.
+		 */
+		FileInputStream fis = new FileInputStream(
+				new File(FileHandler.rootPath() + imagePath));
+		return new InputStreamResource(fis);
 	}
 	
 	public byte[] getProfileImage(String base64, int userId) 
