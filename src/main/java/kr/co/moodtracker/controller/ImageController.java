@@ -47,11 +47,10 @@ public class ImageController extends CommonController {
 			, HttpSession sess
 	) throws SessionNotFoundException, ImageLoadException, IOException
 	{
-		byte[] imageData = imageService.getProfileImage(path, getUserId(sess));
-        ByteArrayResource resource = new ByteArrayResource(imageData);
+		InputStreamResource imageData = imageService.getProfileImage(path, getUserId(sess));
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_PNG_VALUE) // 이미지 타입에 맞게 설정
-                .body(resource);
+                .body(imageData);
 
 	}
 	
