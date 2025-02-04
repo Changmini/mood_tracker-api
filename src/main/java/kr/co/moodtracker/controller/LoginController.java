@@ -32,7 +32,7 @@ public class LoginController {
 	
 	@GetMapping("/")
 	private ResponseEntity<String> check() 
-	{ return ResponseEntity.ok("Hello Moodtracker"); }
+	{ return ResponseEntity.ok("Running Moodtracker"); }
 	
 	@GetMapping("/index")
 	private ModelAndView indexPage() {

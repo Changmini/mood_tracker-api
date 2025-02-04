@@ -41,7 +41,7 @@ class MoodtrackerApplicationTests {
 		this.mockMvc.perform(get("/"))
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(content().string(containsString("Hello Moodtracker")));
+			.andExpect(content().string(containsString("Running Moodtracker")));
 	}
 	
 //	@Test

@@ -26,7 +26,19 @@ logging:
  logback:
   rollingpolicy:
    file-name-pattern: "${LOG_FILE}.%d{yyyy-MM-dd}_%i.zip"
-  
+management:
+ endpoints:
+#  access:
+#   default: none
+  web:
+   base-path: /app-metric
+   exposure:
+    include: "*"
+    exclude: "caches-cache,caches,info,loggers,configprops,env,beans,conditions,configprops-prefix,heapdump,threaddump,sbom-id,sbom,scheduledtasks,mappings"
+# endpoint:
+#  loggers:
+#   access: read-only
+
 ---
 # MySQL DB 정보
 spring:
