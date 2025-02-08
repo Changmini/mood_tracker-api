@@ -8,8 +8,70 @@
 <body>
     Thymeleaf
     <hr>
-    <div>Server : <span th:text="${server}"></span></div>
-    <div>태그 미사용 : [[${server}]]</div>
+    <div>Server: 
+		<span th:text="${server}"></span>
+		<p>[[${message}]]</p>
+	</div>
+    
+    <hr>
+    <a th:href="@{/app-metric}" target="_blank">Monitoring API</a>
 </body>
+<!-- https://www.thymeleaf.org/documentation.html#thymeleaf-spring
+
+******************** foreach
+<td>
+  <table>
+    <tbody>
+      <tr th:each="row,rowStat : ${sb.rows}">
+        <td th:text="${rowStat.count}">1</td>
+        <td th:text="${row.variety.name}">Thymus Thymi</td>
+        <td th:text="${row.seedsPerCell}">12</td>
+      </tr>
+    </tbody>
+  </table>
+</td>
+
+******************** Createing a Form
+<form action="#" th:action="@{/seedstartermng}" th:object="${seedStarter}" method="post">
+    ...
+</form>
+
+******************** inputs
+<input type="text" th:field="*{datePlanted}" />
+
+<input type="text" id="datePlanted" name="datePlanted" th:value="*{datePlanted}" />
+
+******************** checkbox + label
+<div>
+  <label th:for="${#ids.next('covered')}" th:text="#{seedstarter.covered}">Covered</label>
+  <input type="checkbox" th:field="*{covered}" />
+</div>
+
+<ul>
+  <li th:each="feat : ${allFeatures}">
+    <input type="checkbox" th:field="*{features}" th:value="${feat}" />
+    <label th:for="${#ids.prev('features')}" 
+           th:text="#{${'seedstarter.feature.' + feat}}">Heating</label>
+  </li>
+</ul>
+
+******************** radio button + label
+<ul>
+  <li th:each="ty : ${allTypes}">
+    <input type="radio" th:field="*{type}" th:value="${ty}" />
+    <label th:for="${#ids.prev('type')}" th:text="#{${'seedstarter.type.' + ty}}">Wireframe</label>
+  </li>
+</ul>
+
+******************** select + option
+<select th:field="*{type}">
+  <option th:each="type : ${allTypes}" 
+          th:value="${type}" 
+          th:text="#{${'seedstarter.type.' + type}}">Wireframe</option>
+</select>
+
+-->
+
+*/
 <script type="text/javascript" th:src="@{/js/common.js}"></script>
 </html>

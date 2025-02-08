@@ -38,6 +38,7 @@ public class LoginController {
 	private ModelAndView indexPage() {
 		ModelAndView mv = new ModelAndView("index");
 		mv.addObject("server", "active");
+		mv.addObject("message", "Hello Moodtracker");
 		return mv;
 	}
 	
