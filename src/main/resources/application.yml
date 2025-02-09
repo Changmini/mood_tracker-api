@@ -50,6 +50,8 @@ spring:
   driver-class-name: com.mysql.cj.jdbc.Driver
   username: 
   password: 
+  configuration:
+   maximum-pool-size: 30
 
 ---
 # MySQL DB 정보
@@ -62,3 +64,5 @@ spring:
   driver-class-name: com.mysql.cj.jdbc.Driver
   username: 
   password: 
+  configuration:
+   maximum-pool-size: 30
