@@ -217,8 +217,8 @@
 		WHERE neighbor_id = #{neighborId}
 	</update>
 	
-	<select id="alertNeighborsCondition" parameterType="int" 
-							  resultType="kr.co.moodtracker.vo.NeighborVO">
+	<select id="alertNeighborsCondition" parameterType="kr.co.moodtracker.vo.SearchNeighborVO" 
+							  			resultType="kr.co.moodtracker.vo.NeighborVO">
 		SELECT neighbor_id
 			,requester
 			,synchronize
@@ -229,6 +229,11 @@
 			FROM user_profile
 			WHERE user_id = #{userId}
 		)
+		
+		AND updated_at <![CDATA[ <= ]]> DATE_FORMAT(#{updatedAt},'%Y-%m-%d %H:%i:%S')
+		AND updated_at <![CDATA[ >= ]]> DATE_ADD(
+											DATE_FORMAT(#{updatedAt},'%Y-%m-%d %H:%i:%S')
+										, INTERVAL -#{interval} SECOND)
 	</select>
 
 </mapper>

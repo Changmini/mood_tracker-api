@@ -12,6 +12,7 @@ import kr.co.moodtracker.vo.SearchVO;
 
 public class DateHandler {
 	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	public static final DateTimeFormatter FORMATTER_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	public static final String[] DAY_OF_WEEKS = {
 			"SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"
 		};

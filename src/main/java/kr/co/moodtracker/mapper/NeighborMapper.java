@@ -30,6 +30,6 @@ public interface NeighborMapper {
 	public int notifyEndOfChatroom(Long neighborId);
 	public int leaveChatroom(Long neighborId);
 	
-	public List<NeighborVO> alertNeighborsCondition(int userId);
+	public List<NeighborVO> alertNeighborsCondition(SearchNeighborVO vo);
 
 }

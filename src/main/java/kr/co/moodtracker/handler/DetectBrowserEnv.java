@@ -13,12 +13,14 @@ public class DetectBrowserEnv implements HandlerInterceptor {
 	private static Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 	
 	@Override
-	public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler
-			) throws Exception 
+	public boolean preHandle(
+			HttpServletRequest req, HttpServletResponse res, Object handler
+	) throws Exception 
 	{
-		logger.info(
-				getRequestInfo(req)
-			);
+		String url = req.getRequestURL().toString();
+		if (!url.contains("image") && !url.contains("polling")) {
+			logger.info(getRequestInfo(req));			
+		}
 		return true;
 	}
 	

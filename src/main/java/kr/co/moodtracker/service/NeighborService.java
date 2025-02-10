@@ -1,5 +1,7 @@
 package kr.co.moodtracker.service;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.exception.SettingDataException;
 import kr.co.moodtracker.exception.ZeroDataException;
+import kr.co.moodtracker.handler.DateHandler;
 import kr.co.moodtracker.handler.ImageHandler;
 import kr.co.moodtracker.mapper.NeighborMapper;
 import kr.co.moodtracker.mapper.UsersMapper;
@@ -88,11 +91,33 @@ public class NeighborService {
 		ds.setUserId(neighborUserId);
 		return ds;
 	}
-
+	
+	/**
+	 * <pre> 
+	 * 	브라우저에서 Polling을 처리하는 시간 간격(ex 1min)마다 
+	 * 	DB 컬럼의 updated_at이 변경되어진 것만 필터링하여 목록을 반환
+	 * 	[
+	 * 		네트워크 지연, 로직처리, ms 단위의 오차를 고려하여 
+	 * 		interval(60s)일 때, 아래 1-1, 1-2가 아닌 2-1, 2-2가 사용된다.
+	 * 		1-1) 2025-02-11 00:00:01 ~ 2025-02-11 00:01:00	1-2) 2025-02-11 00:01:01 ~ 2025-02-11 00:02:00
+	 * 		2-1) 2025-02-11 00:00:00 ~ 2025-02-11 00:01:00	2-2) 2025-02-11 00:01:00 ~ 2025-02-11 00:02:00
+	 * 	]
+	 * </pre>
+	 * @param vo
+	 * @return
+	 */
 	@Transactional(readOnly = true)
-	public List<NeighborVO> shortPolling(int userId) {
-		List<NeighborVO> neighbors = neighborMapper.alertNeighborsCondition(userId);
-		return null;
+	public List<NeighborVO> shortPolling(SearchNeighborVO vo) {
+		if (vo.getUpdatedAt() == null) {
+			vo.setUpdatedAt(LocalDateTime.now().format(DateHandler.FORMATTER_TIME));
+			// 탐색기준인 날짜가 주어지지 않을 때
+		}
+		if (vo.getInterval() <= 0) {
+			vo.setInterval(60);
+			// Polling을(를) 처리하는 시간 간격이 주어지지 않을 때
+		}
+		List<NeighborVO> neighbors = neighborMapper.alertNeighborsCondition(vo);
+		return neighbors == null ? Collections.emptyList() : neighbors;
 	}
 	
 }

@@ -15,6 +15,8 @@ public class SearchVO {
 	private String title;
 	private String content; // noteContent만 검색하는 용도가 아닌 확장성을 고려한 이름 선정
 	
+	private int interval; // SECOND
+	
     private int offset;
     private int limit=10;
     private List<Integer> ids;
@@ -66,6 +68,12 @@ public class SearchVO {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public int getInterval() {
+		return interval;
+	}
+	public void setInterval(int interval) {
+		this.interval = interval;
 	}
 	public int getOffset() {
 		return offset;

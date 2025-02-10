@@ -118,11 +118,12 @@ public class NeighborController extends CommonController {
 	@GetMapping("/neighbor/polling")
 	public ResponseEntity<?> shortPolling(
 			HttpSession sess
+			, SearchNeighborVO vo
 	) throws SessionNotFoundException
 	{
-		int userId = getUserId(sess);
+		setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		List<NeighborVO> neighbors = neighborService.shortPolling(userId);
+		List<NeighborVO> neighbors = neighborService.shortPolling(vo);
 		res.put("neighbors", neighbors);
 		return ResponseEntity.ok().body(res);
 	}
