@@ -29,5 +29,7 @@ public interface NeighborMapper {
 	public int notifyNeighborsChatroomActive(Long neighborId);
 	public int notifyEndOfChatroom(Long neighborId);
 	public int leaveChatroom(Long neighborId);
+	
+	public List<NeighborVO> alertNeighborsCondition(int userId);
 
 }

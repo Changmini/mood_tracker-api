@@ -171,6 +171,7 @@
 	<update id="notifyNeighborsChatroomActive" parameterType="Long">
 		UPDATE neighbor
 		SET chatroom_active = 'Y'
+			,updated_at = NOW()
 		WHERE host_profile_id = (
 			<!-- MySQL은 서브쿼리 사용에 제한이 었어서 코드가 이상해짐 -->
 			SELECT T.id FROM (
@@ -191,6 +192,7 @@
 	<update id="notifyEndOfChatroom" parameterType="Long">
 		UPDATE neighbor
 		SET chatroom_active = 'N'
+			,updated_at = NOW()
 		WHERE host_profile_id = (
 			<!-- MySQL은 서브쿼리 사용에 제한이 었어서 코드가 이상해짐 -->
 			SELECT T.id FROM (
@@ -211,7 +213,22 @@
 	<update id="leaveChatroom" parameterType="Long">
 		UPDATE neighbor
 		SET chatroom_active = 'N'
+			,updated_at = NOW()
 		WHERE neighbor_id = #{neighborId}
 	</update>
+	
+	<select id="alertNeighborsCondition" parameterType="int" 
+							  resultType="kr.co.moodtracker.vo.NeighborVO">
+		SELECT neighbor_id
+			,requester
+			,synchronize
+			,chatroom_active
+		FROM neighbor
+		WHERE host_profile_id = (
+			SELECT user_profile_id
+			FROM user_profile
+			WHERE user_id = #{userId}
+		)
+	</select>
 
 </mapper>

@@ -88,5 +88,11 @@ public class NeighborService {
 		ds.setUserId(neighborUserId);
 		return ds;
 	}
+
+	@Transactional(readOnly = true)
+	public List<NeighborVO> shortPolling(int userId) {
+		List<NeighborVO> neighbors = neighborMapper.alertNeighborsCondition(userId);
+		return null;
+	}
 	
 }

@@ -43,7 +43,7 @@ public class NeighborController extends CommonController {
 	{
 		UserVO user = getUserInfo(sess);
 		Map<String, Object> res = new HashMap<>();
-		List<NeighborVO> neighbors =  neighborService.getNeighbors(user.getUserId());
+		List<NeighborVO> neighbors = neighborService.getNeighbors(user.getUserId());
 		res.put("neighbors", neighbors);
 		return ResponseEntity.ok().body(res);
 	}
@@ -112,6 +112,18 @@ public class NeighborController extends CommonController {
 		List<DailyInfoVO> list = calendarService.getDailyInfoOfTheMonth(ds);
 		res.put("dailyInfoList", list);
 		res.put("success", true);
+		return ResponseEntity.ok().body(res);
+	}
+	
+	@GetMapping("/neighbor/polling")
+	public ResponseEntity<?> shortPolling(
+			HttpSession sess
+	) throws SessionNotFoundException
+	{
+		int userId = getUserId(sess);
+		Map<String, Object> res = new HashMap<>();
+		List<NeighborVO> neighbors = neighborService.shortPolling(userId);
+		res.put("neighbors", neighbors);
 		return ResponseEntity.ok().body(res);
 	}
 }
