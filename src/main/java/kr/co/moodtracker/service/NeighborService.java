@@ -2,7 +2,11 @@ package kr.co.moodtracker.service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -94,20 +98,20 @@ public class NeighborService {
 	
 	/**
 	 * <pre> 
-	 * 	브라우저에서 Polling을 처리하는 시간 간격(ex 1min)마다 
-	 * 	DB 컬럼의 updated_at이 변경되어진 것만 필터링하여 목록을 반환
-	 * 	[
-	 * 		네트워크 지연, 로직처리, ms 단위의 오차를 고려하여 
-	 * 		interval(60s)일 때, 아래 1-1, 1-2가 아닌 2-1, 2-2가 사용된다.
-	 * 		1-1) 2025-02-11 00:00:01 ~ 2025-02-11 00:01:00	1-2) 2025-02-11 00:01:01 ~ 2025-02-11 00:02:00
-	 * 		2-1) 2025-02-11 00:00:00 ~ 2025-02-11 00:01:00	2-2) 2025-02-11 00:01:00 ~ 2025-02-11 00:02:00
-	 * 	]
+	 * 브라우저에서 Polling을 처리하는 시간 간격(ex 1min)마다 
+	 * DB 컬럼의 updated_at이 변경되어진 것만 필터링하여 목록을 반환
+	 * [
+	 * 	네트워크 지연, 로직처리, ms 단위의 오차를 고려하여 
+	 * 	interval(60s)일 때, 아래 1-1, 1-2가 아닌 2-1, 2-2가 사용된다.
+	 * 	1-1) 2025-02-11 00:00:01 ~ 2025-02-11 00:01:00	1-2) 2025-02-11 00:01:01 ~ 2025-02-11 00:02:00
+	 * 	2-1) 2025-02-11 00:00:00 ~ 2025-02-11 00:01:00	2-2) 2025-02-11 00:01:00 ~ 2025-02-11 00:02:00
+	 * ]
 	 * </pre>
 	 * @param vo
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<NeighborVO> shortPolling(SearchNeighborVO vo) {
+	public Map<Integer, NeighborVO> shortPolling(SearchNeighborVO vo) {
 		if (vo.getUpdatedAt() == null) {
 			vo.setUpdatedAt(LocalDateTime.now().format(DateHandler.FORMATTER_TIME));
 			// 탐색기준인 날짜가 주어지지 않을 때
@@ -116,8 +120,14 @@ public class NeighborService {
 			vo.setInterval(60);
 			// Polling을(를) 처리하는 시간 간격이 주어지지 않을 때
 		}
-		List<NeighborVO> neighbors = neighborMapper.alertNeighborsCondition(vo);
-		return neighbors == null ? Collections.emptyList() : neighbors;
+		List<NeighborVO> neighbors = 
+				Optional.of(neighborMapper.alertNeighborsCondition(vo))
+						.orElse(Collections.emptyList());
+		Map<Integer, NeighborVO> list = new HashMap<>();
+		for (NeighborVO n : neighbors) {
+			list.put(n.getNeighborId(), n);
+		}
+		return list;
 	}
 	
 }

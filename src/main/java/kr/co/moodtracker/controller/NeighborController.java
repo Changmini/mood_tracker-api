@@ -123,8 +123,9 @@ public class NeighborController extends CommonController {
 	{
 		setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		List<NeighborVO> neighbors = neighborService.shortPolling(vo);
+		Map<Integer, NeighborVO> neighbors = neighborService.shortPolling(vo);
 		res.put("neighbors", neighbors);
+		res.put("success", true);
 		return ResponseEntity.ok().body(res);
 	}
 }
