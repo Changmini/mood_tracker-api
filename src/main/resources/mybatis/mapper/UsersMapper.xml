@@ -25,20 +25,20 @@
 			useGeneratedKeys="true" keyProperty="userId">
 		UPDATE users
 		SET
-		<if test='username != null AND username.equals("")'>
+		<if test='username != null and username.equals("")'>
 			username = #{username}				
-			<if test='password != null AND !password.equals("")
-				OR email != null AND !email.equals("")'>
+			<if test='password != null and !password.equals("")
+				or email != null and !email.equals("")'>
 				,
 			</if>
 		</if>
-		<if test='password != null AND !password.equals("")'>
+		<if test='password != null and !password.equals("")'>
 			password_hash = #{password}
-			<if test='email != null AND !email.equals("")'>
+			<if test='email != null and !email.equals("")'>
 				,
 			</if>		
 		</if>
-		<if test='email != null AND !email.equals("")'>
+		<if test='email != null and !email.equals("")'>
 			email = #{email}		
 		</if>
 		WHERE user_id = #{userId}
@@ -68,18 +68,18 @@
 		SET 
 		<if test="description != null">
 			`description` = #{description}				
-			<if test='sessionStatus != null AND !sessionStatus.equals("")
-				OR sharingCalendar != null AND !sharingCalendar.equals("")'>
+			<if test='sessionStatus != null and !sessionStatus.equals("")
+				or sharingCalendar != null and !sharingCalendar.equals("")'>
 				,
 			</if>
 		</if>
-		<if test='sessionStatus != null AND !sessionStatus.equals("")'>
+		<if test='sessionStatus != null and !sessionStatus.equals("")'>
 			`session_status` = #{sessionStatus}
-			<if test='sharingCalendar != null AND !sharingCalendar.equals("")'>
+			<if test='sharingCalendar != null and !sharingCalendar.equals("")'>
 				,
 			</if>		
 		</if>
-		<if test='sharingCalendar != null AND !sharingCalendar.equals("")'>
+		<if test='sharingCalendar != null and !sharingCalendar.equals("")'>
 			`sharing_calendar` = #{sharingCalendar}				
 		</if>
 		WHERE user_id = #{userId}
