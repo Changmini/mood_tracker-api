@@ -38,7 +38,7 @@ class MoodtrackerApplicationTests {
 	 */
 	@Test
 	void defaultContext() throws Exception {
-		this.mockMvc.perform(get("/"))
+		this.mockMvc.perform(get("/view/"))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(content().string(containsString("Running Moodtracker")));
