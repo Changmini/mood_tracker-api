@@ -4,6 +4,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -17,19 +22,29 @@ import kr.co.moodtracker.handler.DetectBrowserEnv;
 import kr.co.moodtracker.handler.SessionCheckHandler;
 
 @Configuration
-public class MvcConfig implements WebMvcConfigurer {
+@EnableWebSecurity
+public class SecurityMvcConfig implements WebMvcConfigurer {
 		
 	private ApplicationContext applicationContext;
 	
-	public MvcConfig() {
-		super();
-	}
-	
-	public MvcConfig(
-			final ApplicationContext applicationContext
-	) throws BeansException {
+	public SecurityMvcConfig() { super(); }
+	public SecurityMvcConfig(final ApplicationContext applicationContext
+			) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
+	
+	@Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.formLogin(login -> login.disable())
+        	.csrf(csrf -> csrf.disable())
+        	.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+        return http.build();
+    }
+	
+	@Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 	
 	/**
 	 * CORS를 적용할 Origins 등록

@@ -28,7 +28,7 @@ import kr.co.moodtracker.vo.UserVO;
 
 
 @RestController
-public class NeighborController extends CommonController {
+public class NeighborController extends CommonControllerAdapter {
 	
 	@Autowired
 	NeighborService neighborService;

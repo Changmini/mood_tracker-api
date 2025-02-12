@@ -24,7 +24,7 @@ import kr.co.moodtracker.vo.UserVO;
 
 
 @RestController
-public class UserController extends CommonController {
+public class UserController extends CommonControllerAdapter {
 	
 	@Autowired
 	UserService userService;

@@ -26,7 +26,7 @@ import kr.co.moodtracker.vo.DailyInfoVO;
 import kr.co.moodtracker.vo.DailySearchVO;
 
 @RestController
-public class CalendarController extends CommonController {
+public class CalendarController extends CommonControllerAdapter {
 	
 	@Autowired
 	CalendarService calendarService;

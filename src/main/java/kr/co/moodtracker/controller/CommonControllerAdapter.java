@@ -7,7 +7,7 @@ import kr.co.moodtracker.vo.DailySearchVO;
 import kr.co.moodtracker.vo.SearchNeighborVO;
 import kr.co.moodtracker.vo.UserVO;
 
-abstract class CommonController {
+abstract class CommonControllerAdapter {
 	
 	protected void setUserId(HttpSession session, DailySearchVO vo
 			) throws SessionNotFoundException {

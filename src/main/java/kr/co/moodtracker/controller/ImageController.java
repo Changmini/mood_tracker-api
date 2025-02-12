@@ -24,7 +24,7 @@ import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.service.ImageService;
 
 @Controller
-public class ImageController extends CommonController {
+public class ImageController extends CommonControllerAdapter {
 	
 	@Autowired
 	ImageService imageService;

@@ -16,7 +16,7 @@ import kr.co.moodtracker.vo.DailySearchVO;
 
 @RequestMapping("/graph")
 @RestController
-public class GraphController extends CommonController {
+public class GraphController extends CommonControllerAdapter {
 	
 	@Autowired
 	GraphService graphService;
