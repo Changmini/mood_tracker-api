@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +25,7 @@ import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.service.ImageService;
 
 @Controller
+@RequestMapping("/view")
 public class ImageController extends CommonControllerAdapter {
 	
 	@Autowired

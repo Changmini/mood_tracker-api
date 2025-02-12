@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
@@ -26,8 +27,8 @@ import kr.co.moodtracker.vo.NeighborVO;
 import kr.co.moodtracker.vo.SearchNeighborVO;
 import kr.co.moodtracker.vo.UserVO;
 
-
 @RestController
+@RequestMapping("/view")
 public class NeighborController extends CommonControllerAdapter {
 	
 	@Autowired

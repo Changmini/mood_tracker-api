@@ -52,13 +52,19 @@ public class SecurityMvcConfig implements WebMvcConfigurer {
 	 */
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**")
+		registry.addMapping("/public/**")
+			.allowedOrigins("*")
+			.allowedMethods("*")
+	        .allowedHeaders("*")
+	        .allowCredentials(false)
+	        .maxAge(3600);
+		
+		registry.addMapping("/view/**")
 	        .allowedOrigins("http://127.0.0.1:3000", "http://127.0.0.1:8080",
 	        				"http://localhost:3000", "http://localhost:8080",
 	        				"http://43.203.220.226:3000"
 	        				,"http://3.38.99.65:3000"
 	        )
-	        //.allowedOrigins("*")
 	        .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS")
 	        .allowedHeaders("*")
 	        .allowCredentials(true)
@@ -74,13 +80,13 @@ public class SecurityMvcConfig implements WebMvcConfigurer {
 				.addPathPatterns("/**");
 		
 		registry.addInterceptor(new SessionCheckHandler())
-				.addPathPatterns("/**")
+				.addPathPatterns("/view/**")
 				.excludePathPatterns(
-						"/"
-						,"/index"
-						,"/css/**", "/images/**", "/js/**"
-						,"/login", "/login/status"
-						,"/user"
+						"/view/"
+						,"/view/index"
+						,"/view/css/**", "/view/images/**", "/view/js/**"
+						,"/view/login", "/view/login/status"
+						,"/view/user"
 						//,"/actuator/**"
 					);
 	}

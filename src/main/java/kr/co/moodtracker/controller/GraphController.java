@@ -14,8 +14,8 @@ import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.service.GraphService;
 import kr.co.moodtracker.vo.DailySearchVO;
 
-@RequestMapping("/graph")
 @RestController
+@RequestMapping("/view/graph")
 public class GraphController extends CommonControllerAdapter {
 	
 	@Autowired
