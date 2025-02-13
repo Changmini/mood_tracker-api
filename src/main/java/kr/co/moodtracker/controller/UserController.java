@@ -19,13 +19,14 @@ import jakarta.servlet.http.HttpSession;
 import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.exception.DataNotUpdatedException;
 import kr.co.moodtracker.exception.SessionNotFoundException;
+import kr.co.moodtracker.handler.AuthUserHandler;
 import kr.co.moodtracker.service.UserService;
 import kr.co.moodtracker.vo.ProfileVO;
 import kr.co.moodtracker.vo.UserVO;
 
 @RestController
 @RequestMapping("/view")
-public class UserController extends CommonControllerAdapter {
+public class UserController {
 	
 	@Autowired
 	UserService userService;
@@ -75,7 +76,7 @@ public class UserController extends CommonControllerAdapter {
 			HttpSession sess, UserVO vo
 	) throws SessionNotFoundException 
 	{
-		UserVO user = getUserInfo(sess);
+		UserVO user = AuthUserHandler.getUserInfo(sess);
 		Map<String, Object> result = new HashMap<>();
 		ProfileVO profile = userService.getUserProfile(user.getUserId());
 		result.put("profile", profile);
@@ -89,7 +90,7 @@ public class UserController extends CommonControllerAdapter {
 			, UserVO vo
 	) throws SessionNotFoundException, DataNotUpdatedException 
 	{
-		UserVO user = getUserInfo(sess);
+		UserVO user = AuthUserHandler.getUserInfo(sess);
 		Map<String, Object> result = new HashMap<>();
 		userService.patchUserProfile(user.getUserId(), vo);
 		result.put("success", true);
@@ -103,7 +104,7 @@ public class UserController extends CommonControllerAdapter {
 			, UserVO vo
 	) throws SessionNotFoundException, DataNotUpdatedException, IllegalStateException, IOException 
 	{
-		UserVO user = getUserInfo(sess);
+		UserVO user = AuthUserHandler.getUserInfo(sess);
 		Map<String, Object> result = new HashMap<>();
 		String base64 = userService.putUserProfileImage(file, user.getUserId(), vo);
 		result.put("imagePath", base64);

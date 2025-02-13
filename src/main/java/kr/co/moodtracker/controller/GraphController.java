@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
 import kr.co.moodtracker.exception.SessionNotFoundException;
+import kr.co.moodtracker.handler.AuthUserHandler;
 import kr.co.moodtracker.service.GraphService;
 import kr.co.moodtracker.vo.DailySearchVO;
 
 @RestController
 @RequestMapping("/view/graph")
-public class GraphController extends CommonControllerAdapter {
+public class GraphController {
 	
 	@Autowired
 	GraphService graphService;
@@ -27,7 +28,7 @@ public class GraphController extends CommonControllerAdapter {
 			, DailySearchVO vo
 	) throws SessionNotFoundException, Exception
 	{
-		setUserId(sess, vo);
+		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> result = new HashMap<>();
 		Map<?,?> graphData = graphService.getMoodLevelData(vo);
 		result.put("graph", graphData);

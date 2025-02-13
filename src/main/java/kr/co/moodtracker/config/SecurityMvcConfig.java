@@ -18,8 +18,8 @@ import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
-import kr.co.moodtracker.handler.DetectBrowserEnv;
-import kr.co.moodtracker.handler.SessionCheckHandler;
+import kr.co.moodtracker.handler.DetectBrowserInterceptor;
+import kr.co.moodtracker.handler.SessionCheckInterceptor;
 
 @Configuration
 @EnableWebSecurity
@@ -76,10 +76,10 @@ public class SecurityMvcConfig implements WebMvcConfigurer {
 	 */
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new DetectBrowserEnv())
+		registry.addInterceptor(new DetectBrowserInterceptor())
 				.addPathPatterns("/**");
 		
-		registry.addInterceptor(new SessionCheckHandler())
+		registry.addInterceptor(new SessionCheckInterceptor())
 				.addPathPatterns("/view/**")
 				.excludePathPatterns(
 						"/view/"

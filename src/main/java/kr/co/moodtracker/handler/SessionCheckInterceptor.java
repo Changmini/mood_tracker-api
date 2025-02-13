@@ -10,7 +10,7 @@ import kr.co.moodtracker.controller.ExceptionController;
 import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.vo.UserVO;
 
-public class SessionCheckHandler implements HandlerInterceptor {
+public class SessionCheckInterceptor implements HandlerInterceptor {
 	
 	private static Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 	

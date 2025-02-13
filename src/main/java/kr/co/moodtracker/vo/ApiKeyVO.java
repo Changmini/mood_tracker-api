@@ -5,9 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ImageVO extends ApiKeyVO {
+public class ApiKeyVO {
 	
-	private int imageId;
-	private String imagePath;
+	private String key;
 	
 }

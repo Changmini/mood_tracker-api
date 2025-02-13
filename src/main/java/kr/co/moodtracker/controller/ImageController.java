@@ -22,11 +22,12 @@ import kr.co.moodtracker.exception.DataMissingException;
 import kr.co.moodtracker.exception.DataNotDeletedException;
 import kr.co.moodtracker.exception.ImageLoadException;
 import kr.co.moodtracker.exception.SessionNotFoundException;
+import kr.co.moodtracker.handler.AuthUserHandler;
 import kr.co.moodtracker.service.ImageService;
 
 @Controller
 @RequestMapping("/view")
-public class ImageController extends CommonControllerAdapter {
+public class ImageController {
 	
 	@Autowired
 	ImageService imageService;
@@ -37,7 +38,7 @@ public class ImageController extends CommonControllerAdapter {
 			, HttpSession sess
 	) throws SessionNotFoundException, ImageLoadException, IOException 
 	{
-		InputStreamResource imageData = imageService.getImage(path, getUserId(sess));
+		InputStreamResource imageData = imageService.getImage(path, AuthUserHandler.getUserId(sess));
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_PNG_VALUE) // 이미지 타입에 맞게 설정
                 .body(imageData);
@@ -49,7 +50,7 @@ public class ImageController extends CommonControllerAdapter {
 			, HttpSession sess
 	) throws SessionNotFoundException, ImageLoadException, IOException
 	{
-		InputStreamResource imageData = imageService.getProfileImage(path, getUserId(sess));
+		InputStreamResource imageData = imageService.getProfileImage(path, AuthUserHandler.getUserId(sess));
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_PNG_VALUE) // 이미지 타입에 맞게 설정
                 .body(imageData);
@@ -63,7 +64,7 @@ public class ImageController extends CommonControllerAdapter {
 	) throws SessionNotFoundException, DataNotDeletedException, DataMissingException 
 	{
 		Map<String, Object> result = new HashMap<>();
-		imageService.deleteImage(imageId, getUserId(sess));
+		imageService.deleteImage(imageId, AuthUserHandler.getUserId(sess));
         result.put("success", true);
 		return ResponseEntity.ok().body(result);
 	}

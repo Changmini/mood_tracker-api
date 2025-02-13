@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.moodtracker.controller.ExceptionController;
 
-public class DetectBrowserEnv implements HandlerInterceptor {
+public class DetectBrowserInterceptor implements HandlerInterceptor {
 	
 	private static Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 	

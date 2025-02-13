@@ -19,6 +19,7 @@ import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.exception.SettingDataException;
 import kr.co.moodtracker.exception.ZeroDataException;
+import kr.co.moodtracker.handler.AuthUserHandler;
 import kr.co.moodtracker.service.CalendarService;
 import kr.co.moodtracker.service.NeighborService;
 import kr.co.moodtracker.vo.DailyInfoVO;
@@ -29,7 +30,7 @@ import kr.co.moodtracker.vo.UserVO;
 
 @RestController
 @RequestMapping("/view")
-public class NeighborController extends CommonControllerAdapter {
+public class NeighborController {
 	
 	@Autowired
 	NeighborService neighborService;
@@ -42,7 +43,7 @@ public class NeighborController extends CommonControllerAdapter {
 			HttpSession sess
 	) throws SessionNotFoundException 
 	{
-		UserVO user = getUserInfo(sess);
+		UserVO user = AuthUserHandler.getUserInfo(sess);
 		Map<String, Object> res = new HashMap<>();
 		List<NeighborVO> neighbors = neighborService.getNeighbors(user.getUserId());
 		res.put("neighbors", neighbors);
@@ -55,7 +56,7 @@ public class NeighborController extends CommonControllerAdapter {
 			, SearchNeighborVO vo
 	) throws SessionNotFoundException, DataNotInsertedException 
 	{
-		setUserId(sess, vo);
+		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
 		neighborService.postNeighbor(vo);
 		res.put("success", true);
@@ -68,7 +69,7 @@ public class NeighborController extends CommonControllerAdapter {
 			, SearchNeighborVO vo
 	) throws SessionNotFoundException 
 	{
-		setUserId(sess, vo);
+		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
 		neighborService.patchNeighbor(vo);
 		res.put("success", true);
@@ -81,7 +82,7 @@ public class NeighborController extends CommonControllerAdapter {
 			, SearchNeighborVO vo
 	) throws SessionNotFoundException 
 	{
-		setUserId(sess, vo);
+		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
 		neighborService.synchronize(vo);
 		res.put("success", true);
@@ -94,7 +95,7 @@ public class NeighborController extends CommonControllerAdapter {
 			, SearchNeighborVO vo
 	) throws SessionNotFoundException 
 	{
-		setUserId(sess, vo);
+		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
 		neighborService.deleteNeighbor(vo);
 		res.put("success", true);
@@ -107,7 +108,7 @@ public class NeighborController extends CommonControllerAdapter {
 			, SearchNeighborVO vo
 	) throws SessionNotFoundException, DataMissingException, ZeroDataException, SettingDataException 
 	{
-		setUserId(sess, vo);
+		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
 		DailySearchVO ds = neighborService.getDailySearchVoOfNeighbor(vo);
 		List<DailyInfoVO> list = calendarService.getDailyInfoOfTheMonth(ds);
@@ -122,7 +123,7 @@ public class NeighborController extends CommonControllerAdapter {
 			, SearchNeighborVO vo
 	) throws SessionNotFoundException
 	{
-		setUserId(sess, vo);
+		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
 		Map<Integer, NeighborVO> neighbors = neighborService.shortPolling(vo);
 		res.put("neighbors", neighbors);

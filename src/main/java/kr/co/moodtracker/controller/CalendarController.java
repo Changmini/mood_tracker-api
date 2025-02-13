@@ -7,10 +7,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,13 +21,14 @@ import kr.co.moodtracker.exception.DataMissingException;
 import kr.co.moodtracker.exception.DataNotDeletedException;
 import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.exception.SessionNotFoundException;
+import kr.co.moodtracker.handler.AuthUserHandler;
 import kr.co.moodtracker.service.CalendarService;
 import kr.co.moodtracker.vo.DailyInfoVO;
 import kr.co.moodtracker.vo.DailySearchVO;
 
 @RestController
 @RequestMapping("/view")
-public class CalendarController extends CommonControllerAdapter {
+public class CalendarController {
 	
 	@Autowired
 	CalendarService calendarService;
@@ -40,7 +39,7 @@ public class CalendarController extends CommonControllerAdapter {
 			, DailySearchVO vo
 	) throws SessionNotFoundException, DataMissingException 
 	{
-		setUserId(sess, vo);
+		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
 		List<DailyInfoVO> list = calendarService.getDailyInfoOfTheMonth(vo);
 		res.put("dailyInfoList", list);
@@ -54,7 +53,7 @@ public class CalendarController extends CommonControllerAdapter {
 			, DailySearchVO vo
 	)throws SessionNotFoundException, DataMissingException 
 	{
-		setUserId(sess, vo);
+		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
 		res.put("dailyInfoList", calendarService.getDailyInfoList(vo));
 		res.put("success", true);
@@ -68,7 +67,7 @@ public class CalendarController extends CommonControllerAdapter {
 			, @RequestParam("files") List<MultipartFile> files
 	) throws SessionNotFoundException, DataNotInsertedException, IllegalStateException, IOException 
 	{
-		setUserId(sess, vo);
+		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
 		calendarService.postDailyInfo(vo, files);
 		res.put("success", true);
@@ -83,7 +82,7 @@ public class CalendarController extends CommonControllerAdapter {
 			, @RequestParam("preImageId") List<Integer> preImageId
 	) throws SessionNotFoundException, DataNotInsertedException, IllegalStateException, IOException 
 	{
-		setUserId(sess, vo);
+		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
 		calendarService.putDailyInfo(vo, files, preImageId);
 		res.put("success", true);
@@ -96,7 +95,7 @@ public class CalendarController extends CommonControllerAdapter {
 			, DailyInfoVO vo
 	) throws SessionNotFoundException, DataNotDeletedException 
 	{
-		setUserId(sess, vo);
+		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
 		calendarService.deleteDailyInfo(vo);
 		res.put("success", true);
