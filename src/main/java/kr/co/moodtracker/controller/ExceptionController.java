@@ -14,7 +14,9 @@ import kr.co.moodtracker.exception.DataMissingException;
 import kr.co.moodtracker.exception.DataNotDeletedException;
 import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.exception.DataNotUpdatedException;
+import kr.co.moodtracker.exception.DuplicateDataException;
 import kr.co.moodtracker.exception.ImageLoadException;
+import kr.co.moodtracker.exception.InvalidApiKeyException;
 import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.exception.SettingDataException;
 import kr.co.moodtracker.exception.ZeroDataException;
@@ -24,8 +26,11 @@ public class ExceptionController {
 	
 	private static Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 	
-	@ExceptionHandler(value = SessionNotFoundException.class)
-	public ResponseEntity<?> sessioNotFound(SessionNotFoundException e) {
+	@ExceptionHandler(value = {
+			SessionNotFoundException.class
+			,InvalidApiKeyException.class
+	})
+	public ResponseEntity<?> sessioNotFound(Exception e) {
 		Map<String, Object> result = new HashMap<>();
 		result.put("msg", e.getMessage());
 		result.put("success", false);
@@ -46,7 +51,9 @@ public class ExceptionController {
 			, DataNotUpdatedException.class
 			, DataMissingException.class
 			, ZeroDataException.class
-			, SettingDataException.class})
+			, SettingDataException.class
+			, DuplicateDataException.class
+	})
 	public ResponseEntity<?> dataError(Exception e) {
 		Map<String, Object> result = new HashMap<>();
 		logger.info(e.getMessage());
@@ -58,7 +65,8 @@ public class ExceptionController {
 	@ExceptionHandler(value = {
 			Exception.class
 			, IllegalStateException.class
-			, IOException.class})
+			, IOException.class
+	})
 	public ResponseEntity<?> Error(Exception e) {
 		e.printStackTrace();
 		Map<String, Object> result = new HashMap<>();

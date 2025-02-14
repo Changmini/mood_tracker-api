@@ -11,6 +11,7 @@ import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 
 import jakarta.servlet.http.HttpSession;
+import kr.co.moodtracker.exception.InvalidApiKeyException;
 import kr.co.moodtracker.vo.DailyInfoVO;
 import kr.co.moodtracker.vo.DailySearchVO;
 import kr.co.moodtracker.vo.SearchNeighborVO;
@@ -21,26 +22,64 @@ public class AuthUserHandler {
 	static final private SecureRandom secRandom = new SecureRandom();
 	static final private JSONParser jp = new JSONParser();
 	
-	static public String generateApiKey(int id, String username) {
-		/* 랜덤토큰 만들기 */
-		byte[] tokenBytes = new byte[16];
-		secRandom.nextBytes(tokenBytes);
-		String token = Base64.getEncoder().encodeToString(tokenBytes);
-		
-		/* 사용자 정보 */
+	/**
+	 * 새로운 API Key 생성
+	 * @param userId
+	 * @return
+	 */
+	static public String generateApiKey(int userId) {
 		JSONObject jo = new JSONObject();
-		jo.put("token", token);
-		jo.put("id", id);
-		
+		jo.put("id", userId);
 		return enc.encrypt(jo.toJSONString());
     }
 	
-	static public int getUserId(String apiKey) throws ParseException {
+	/**
+	 * API Key를 파싱하여, userId 추출하는 메서드
+	 * @param apiKey
+	 * @return
+	 * @throws InvalidApiKeyException
+	 */
+	static private int getUserId(String apiKey) throws InvalidApiKeyException {
 		String decoding = enc.decrypt(apiKey);
-		JSONObject jo = (JSONObject) jp.parse(decoding);
+		JSONObject jo;
+		try {
+			jo = (JSONObject) jp.parse(decoding);
+		} catch (ParseException e) {
+			throw new InvalidApiKeyException("올바르지 않은 API 형식입니다.");
+		}
 		return Integer.valueOf(jo.get("id").toString());
 	}
+	/**
+	 * API Key의 내포된 userId 값을 전달된 객체에 세팅
+	 * @param apiKey
+	 * @param vo
+	 * @throws InvalidApiKeyException
+	 */
+	static public void setUserId(
+			String apiKey
+			, Object vo
+	) throws InvalidApiKeyException {
+		int userId = getUserId(apiKey);
+		if (vo instanceof DailySearchVO) {
+			((DailySearchVO) vo).setUserId(userId); 
+		} else if (vo instanceof DailyInfoVO) {
+			((DailyInfoVO) vo).setUserId(userId); 
+		} else if (vo instanceof SearchNeighborVO) {
+			((SearchNeighborVO) vo).setUserId(userId); 
+		} else if (vo instanceof UserVO) {
+			((UserVO) vo).setUserId(userId); 
+		}
+	}
 	
+	
+	/**
+	 * Sesstion에서 USER 속성 반환 메서드
+	 * @param session
+	 * @return
+	 */
+	static private UserVO getAttributeUser(HttpSession session) {
+		return (UserVO) session.getAttribute("USER");
+	}
 	/**
 	 * Session의 User 정보를
 	 * vo 객체에 넣어주는 메서드 
@@ -49,24 +88,18 @@ public class AuthUserHandler {
 	 */
 	static public void setUserId(
 			HttpSession session
-			, DailySearchVO vo
+			, Object vo
 	) {
 		UserVO u = getAttributeUser(session);
-		vo.setUserId(u.getUserId());
-	}
-	static public void setUserId(
-			HttpSession session
-			, DailyInfoVO vo
-	) {
-		UserVO u = getAttributeUser(session);
-		vo.setUserId(u.getUserId());
-	}
-	static public void setUserId(
-			HttpSession session
-			, SearchNeighborVO vo
-	) {
-		UserVO u = getAttributeUser(session);
-		vo.setUserId(u.getUserId());
+		if (vo instanceof DailySearchVO) {
+			((DailySearchVO) vo).setUserId(u.getUserId()); 
+		} else if (vo instanceof DailyInfoVO) {
+			((DailyInfoVO) vo).setUserId(u.getUserId()); 
+		} else if (vo instanceof SearchNeighborVO) {
+			((SearchNeighborVO) vo).setUserId(u.getUserId()); 
+		} else if (vo instanceof UserVO) {
+			((UserVO) vo).setUserId(u.getUserId()); 
+		}
 	}
 	/**
 	 * Session의 User 정보 중 id 값을 반환하는 메서드
@@ -89,7 +122,5 @@ public class AuthUserHandler {
 	) {
 		return getAttributeUser(session);
 	}
-	static private UserVO getAttributeUser(HttpSession session) {
-		return (UserVO) session.getAttribute("USER");
-	}
+	
 }

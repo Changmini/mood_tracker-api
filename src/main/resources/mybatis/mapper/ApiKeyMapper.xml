@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.co.moodtracker.mapper.UsersMapper">
+<mapper namespace="kr.co.moodtracker.mapper.ApiKeyMapper">
 	
 	<select id="validateApiKey" parameterType="String" resultType="int">
 		SELECT COUNT(user_id)
@@ -8,18 +8,32 @@
 		WHERE `key` = #{key}
 	</select>
 	
-	<insert id="postApiKey" parameterType="kr.co.moodtracker.vo.UserVO">
-		INSERT api_key (
-			user_id, `key` 
-		) VALUES ( 
-			#{user_id}, #{key} 
-		)
-	</insert>
-	
-	<update id="updateKey">
-		UPDATE api_key
-		SET `key` = #{key}
+	<select id="getApiKey" parameterType="int" resultType="String">
+		SELECT `key`
+		FROM api_key
 		WHERE user_id = #{userId}
+	</select>
+	
+	<update id="updateApiKey" parameterType="kr.co.moodtracker.vo.UserVO">
+		<selectKey order="BEFORE" keyColumn="hasKey" keyProperty="hasKey" resultType="int">
+			SELECT COUNT(user_id) as hasKey
+			FROM api_key
+			WHERE user_id = #{userId}
+		</selectKey>
+		<choose>
+			<when test="hasKey > 0">
+				UPDATE api_key
+				SET `key` = #{key}
+				WHERE user_id = #{userId}		
+			</when>
+			<otherwise>
+				INSERT api_key (
+					user_id, `key` 
+				) VALUES ( 
+					#{userId}, #{key} 
+				)
+			</otherwise>
+		</choose>
 	</update>
 
 </mapper>

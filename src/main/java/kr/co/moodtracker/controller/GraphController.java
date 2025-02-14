@@ -26,7 +26,7 @@ public class GraphController {
 	public ResponseEntity<?> getMoodLevelData(
 			HttpSession sess
 			, DailySearchVO vo
-	) throws SessionNotFoundException, Exception
+	) throws Exception
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> result = new HashMap<>();

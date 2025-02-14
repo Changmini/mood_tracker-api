@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpSession;
 import kr.co.moodtracker.exception.DataMissingException;
 import kr.co.moodtracker.exception.DataNotDeletedException;
 import kr.co.moodtracker.exception.DataNotInsertedException;
+import kr.co.moodtracker.exception.DuplicateDataException;
 import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.handler.AuthUserHandler;
 import kr.co.moodtracker.service.CalendarService;
@@ -37,7 +38,7 @@ public class CalendarController {
 	public ResponseEntity<?> getCalendarInfo(
 			HttpSession sess
 			, DailySearchVO vo
-	) throws SessionNotFoundException, DataMissingException 
+	) throws DataMissingException 
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
@@ -51,7 +52,7 @@ public class CalendarController {
 	public ResponseEntity<?> timeline(
 			HttpSession sess
 			, DailySearchVO vo
-	)throws SessionNotFoundException, DataMissingException 
+	)throws DataMissingException 
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
@@ -65,7 +66,7 @@ public class CalendarController {
 			HttpSession sess
 			, DailyInfoVO vo
 			, @RequestParam("files") List<MultipartFile> files
-	) throws SessionNotFoundException, DataNotInsertedException, IllegalStateException, IOException 
+	) throws DataNotInsertedException, IllegalStateException, IOException, DuplicateDataException 
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
@@ -80,7 +81,7 @@ public class CalendarController {
 			, DailyInfoVO vo
 			, @RequestParam("files") List<MultipartFile> files
 			, @RequestParam("preImageId") List<Integer> preImageId
-	) throws SessionNotFoundException, DataNotInsertedException, IllegalStateException, IOException 
+	) throws DataNotInsertedException, IllegalStateException, IOException 
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
@@ -93,7 +94,7 @@ public class CalendarController {
 	public ResponseEntity<?> deleteDailyEntry(
 			HttpSession sess
 			, DailyInfoVO vo
-	) throws SessionNotFoundException, DataNotDeletedException 
+	) throws DataNotDeletedException 
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();

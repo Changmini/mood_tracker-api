@@ -8,5 +8,6 @@ import lombok.Setter;
 public class ApiKeyVO {
 	
 	private String key;
+	private int hasKey;
 	
 }

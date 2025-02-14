@@ -14,6 +14,8 @@ public interface DailiesMapper {
 	
 	public List<Map<String,Object>> getDailyInfoCount(DailySearchVO vo);
 	
+	public int checkDailyInfo(DailyInfoVO vo);
+	
 	public int postDaily(DailyInfoVO vo);
 
 	public int deleteDaily(DailyInfoVO vo);

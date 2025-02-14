@@ -11,4 +11,5 @@ public class UserVO extends ProfileVO {
 	private String username;
 	private String password;
 	private String email;
+	
 }

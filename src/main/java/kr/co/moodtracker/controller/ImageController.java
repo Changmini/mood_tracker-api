@@ -36,7 +36,7 @@ public class ImageController {
 	public ResponseEntity<?> getImage(
 			@RequestParam("path") String path
 			, HttpSession sess
-	) throws SessionNotFoundException, ImageLoadException, IOException 
+	) throws ImageLoadException, IOException 
 	{
 		InputStreamResource imageData = imageService.getImage(path, AuthUserHandler.getUserId(sess));
         return ResponseEntity.ok()
@@ -48,7 +48,7 @@ public class ImageController {
 	public ResponseEntity<?> getProfileImage(
 			@RequestParam("path") String path
 			, HttpSession sess
-	) throws SessionNotFoundException, ImageLoadException, IOException
+	) throws ImageLoadException, IOException
 	{
 		InputStreamResource imageData = imageService.getProfileImage(path, AuthUserHandler.getUserId(sess));
         return ResponseEntity.ok()
@@ -61,7 +61,7 @@ public class ImageController {
 	public ResponseEntity<?> deleteImage(
 			@RequestParam("imageId") List<Integer> imageId
 			, HttpSession sess
-	) throws SessionNotFoundException, DataNotDeletedException, DataMissingException 
+	) throws DataNotDeletedException, DataMissingException 
 	{
 		Map<String, Object> result = new HashMap<>();
 		imageService.deleteImage(imageId, AuthUserHandler.getUserId(sess));

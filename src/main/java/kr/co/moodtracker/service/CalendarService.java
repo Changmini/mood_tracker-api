@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.co.moodtracker.exception.DataMissingException;
 import kr.co.moodtracker.exception.DataNotDeletedException;
 import kr.co.moodtracker.exception.DataNotInsertedException;
+import kr.co.moodtracker.exception.DuplicateDataException;
 import kr.co.moodtracker.handler.DateHandler;
 import kr.co.moodtracker.handler.FileHandler;
 import kr.co.moodtracker.handler.ImageHandler;
@@ -66,7 +67,7 @@ public class CalendarService {
 	
 	@Transactional(rollbackFor = { Exception.class })
 	public void postDailyInfo(DailyInfoVO vo, List<MultipartFile> files) 
-			throws DataNotInsertedException, IllegalStateException, IOException {
+			throws DataNotInsertedException, IllegalStateException, IOException, DuplicateDataException {
 		if (files != null && files.size() > 0) {
 			List<ImageVO> imageList = new ArrayList<>();
 			for (MultipartFile f : files) {
@@ -77,10 +78,11 @@ public class CalendarService {
 			}
 			vo.setImageList(imageList);
 		}
-		/* 
-		 * 이미 데이터가 존재하는지 확인하는 로직을 추가해야 한다.
-		 * */
-		int cnt = notesMapper.postNote(vo);
+
+		int cnt = dailiesMapper.checkDailyInfo(vo);
+		if (cnt > 0) throw new DuplicateDataException("해당 날짜에 데이터가 존재합니다. 수정 작업을 수행하여 데이터를 갱신해주세요.");
+		
+		cnt = notesMapper.postNote(vo);
 		if (cnt == 0) throw new DataNotInsertedException("입력된 텍스트 정보를 확인해주세요.");
 		cnt = moodsMapper.postMood(vo);
 		if (cnt == 0) throw new DataNotInsertedException("분위기 정보를 등록 실패했습니다.");
@@ -91,6 +93,7 @@ public class CalendarService {
 		
 	}
 	
+	@Transactional(rollbackFor = { Exception.class })
 	public void putDailyInfo(DailyInfoVO vo
 			, List<MultipartFile> files, List<Integer> preImageId) 
 			throws DataNotInsertedException, IllegalStateException, IOException {

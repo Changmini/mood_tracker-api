@@ -19,7 +19,9 @@ import jakarta.servlet.http.HttpSession;
 import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.exception.DataNotUpdatedException;
 import kr.co.moodtracker.exception.SessionNotFoundException;
+import kr.co.moodtracker.exception.SettingDataException;
 import kr.co.moodtracker.handler.AuthUserHandler;
+import kr.co.moodtracker.service.AuthenticationService;
 import kr.co.moodtracker.service.UserService;
 import kr.co.moodtracker.vo.ProfileVO;
 import kr.co.moodtracker.vo.UserVO;
@@ -30,6 +32,9 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	AuthenticationService authenticationService;
 	
 	@GetMapping("/user")
 	public ResponseEntity<?> getUser(
@@ -74,7 +79,7 @@ public class UserController {
 	@GetMapping("/user/profile")
 	public ResponseEntity<?> getUserProfile(
 			HttpSession sess, UserVO vo
-	) throws SessionNotFoundException 
+	)
 	{
 		UserVO user = AuthUserHandler.getUserInfo(sess);
 		Map<String, Object> result = new HashMap<>();
@@ -88,7 +93,7 @@ public class UserController {
 	public ResponseEntity<?> patchUserProfile(
 			HttpSession sess
 			, UserVO vo
-	) throws SessionNotFoundException, DataNotUpdatedException 
+	) throws DataNotUpdatedException 
 	{
 		UserVO user = AuthUserHandler.getUserInfo(sess);
 		Map<String, Object> result = new HashMap<>();
@@ -102,13 +107,40 @@ public class UserController {
 			HttpSession sess
 			, @RequestParam("file") MultipartFile file
 			, UserVO vo
-	) throws SessionNotFoundException, DataNotUpdatedException, IllegalStateException, IOException 
+	) throws DataNotUpdatedException, IllegalStateException, IOException 
 	{
 		UserVO user = AuthUserHandler.getUserInfo(sess);
 		Map<String, Object> result = new HashMap<>();
 		String base64 = userService.putUserProfileImage(file, user.getUserId(), vo);
 		result.put("imagePath", base64);
 		result.put("success", true);
+		return ResponseEntity.ok().body(result);
+	}
+	
+	@GetMapping("/user/api-token")
+	public ResponseEntity<?> getApiToken(
+			HttpSession sess
+	)
+	{
+		UserVO user = AuthUserHandler.getUserInfo(sess);
+		Map<String, Object> result = new HashMap<>();
+		String token = authenticationService.getApiKey(user);
+		result.put("success", true);
+		result.put("token", token);
+		return ResponseEntity.ok().body(result);
+	}
+	
+	@PutMapping("/user/api-token")
+	public ResponseEntity<?> putApiToken(
+			HttpSession sess
+			, UserVO vo
+	) throws SettingDataException 
+	{
+		AuthUserHandler.setUserId(sess, vo);
+		Map<String, Object> result = new HashMap<>();
+		String token = authenticationService.generateApiKey(vo);
+		result.put("success", true);
+		result.put("token", token);
 		return ResponseEntity.ok().body(result);
 	}
 	

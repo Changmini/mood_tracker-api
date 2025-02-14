@@ -97,6 +97,13 @@
 		</choose>
 	</select>
 	
+	<select id="checkDailyInfo" parameterType="kr.co.moodtracker.vo.DailyInfoVO" 
+							resultType="int">
+		SELECT COUNT(daily_id) 
+		FROM moodtracker.dailies
+		WHERE `date` = DATE_FORMAT(#{date}, '%Y-%m-%d')		
+	</select>
+	
 	<insert id="postDaily" parameterType="kr.co.moodtracker.vo.DailyInfoVO"
 			useGeneratedKeys="true" keyProperty="dailyId">
 		INSERT INTO dailies (

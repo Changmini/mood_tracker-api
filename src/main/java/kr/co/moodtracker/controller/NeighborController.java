@@ -54,7 +54,7 @@ public class NeighborController {
 	public ResponseEntity<?> postNeighbor(
 			HttpSession sess
 			, SearchNeighborVO vo
-	) throws SessionNotFoundException, DataNotInsertedException 
+	) throws DataNotInsertedException 
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
@@ -67,7 +67,7 @@ public class NeighborController {
 	public ResponseEntity<?> patchNeighbor(
 			HttpSession sess
 			, SearchNeighborVO vo
-	) throws SessionNotFoundException 
+	) 
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
@@ -80,7 +80,7 @@ public class NeighborController {
 	public ResponseEntity<?> setSynchronize(
 			HttpSession sess
 			, SearchNeighborVO vo
-	) throws SessionNotFoundException 
+	) 
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
@@ -93,7 +93,7 @@ public class NeighborController {
 	public ResponseEntity<?> deleteNeighbor(
 			HttpSession sess
 			, SearchNeighborVO vo
-	) throws SessionNotFoundException 
+	) 
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
@@ -106,7 +106,7 @@ public class NeighborController {
 	public ResponseEntity<?> getNeighborCalendar(
 			HttpSession sess
 			, SearchNeighborVO vo
-	) throws SessionNotFoundException, DataMissingException, ZeroDataException, SettingDataException 
+	) throws DataMissingException, ZeroDataException, SettingDataException 
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
@@ -121,7 +121,7 @@ public class NeighborController {
 	public ResponseEntity<?> shortPolling(
 			HttpSession sess
 			, SearchNeighborVO vo
-	) throws SessionNotFoundException
+	)
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
