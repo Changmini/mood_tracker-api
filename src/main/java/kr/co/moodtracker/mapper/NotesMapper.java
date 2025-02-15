@@ -1,15 +1,15 @@
 package kr.co.moodtracker.mapper;
 
-import kr.co.moodtracker.vo.DailyInfoVO;
+import kr.co.moodtracker.vo.SearchDailyInfoVO;
 
 public interface NotesMapper {
 
-	public int postNote(DailyInfoVO vo);
+	public int postNote(SearchDailyInfoVO vo);
 
-	public int putNote(DailyInfoVO vo);
+	public int putNote(SearchDailyInfoVO vo);
 	
-	public int patchNote(DailyInfoVO vo);
+	public int patchNote(SearchDailyInfoVO vo);
 
-	public int deleteNote(DailyInfoVO vo);
+	public int deleteNote(SearchDailyInfoVO vo);
 
 }

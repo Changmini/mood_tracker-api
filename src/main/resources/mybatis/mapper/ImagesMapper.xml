@@ -12,7 +12,8 @@
 	        <result column="image_path" property="imagePath"/>
         </collection>
     </resultMap>
-	<select id="getImageInfoList" parameterType="kr.co.moodtracker.vo.DailySearchVO"
+    
+	<select id="getImageInfoList" parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO"
 									resultMap="dailyInfoMap">
 		SELECT I.image_id 
 			,DS.daily_id
@@ -58,7 +59,7 @@
 	</select>
 	
 	
-	<insert id="postImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<insert id="postImage" parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO">
 		INSERT INTO images (
 			daily_id
 			,user_id
@@ -73,7 +74,7 @@
 		</foreach>
 	</insert>
 	
-	<update id="putImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<update id="putImage" parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO">
 		<foreach collection="imageList" item="item" separator=";">
 		UPDATE images
 		SET image_path = <choose>
@@ -89,13 +90,13 @@
 		</foreach>
 	</update>
 	
-	<delete id="deleteAllImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<delete id="deleteAllImage" parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO">
 		DELETE FROM images
 		WHERE image_id = #{dailyId}
 		AND user_id = #{userId}
 	</delete>
 	
-	<update id="deleteImage" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<update id="deleteImage" parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO">
 		<foreach collection="imageList" item="item" separator=";">
 		UPDATE images
 		SET image_path = null

@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.handler.AuthUserHandler;
 import kr.co.moodtracker.service.GraphService;
-import kr.co.moodtracker.vo.DailySearchVO;
+import kr.co.moodtracker.vo.SearchDailyInfoVO;
 
 @RestController
 @RequestMapping("/view/graph")
@@ -25,7 +25,7 @@ public class GraphController {
 	@GetMapping("/mood-level-data")
 	public ResponseEntity<?> getMoodLevelData(
 			HttpSession sess
-			, DailySearchVO vo
+			, SearchDailyInfoVO vo
 	) throws Exception
 	{
 		AuthUserHandler.setUserId(sess, vo);

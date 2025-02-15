@@ -1,7 +1,8 @@
 package kr.co.moodtracker.enums;
 
 public enum MethodType {
-	SELECT
+	SELECT_LIST
+	,SELECT
 	,INSERT
 	,UPDATE
 	,DELETE

@@ -16,8 +16,8 @@ import kr.co.moodtracker.exception.ImageLoadException;
 import kr.co.moodtracker.handler.FileHandler;
 import kr.co.moodtracker.handler.ImageHandler;
 import kr.co.moodtracker.mapper.ImagesMapper;
-import kr.co.moodtracker.vo.DailyInfoVO;
 import kr.co.moodtracker.vo.ImageVO;
+import kr.co.moodtracker.vo.SearchDailyInfoVO;
 
 @Service
 public class ImageService {
@@ -57,7 +57,7 @@ public class ImageService {
 			throws DataNotDeletedException, DataMissingException {
 		if (!(imageId != null && imageId.size() > 0)) 
 			throw new DataMissingException("삭제할 이미지를 선택해주십시오.");
-		DailyInfoVO vo = new DailyInfoVO();
+		SearchDailyInfoVO vo = new SearchDailyInfoVO();
 		List<ImageVO> imgList = new ArrayList<>();
 		for (Integer id : imageId) {
 			ImageVO img = new ImageVO();

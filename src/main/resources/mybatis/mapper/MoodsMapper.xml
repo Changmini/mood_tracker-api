@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.moodtracker.mapper.MoodsMapper">
 	
-	<insert id="postMood" parameterType="kr.co.moodtracker.vo.DailyInfoVO"
+	<insert id="postMood" parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO"
 			useGeneratedKeys="true" keyProperty="moodId">
 		INSERT INTO moods (
 			user_id
@@ -13,14 +13,14 @@
 		)
 	</insert>
 	
-	<update id="putMood" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<update id="putMood" parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO">
 		UPDATE moods
 		SET mood_level = #{moodLevel}
 		WHERE mood_id = #{moodId}
 		AND user_id = #{userId}
 	</update>
 	
-	<delete id="deleteMood" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<delete id="deleteMood" parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO">
 		DELETE FROM moods
 		WHERE mood_id = #{moodId}
 		AND user_id = #{userId}

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +20,7 @@ public class ApiCommonController {
 	 * @param req
 	 * @return
 	 */
-	@RequestMapping("/api/v1")
+	@GetMapping("/api/v1")
 	public ResponseEntity<Map<String, Object>> getMethodName(
 			HttpServletRequest req
 	) {
@@ -44,7 +44,7 @@ public class ApiCommonController {
 		type.add("list");
 		details.put("type", type);
 		reqBody = new ArrayList<>();
-		reqBody.add("*apiToken");
+		reqBody.add("*key");
 		details.put("request-payload", reqBody);
 		links.put("calendar-date", details);
 		
@@ -55,7 +55,7 @@ public class ApiCommonController {
 		type.add("update");
 		details.put("type", type);
 		reqBody = new ArrayList<>();
-		reqBody.add("*apiToken");
+		reqBody.add("*key");
 		reqBody.add("*moodLevel");
 		reqBody.add("noteTitle");
 		reqBody.add("noteContent");

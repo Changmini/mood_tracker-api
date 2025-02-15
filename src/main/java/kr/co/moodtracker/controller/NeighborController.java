@@ -23,8 +23,9 @@ import kr.co.moodtracker.handler.AuthUserHandler;
 import kr.co.moodtracker.service.CalendarService;
 import kr.co.moodtracker.service.NeighborService;
 import kr.co.moodtracker.vo.DailyInfoVO;
-import kr.co.moodtracker.vo.DailySearchVO;
+import kr.co.moodtracker.vo.SearchDailyInfoVO;
 import kr.co.moodtracker.vo.NeighborVO;
+import kr.co.moodtracker.vo.ReturnDailyInfoVO;
 import kr.co.moodtracker.vo.SearchNeighborVO;
 import kr.co.moodtracker.vo.UserVO;
 
@@ -110,8 +111,8 @@ public class NeighborController {
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		DailySearchVO ds = neighborService.getDailySearchVoOfNeighbor(vo);
-		List<DailyInfoVO> list = calendarService.getDailyInfoOfTheMonth(ds);
+		SearchDailyInfoVO ds = neighborService.getSearchDailyInfoVoOfNeighbor(vo);
+		List<ReturnDailyInfoVO> list = calendarService.getDailyInfoOfTheMonth(ds);
 		res.put("dailyInfoList", list);
 		res.put("success", true);
 		return ResponseEntity.ok().body(res);

@@ -3,7 +3,7 @@
 <mapper namespace="kr.co.moodtracker.mapper.GraphMapper">
 	
 	<select id="getMoodLevelData" 
-			parameterType="kr.co.moodtracker.vo.DailySearchVO" resultType="hashMap">
+			parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO" resultType="hashMap">
 		SELECT substring(D.`date`,1,7) AS 'label'
 		    ,substring(D.`date`,9,2) AS 'dayOfMonth'
 			,DAYOFWEEK(D.`date`) AS 'weekNum'

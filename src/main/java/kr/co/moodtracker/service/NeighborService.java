@@ -19,7 +19,7 @@ import kr.co.moodtracker.handler.DateHandler;
 import kr.co.moodtracker.handler.ImageHandler;
 import kr.co.moodtracker.mapper.NeighborMapper;
 import kr.co.moodtracker.mapper.UsersMapper;
-import kr.co.moodtracker.vo.DailySearchVO;
+import kr.co.moodtracker.vo.SearchDailyInfoVO;
 import kr.co.moodtracker.vo.NeighborVO;
 import kr.co.moodtracker.vo.SearchNeighborVO;
 
@@ -82,7 +82,7 @@ public class NeighborService {
 	}
 	
 	@Transactional(readOnly = true)
-	public DailySearchVO getDailySearchVoOfNeighbor(SearchNeighborVO vo) 
+	public SearchDailyInfoVO getSearchDailyInfoVoOfNeighbor(SearchNeighborVO vo) 
 			throws ZeroDataException, SettingDataException {
 		String date = vo.getDate();
 		if (date == null || date.trim().equals(""))
@@ -90,7 +90,7 @@ public class NeighborService {
 		Integer neighborUserId = neighborMapper.getNeighborUserId(vo);
 		if (neighborUserId == null || neighborUserId == 0)
 			throw new ZeroDataException("접근할 수 없는 이웃입니다.");
-		DailySearchVO ds = new DailySearchVO();
+		SearchDailyInfoVO ds = new SearchDailyInfoVO();
 		ds.setDate(date);
 		ds.setUserId(neighborUserId);
 		return ds;
@@ -113,7 +113,7 @@ public class NeighborService {
 	@Transactional(readOnly = true)
 	public Map<Integer, NeighborVO> shortPolling(SearchNeighborVO vo) {
 		if (vo.getUpdatedAt() == null) {
-			vo.setUpdatedAt(LocalDateTime.now().format(DateHandler.FORMATTER_TIME));
+			vo.setUpdatedAt(LocalDateTime.now().format(DateHandler.FORMATTER_ymdhms));
 			// 탐색기준인 날짜가 주어지지 않을 때
 		}
 		if (vo.getInterval() <= 0) {

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.moodtracker.mapper.NotesMapper">
 	
-	<insert id="postNote" parameterType="kr.co.moodtracker.vo.DailyInfoVO"
+	<insert id="postNote" parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO"
 			useGeneratedKeys="true" keyProperty="noteId">
 		INSERT INTO notes (
 			user_id
@@ -15,7 +15,7 @@
 		)
 	</insert>
 	
-	<update id="putNote" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<update id="putNote" parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO">
 		UPDATE notes
 		SET
 			note_title = #{noteTitle}
@@ -24,7 +24,7 @@
 		AND user_id = #{userId}
 	</update>
 	
-	<update id="patchNote" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<update id="patchNote" parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO">
 		UPDATE notes
 		<trim prefix="SET" prefixOverrides=",">
 			<if test='noteTitle != null'>note_title = #{noteTitle}</if>
@@ -34,7 +34,7 @@
 		AND user_id = #{userId}
 	</update>
 	
-	<delete id="deleteNote" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+	<delete id="deleteNote" parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO">
 		DELETE FROM notes
 		WHERE note_id = #{noteId} 
 		AND user_id = #{userId}

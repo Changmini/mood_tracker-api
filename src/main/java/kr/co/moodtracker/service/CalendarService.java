@@ -23,8 +23,9 @@ import kr.co.moodtracker.mapper.ImagesMapper;
 import kr.co.moodtracker.mapper.MoodsMapper;
 import kr.co.moodtracker.mapper.NotesMapper;
 import kr.co.moodtracker.vo.DailyInfoVO;
-import kr.co.moodtracker.vo.DailySearchVO;
+import kr.co.moodtracker.vo.SearchDailyInfoVO;
 import kr.co.moodtracker.vo.ImageVO;
+import kr.co.moodtracker.vo.ReturnDailyInfoVO;
 
 @Service
 public class CalendarService {
@@ -41,18 +42,19 @@ public class CalendarService {
 	static final int MAX_LIST_COUNT = 10;
 	
 	@Transactional(readOnly = true)
-	public List<DailyInfoVO> getDailyInfoOfTheMonth(DailySearchVO vo) throws DataMissingException {
+	public List<ReturnDailyInfoVO> getDailyInfoOfTheMonth(SearchDailyInfoVO vo) throws DataMissingException {
 		DateHandler.determineDateRange(vo);
 		List<DailyInfoVO> dailies = dailiesMapper.getDailyInfoOfTheMonth(vo);
 		List<DailyInfoVO> images =  imagesMapper.getImageInfoList(vo);
 		ImageHandler.insertImageDataIntoDailyInfo(images, dailies, true);
-		List<DailyInfoVO> dailyInfoList = DateHandler.makeDateList(vo, dailies);
+		List<ReturnDailyInfoVO> dailyInfoList = DateHandler.makeDateListInCalendar(vo, dailies);
+		// DateHandler.makeDateListInCalendar에서 DailyInfoVO => ReturnDailyInfoVO 변환 작업도 같이 실행
 		if (dailyInfoList.size() < 1) return Collections.emptyList();
 		return dailyInfoList;
 	}
 	
 	@Transactional(readOnly = true)
-	public List<DailyInfoVO> getDailyInfoList(DailySearchVO vo) throws DataMissingException {
+	public List<DailyInfoVO> getDailyInfoList(SearchDailyInfoVO vo) throws DataMissingException {
 		if (vo.getLimit() > 30) throw new DataMissingException("한번에 너무 많은 데이터를 요청할 수 없습니다.");
 		List<DailyInfoVO> dailies = dailiesMapper.getDailyInfoList(vo);
 		List<Integer> ids = new ArrayList<>();// daily_id 수집
@@ -66,9 +68,27 @@ public class CalendarService {
 		return dailies;
 	}
 	
+	@Transactional(readOnly = true)
+	public ReturnDailyInfoVO getDailyInfo(SearchDailyInfoVO vo) throws DataMissingException {
+		DailyInfoVO daily = dailiesMapper.getDailyInfo(vo);
+		List<Integer> ids = new ArrayList<>();// daily_id 수집
+		ids.add(daily.getDailyId());
+		vo.setIds(ids);
+		// 이미지를 daily_id 목록으로 검색
+		List<DailyInfoVO> images =  imagesMapper.getImageInfoList(vo);
+		List<ImageVO> image = images.get(0).getImageList();
+		for (ImageVO i : image) {
+			i.setImagePath(
+					ImageHandler.pathToBase64(i.getImagePath())
+			);
+		}
+		daily.setImageList(image);
+		return daily.returnDailyInfoVO();
+	}
+	
 	@Transactional(rollbackFor = { Exception.class })
 	public void postDailyInfo(
-			DailyInfoVO vo
+			SearchDailyInfoVO vo
 			, List<MultipartFile> files
 	) throws DataNotInsertedException, IllegalStateException, IOException, DuplicateDataException {
 		this.savedImageFileList(MethodType.INSERT, files, null, vo);
@@ -89,7 +109,7 @@ public class CalendarService {
 	
 	@Transactional(rollbackFor = { Exception.class })
 	public void putDailyInfoWithImageJobExclusion(
-			DailyInfoVO vo
+			SearchDailyInfoVO vo
 	) throws DataNotInsertedException, IllegalStateException, IOException {
 		this.instantInjection(dailiesMapper.getDailyRelatedIds(vo), vo);
 		// 날짜로 dailyId, noteId, moodId 세팅
@@ -99,7 +119,7 @@ public class CalendarService {
 	
 	@Transactional(rollbackFor = { Exception.class })
 	public void patchDailyInfo(
-			DailyInfoVO vo
+			SearchDailyInfoVO vo
 			, List<MultipartFile> files
 			, List<Integer> preImageId
 	) throws DataNotInsertedException, IllegalStateException, IOException {
@@ -109,7 +129,7 @@ public class CalendarService {
 		// 날짜로 dailyId, noteId, moodId 세팅
 		if (vo.getNoteTitle() != null || vo.getNoteContent() != null)
 			notesMapper.patchNote(vo);
-		if (vo.getMoodLevel() != null && vo.getMoodLevel() > 0) 
+		if (vo.getMoodLevel() != null) 
 			moodsMapper.putMood(vo);
 		if (numberOfImagesInserted > 0) {
 			imagesMapper.putImage(vo);
@@ -117,7 +137,7 @@ public class CalendarService {
 	}
 
 	@Transactional(rollbackFor = { Exception.class })
-	public void deleteDailyInfo(DailyInfoVO vo) throws DataNotDeletedException {
+	public void deleteDailyInfo(SearchDailyInfoVO vo) throws DataNotDeletedException {
 		this.instantInjection(dailiesMapper.getDailyRelatedIds(vo), vo);
 		// 날짜로 dailyId, noteId, moodId 세팅
 		
@@ -142,7 +162,7 @@ public class CalendarService {
 			MethodType m
 			, List<MultipartFile> files
 			, List<Integer> preImageId
-			, DailyInfoVO vo
+			, SearchDailyInfoVO vo
 	) throws IllegalStateException, IOException {
 		/**
 		 * 이미지 갱신에 사용되는 로직 (PUT, PATCH)
@@ -185,7 +205,7 @@ public class CalendarService {
 		return 0;
 	}
 	
-	private void instantInjection(DailyInfoVO DailyRelatedIds, DailyInfoVO vo) {
+	private void instantInjection(DailyInfoVO DailyRelatedIds, SearchDailyInfoVO vo) {
 		vo.setDailyId(DailyRelatedIds.getDailyId());
 		vo.setNoteId(DailyRelatedIds.getNoteId());
 		vo.setMoodId(DailyRelatedIds.getMoodId());

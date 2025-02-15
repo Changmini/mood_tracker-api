@@ -9,7 +9,7 @@ import org.springframework.security.crypto.encrypt.TextEncryptor;
 import jakarta.servlet.http.HttpSession;
 import kr.co.moodtracker.exception.InvalidApiKeyException;
 import kr.co.moodtracker.vo.DailyInfoVO;
-import kr.co.moodtracker.vo.DailySearchVO;
+import kr.co.moodtracker.vo.SearchDailyInfoVO;
 import kr.co.moodtracker.vo.SearchNeighborVO;
 import kr.co.moodtracker.vo.UserVO;
 
@@ -60,8 +60,8 @@ public class AuthUserHandler {
 			, Object vo
 	) throws InvalidApiKeyException {
 		int userId = getUserId(apiKey);
-		if (vo instanceof DailySearchVO) {
-			((DailySearchVO) vo).setUserId(userId); 
+		if (vo instanceof SearchDailyInfoVO) {
+			((SearchDailyInfoVO) vo).setUserId(userId); 
 		} else if (vo instanceof DailyInfoVO) {
 			((DailyInfoVO) vo).setUserId(userId); 
 		} else if (vo instanceof SearchNeighborVO) {
@@ -91,8 +91,8 @@ public class AuthUserHandler {
 			, Object vo
 	) {
 		UserVO u = getAttributeUser(session);
-		if (vo instanceof DailySearchVO) {
-			((DailySearchVO) vo).setUserId(u.getUserId()); 
+		if (vo instanceof SearchDailyInfoVO) {
+			((SearchDailyInfoVO) vo).setUserId(u.getUserId()); 
 		} else if (vo instanceof DailyInfoVO) {
 			((DailyInfoVO) vo).setUserId(u.getUserId()); 
 		} else if (vo instanceof SearchNeighborVO) {

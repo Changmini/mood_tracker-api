@@ -24,7 +24,8 @@ import kr.co.moodtracker.exception.DuplicateDataException;
 import kr.co.moodtracker.handler.AuthUserHandler;
 import kr.co.moodtracker.service.CalendarService;
 import kr.co.moodtracker.vo.DailyInfoVO;
-import kr.co.moodtracker.vo.DailySearchVO;
+import kr.co.moodtracker.vo.SearchDailyInfoVO;
+import kr.co.moodtracker.vo.ReturnDailyInfoVO;
 
 @RestController
 @RequestMapping("/view")
@@ -36,12 +37,12 @@ public class CalendarController {
 	@GetMapping(value = "/calendar/{date}")
 	public ResponseEntity<?> getCalendarInfo(
 			HttpSession sess
-			, DailySearchVO vo
+			, SearchDailyInfoVO vo
 	) throws DataMissingException 
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		List<DailyInfoVO> list = calendarService.getDailyInfoOfTheMonth(vo);
+		List<ReturnDailyInfoVO> list = calendarService.getDailyInfoOfTheMonth(vo);
 		res.put("dailyInfoList", list);
 		res.put("success", true);
 		return ResponseEntity.ok().body(res);
@@ -50,7 +51,7 @@ public class CalendarController {
 	@GetMapping(value = "/daily")
 	public ResponseEntity<?> timeline(
 			HttpSession sess
-			, DailySearchVO vo
+			, SearchDailyInfoVO vo
 	)throws DataMissingException 
 	{
 		AuthUserHandler.setUserId(sess, vo);
@@ -63,7 +64,7 @@ public class CalendarController {
 	@PostMapping(value = "/daily")
 	public ResponseEntity<?> postDailyEntry(
 			HttpSession sess
-			, DailyInfoVO vo
+			, SearchDailyInfoVO vo
 			, @RequestParam("files") List<MultipartFile> files
 	) throws DataNotInsertedException, IllegalStateException, IOException, DuplicateDataException 
 	{
@@ -77,7 +78,7 @@ public class CalendarController {
 	@PatchMapping(value = "/daily")
 	public ResponseEntity<?> patchDailyEntry(
 			HttpSession sess
-			, DailyInfoVO vo
+			, SearchDailyInfoVO vo
 			, @RequestParam("files") List<MultipartFile> files
 			, @RequestParam("preImageId") List<Integer> preImageId
 	) throws DataNotInsertedException, IllegalStateException, IOException 
@@ -92,7 +93,7 @@ public class CalendarController {
 	@DeleteMapping(value = "/daily")
 	public ResponseEntity<?> deleteDailyEntry(
 			HttpSession sess
-			, DailyInfoVO vo
+			, SearchDailyInfoVO vo
 	) throws DataNotDeletedException 
 	{
 		AuthUserHandler.setUserId(sess, vo);

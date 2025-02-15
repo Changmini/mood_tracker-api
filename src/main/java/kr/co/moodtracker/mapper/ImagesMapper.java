@@ -3,18 +3,18 @@ package kr.co.moodtracker.mapper;
 import java.util.List;
 
 import kr.co.moodtracker.vo.DailyInfoVO;
-import kr.co.moodtracker.vo.DailySearchVO;
+import kr.co.moodtracker.vo.SearchDailyInfoVO;
 
 public interface ImagesMapper {
 	
-	public List<DailyInfoVO> getImageInfoList(DailySearchVO vo);
+	public List<DailyInfoVO> getImageInfoList(SearchDailyInfoVO vo);
 
-	public int postImage(DailyInfoVO vo);
+	public int postImage(SearchDailyInfoVO vo);
 
-	public int putImage(DailyInfoVO vo);
+	public int putImage(SearchDailyInfoVO vo);
 
-	public int deleteAllImage(DailyInfoVO vo);
+	public int deleteAllImage(SearchDailyInfoVO vo);
 	
-	public int deleteImage(DailyInfoVO vo);
+	public int deleteImage(SearchDailyInfoVO vo);
 
 }

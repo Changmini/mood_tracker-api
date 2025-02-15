@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.moodtracker.handler.DateHandler;
 import kr.co.moodtracker.mapper.GraphMapper;
 import kr.co.moodtracker.vo.ChartVO;
-import kr.co.moodtracker.vo.DailySearchVO;
+import kr.co.moodtracker.vo.SearchDailyInfoVO;
 
 @Service
 public class GraphService {
@@ -20,7 +20,7 @@ public class GraphService {
 	GraphMapper graphMapper;
 
 	@Transactional(readOnly = true)
-	public Map<?,?> getMoodLevelData(DailySearchVO vo) {
+	public Map<?,?> getMoodLevelData(SearchDailyInfoVO vo) {
 		Map<String, Map<?,?>> graphData = new HashMap<>();
 		/* 라벨링 */
 		ChartVO line = new ChartVO(DateHandler.DAY_OF_WEEKS);

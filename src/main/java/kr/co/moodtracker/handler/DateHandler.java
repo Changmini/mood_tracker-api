@@ -8,11 +8,13 @@ import java.util.List;
 import kr.co.moodtracker.exception.DataMissingException;
 import kr.co.moodtracker.vo.DailyInfoVO;
 import kr.co.moodtracker.vo.ImageVO;
+import kr.co.moodtracker.vo.ReturnDailyInfoVO;
 import kr.co.moodtracker.vo.SearchVO;
 
 public class DateHandler {
-	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	public static final DateTimeFormatter FORMATTER_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	public static final DateTimeFormatter FORMATTER_ym = DateTimeFormatter.ofPattern("yyyy-MM");
+	public static final DateTimeFormatter FORMATTER_ymd = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	public static final DateTimeFormatter FORMATTER_ymdhms = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	public static final String[] DAY_OF_WEEKS = {
 			"SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"
 		};
@@ -27,8 +29,8 @@ public class DateHandler {
 		} else if (vo.getDate() != null && !vo.getDate().equals("")) {
 			String date = vo.getDate();
 			int len = date.length();
-			if (len == 7) targetDate = LocalDate.parse(date+"-01", FORMATTER); 
-			else if (len == 10) targetDate = LocalDate.parse(date, FORMATTER);
+			if (len == 7) targetDate = LocalDate.parse(date+"-01", FORMATTER_ymd); 
+			else if (len == 10) targetDate = LocalDate.parse(date, FORMATTER_ymd);
 		} else { 
 			targetDate = LocalDate.now();
 		}
@@ -70,29 +72,31 @@ public class DateHandler {
 		}
 	}
 	
-	public static List<DailyInfoVO> makeDateList(SearchVO vo, List<DailyInfoVO> dailies) {
+	public static List<ReturnDailyInfoVO> makeDateListInCalendar(SearchVO vo, List<DailyInfoVO> dailies) {
 		LocalDate startDate = LocalDate.parse(vo.getStartDate());
 		LocalDate endDate = LocalDate.parse(vo.getEndDate());
-		List<DailyInfoVO> list = new ArrayList<DailyInfoVO>();
+		List<ReturnDailyInfoVO> list = new ArrayList<>();
 		
 		LocalDate nextDate = startDate;
 		int dailesSize = dailies.size();
 		int dailiesIndex = 0;
 		/* 캘린더에 사용될 날짜 세팅하기 */
 		while(!nextDate.isAfter(endDate)) {
-			String nDate = nextDate.format(FORMATTER);
+			String nDate = nextDate.format(FORMATTER_ymd);
 			String tmpDate = null;
 			DailyInfoVO daily = null;
-			if (dailesSize > dailiesIndex// DB에 저장된 날짜정보 세팅
+			if (dailesSize > dailiesIndex
 					&& (daily = dailies.get(dailiesIndex)) != null
 					&& (tmpDate = daily.getDate()) != null
 					&& nDate.equals(tmpDate)) {
+				// DB에 저장되어 있는 날짜 (= 이미 채워져 있는 날짜 건너뛰기)
 				dailiesIndex++;
-			} else {// 기본 날짜정보만 세팅
+			} else {
+				// DB에 없는 날짜 (= 비워진 날짜 채우기)
 				daily = new DailyInfoVO();
 				daily.setDate(nDate);
 			}
-			list.add(daily);
+			list.add(daily.returnDailyInfoVO());
 			nextDate = nextDate.plusDays(1);
 		}
 		return list;
