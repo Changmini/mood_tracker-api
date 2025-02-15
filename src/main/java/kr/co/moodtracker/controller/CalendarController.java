@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +21,6 @@ import kr.co.moodtracker.exception.DataMissingException;
 import kr.co.moodtracker.exception.DataNotDeletedException;
 import kr.co.moodtracker.exception.DataNotInsertedException;
 import kr.co.moodtracker.exception.DuplicateDataException;
-import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.handler.AuthUserHandler;
 import kr.co.moodtracker.service.CalendarService;
 import kr.co.moodtracker.vo.DailyInfoVO;
@@ -75,7 +74,7 @@ public class CalendarController {
 		return ResponseEntity.ok().body(res);
 	}
 	
-	@PutMapping(value = "/daily")
+	@PatchMapping(value = "/daily")
 	public ResponseEntity<?> patchDailyEntry(
 			HttpSession sess
 			, DailyInfoVO vo
@@ -85,7 +84,7 @@ public class CalendarController {
 	{
 		AuthUserHandler.setUserId(sess, vo);
 		Map<String, Object> res = new HashMap<>();
-		calendarService.putDailyInfo(vo, files, preImageId);
+		calendarService.patchDailyInfo(vo, files, preImageId);
 		res.put("success", true);
 		return ResponseEntity.ok().body(res);
 	}

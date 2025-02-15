@@ -100,20 +100,14 @@
 	<update id="patchNeighbor" parameterType="kr.co.moodtracker.vo.SearchNeighborVO">
 		UPDATE neighbor
 		<!-- 'Y' or 'N'-->
-		SET <choose>
-				<when test='chatroomActive != null and !chatroomActive.equals("")
-				 		 and calExtAccess != null and !calExtAccess.equals("")'>
-					chatroom_active = #{chatroomActive}
-					, cal_ext_access = #{calExtAccess} 
-				</when>
-				<when test='chatroomActive != null and !chatroomActive.equals("")'>
-					chatroom_active = #{chatroomActive}
-				</when>
-				<when test='calExtAccess != null and !calExtAccess.equals("")'>
-					cal_ext_access = #{calExtAccess}
-				</when>
-				<otherwise></otherwise>
-			</choose>
+		<trim prefix="SET" prefixOverrides=",">
+			<if test='chatroomActive != null and !chatroomActive.equals("")'>
+				chatroom_active = #{chatroomActive}
+			</if>
+			<if test='calExtAccess != null and !calExtAccess.equals("")'>
+				,cal_ext_access = #{calExtAccess}
+			</if>
+		</trim>
 			, updated_at = NOW()
 		WHERE host_profile_id = (
 			SELECT user_profile_id

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,7 +20,6 @@ import jakarta.servlet.http.HttpSession;
 import kr.co.moodtracker.exception.DataMissingException;
 import kr.co.moodtracker.exception.DataNotDeletedException;
 import kr.co.moodtracker.exception.ImageLoadException;
-import kr.co.moodtracker.exception.SessionNotFoundException;
 import kr.co.moodtracker.handler.AuthUserHandler;
 import kr.co.moodtracker.service.ImageService;
 

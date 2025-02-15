@@ -7,6 +7,8 @@ public interface NotesMapper {
 	public int postNote(DailyInfoVO vo);
 
 	public int putNote(DailyInfoVO vo);
+	
+	public int patchNote(DailyInfoVO vo);
 
 	public int deleteNote(DailyInfoVO vo);
 

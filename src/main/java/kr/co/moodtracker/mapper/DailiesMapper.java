@@ -14,6 +14,12 @@ public interface DailiesMapper {
 	
 	public List<Map<String,Object>> getDailyInfoCount(DailySearchVO vo);
 	
+	/**
+	 * 날짜로 dailyId, noteId, moodId 세팅
+	 * @param vo
+	 */
+	public DailyInfoVO getDailyRelatedIds (DailyInfoVO vo);
+	
 	public int checkDailyInfo(DailyInfoVO vo);
 	
 	public int postDaily(DailyInfoVO vo);

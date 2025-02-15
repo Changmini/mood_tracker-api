@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.co.moodtracker.enums.MethodType;
 import kr.co.moodtracker.exception.DataMissingException;
 import kr.co.moodtracker.exception.DataNotDeletedException;
 import kr.co.moodtracker.exception.DataNotInsertedException;
@@ -66,18 +67,11 @@ public class CalendarService {
 	}
 	
 	@Transactional(rollbackFor = { Exception.class })
-	public void postDailyInfo(DailyInfoVO vo, List<MultipartFile> files) 
-			throws DataNotInsertedException, IllegalStateException, IOException, DuplicateDataException {
-		if (files != null && files.size() > 0) {
-			List<ImageVO> imageList = new ArrayList<>();
-			for (MultipartFile f : files) {
-				String path = FileHandler.saveFile(f, vo.getUserId());
-				ImageVO ivo = new ImageVO();
-				ivo.setImagePath(path);
-				imageList.add(ivo);
-			}
-			vo.setImageList(imageList);
-		}
+	public void postDailyInfo(
+			DailyInfoVO vo
+			, List<MultipartFile> files
+	) throws DataNotInsertedException, IllegalStateException, IOException, DuplicateDataException {
+		this.savedImageFileList(MethodType.INSERT, files, null, vo);
 
 		int cnt = dailiesMapper.checkDailyInfo(vo);
 		if (cnt > 0) throw new DuplicateDataException("해당 날짜에 데이터가 존재합니다. 수정 작업을 수행하여 데이터를 갱신해주세요.");
@@ -94,36 +88,39 @@ public class CalendarService {
 	}
 	
 	@Transactional(rollbackFor = { Exception.class })
-	public void putDailyInfo(DailyInfoVO vo
-			, List<MultipartFile> files, List<Integer> preImageId) 
-			throws DataNotInsertedException, IllegalStateException, IOException {
-		int filesSize = 0;
-		int imageIdSize = 0;
-		int numberOfImagesInserted = 0;
-		if (files != null && preImageId != null
-				&& (filesSize=files.size()) > 0 
-				&& (imageIdSize=preImageId.size()) > 0) {
-			List<ImageVO> imageList = new ArrayList<>();
-			for (int i = 0; i < filesSize && i < imageIdSize; i++) {
-				String path = FileHandler.saveFile(files.get(i), vo.getUserId());
-				if (path == null) continue;
-				ImageVO image = new ImageVO();
-				image.setImagePath(path);
-				image.setImageId(preImageId.get(i));
-				imageList.add(image);
-			}
-			numberOfImagesInserted = imageList.size();
-			vo.setImageList(imageList);
-		}
+	public void putDailyInfoWithImageJobExclusion(
+			DailyInfoVO vo
+	) throws DataNotInsertedException, IllegalStateException, IOException {
+		this.instantInjection(dailiesMapper.getDailyRelatedIds(vo), vo);
+		// 날짜로 dailyId, noteId, moodId 세팅
 		notesMapper.putNote(vo);
 		moodsMapper.putMood(vo);
+	}
+	
+	@Transactional(rollbackFor = { Exception.class })
+	public void patchDailyInfo(
+			DailyInfoVO vo
+			, List<MultipartFile> files
+			, List<Integer> preImageId
+	) throws DataNotInsertedException, IllegalStateException, IOException {
+		int numberOfImagesInserted = this.savedImageFileList(MethodType.UPDATE, files, preImageId, vo);
+		
+		this.instantInjection(dailiesMapper.getDailyRelatedIds(vo), vo);
+		// 날짜로 dailyId, noteId, moodId 세팅
+		if (vo.getNoteTitle() != null || vo.getNoteContent() != null)
+			notesMapper.patchNote(vo);
+		if (vo.getMoodLevel() != null && vo.getMoodLevel() > 0) 
+			moodsMapper.putMood(vo);
 		if (numberOfImagesInserted > 0) {
 			imagesMapper.putImage(vo);
 		}
 	}
-	
+
 	@Transactional(rollbackFor = { Exception.class })
 	public void deleteDailyInfo(DailyInfoVO vo) throws DataNotDeletedException {
+		this.instantInjection(dailiesMapper.getDailyRelatedIds(vo), vo);
+		// 날짜로 dailyId, noteId, moodId 세팅
+		
 		int cnt = notesMapper.deleteNote(vo);
 		if (cnt == 0) throw new DataNotDeletedException("삭제 데이터의 noteId 정보가 일치한지 확인이 필요합니다.");
 		cnt = moodsMapper.deleteMood(vo);
@@ -134,4 +131,63 @@ public class CalendarService {
 		if (cnt == 0) throw new DataNotDeletedException("삭제 데이터의 imageId 정보가 일치한지 확인이 필요합니다.");
 	}
 	
+	/**
+	 * 인자 값으로 전달된 객체에 저장된 이미지의 경로를 세팅해준다.  
+	 * @return 갱신된 이미지의 수
+	 * @throws IOException 
+	 * @throws IllegalStateException 
+	 */
+	@SuppressWarnings("unused")
+	private int savedImageFileList(
+			MethodType m
+			, List<MultipartFile> files
+			, List<Integer> preImageId
+			, DailyInfoVO vo
+	) throws IllegalStateException, IOException {
+		/**
+		 * 이미지 갱신에 사용되는 로직 (PUT, PATCH)
+		 */
+		if (m == MethodType.UPDATE && files != null && preImageId != null) {
+			int filesSize = files.size();
+			int imageIdSize = preImageId.size();
+			List<ImageVO> imageList = new ArrayList<>();
+			for (int i = 0; i < filesSize && i < imageIdSize; i++) {
+				String path = FileHandler.saveFile(files.get(i), vo.getUserId());
+				if (path == null) continue;
+				ImageVO image = new ImageVO();
+				image.setImagePath(path);
+				image.setImageId(preImageId.get(i));
+				imageList.add(image);
+			}
+			vo.setImageList(imageList);
+			return imageList.size();
+		}
+		/**
+		 * 첫 이미지 저장에 사용되는 로직(POST)
+		 * 무조건 DB의 images.imagePath를 3개 만들기 위한 작업을 수행
+		 */
+		if (m == MethodType.INSERT) {
+			List<ImageVO> imageList = new ArrayList<>();
+			if (files != null && files.size() >= 3) {
+				for (MultipartFile f : files) {
+					String path = FileHandler.saveFile(f, vo.getUserId());
+					ImageVO ivo = new ImageVO();
+					ivo.setImagePath(path);
+					imageList.add(ivo);
+				}				
+			} else {
+				for (int i = 0; i < 3; i++) {
+					imageList.add(new ImageVO());
+				}				
+			}
+			vo.setImageList(imageList);
+		} 
+		return 0;
+	}
+	
+	private void instantInjection(DailyInfoVO DailyRelatedIds, DailyInfoVO vo) {
+		vo.setDailyId(DailyRelatedIds.getDailyId());
+		vo.setNoteId(DailyRelatedIds.getNoteId());
+		vo.setMoodId(DailyRelatedIds.getMoodId());
+	}
 }// class

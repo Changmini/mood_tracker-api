@@ -2,6 +2,7 @@ package kr.co.moodtracker.api.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,15 +15,56 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestController
 public class ApiCommonController {
 	
-	@RequestMapping("/api")
+	/**
+	 * description
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping("/api/v1")
 	public ResponseEntity<Map<String, Object>> getMethodName(
 			HttpServletRequest req
 	) {
-		Map<String, Object> res = new HashMap<>();
-		List<String> urlList = new ArrayList<>();
-		urlList.add(req.getContextPath() + "/api/calendar/{yyyyMMdd}");
+		String url = req.getRequestURL().toString();
+		int idx = url.indexOf("/api");
+		String contextPath = url.substring(0, idx);
 		
-		res.put("URL", urlList);
+		Map<String, Object> res = new HashMap<>();
+		Map<String, Object> links = new LinkedHashMap<>();
+		Map<String, Object> details = null;
+		List<String> type = null;
+		List<String> reqBody = null;
+		
+		details = new LinkedHashMap<>();
+		details.put("href", contextPath+"/api/v1");
+		links.put("self", details);
+		
+		details = new LinkedHashMap<>();
+		details.put("href", contextPath+"/api/v1/calendar/{*yyyy-MM}");
+		type = new ArrayList<>();
+		type.add("list");
+		details.put("type", type);
+		reqBody = new ArrayList<>();
+		reqBody.add("*apiToken");
+		details.put("request-payload", reqBody);
+		links.put("calendar-date", details);
+		
+		details = new LinkedHashMap<>();
+		details.put("href", contextPath+"/api/v1/daily/{*yyyy-MM-dd}");
+		type = new ArrayList<>();
+		type.add("insert");
+		type.add("update");
+		details.put("type", type);
+		reqBody = new ArrayList<>();
+		reqBody.add("*apiToken");
+		reqBody.add("*moodLevel");
+		reqBody.add("noteTitle");
+		reqBody.add("noteContent");
+		details.put("request-payload", reqBody);
+		links.put("daily-date", details);
+		
+		res.put("_links", links);
 		return ResponseEntity.ok().body(res);
 	}
+	
+	
 }

@@ -46,9 +46,7 @@ spring:
    on-profile: local
  datasource:
   url: jdbc:mysql://127.0.0.1:3306/moodtracker?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowMultiQueries=true
-  #url: jdbc:log4jdbc:mysql://127.0.0.1:3306/moodtracker?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowMultiQueries=true
   driver-class-name: com.mysql.cj.jdbc.Driver
-  #driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
   username: 
   password: 
   configuration:

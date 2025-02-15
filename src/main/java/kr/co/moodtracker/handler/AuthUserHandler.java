@@ -1,14 +1,10 @@
 package kr.co.moodtracker.handler;
 
-import java.security.SecureRandom;
-import java.util.Base64;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
-import org.springframework.security.crypto.keygen.KeyGenerators;
 
 import jakarta.servlet.http.HttpSession;
 import kr.co.moodtracker.exception.InvalidApiKeyException;
@@ -18,9 +14,13 @@ import kr.co.moodtracker.vo.SearchNeighborVO;
 import kr.co.moodtracker.vo.UserVO;
 
 public class AuthUserHandler {
-	static final private TextEncryptor enc = Encryptors.text("mood-sec-tr-ack-er", KeyGenerators.string().generateKey());
-	static final private SecureRandom secRandom = new SecureRandom();
-	static final private JSONParser jp = new JSONParser();
+	static final private TextEncryptor enc;
+	static final private JSONParser jp;
+	
+	static {
+		enc = Encryptors.text("mood-sec-tr-ack-er", "1235679abcdefABC");
+		jp = new JSONParser();
+	}
 	
 	/**
 	 * 새로운 API Key 생성

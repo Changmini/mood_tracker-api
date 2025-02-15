@@ -17,9 +17,20 @@
 	
 	<update id="putNote" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
 		UPDATE notes
-		SET	note_title = #{noteTitle}
-			,note_content = #{noteContent}
-		WHERE note_id = #{noteId} 
+		SET
+			note_title = #{noteTitle}
+			, note_content = #{noteContent}
+		WHERE note_id = #{noteId}
+		AND user_id = #{userId}
+	</update>
+	
+	<update id="patchNote" parameterType="kr.co.moodtracker.vo.DailyInfoVO">
+		UPDATE notes
+		<trim prefix="SET" prefixOverrides=",">
+			<if test='noteTitle != null'>note_title = #{noteTitle}</if>
+			<if test='noteContent != null'>,note_content = #{noteContent}</if>			
+		</trim>
+		WHERE note_id = #{noteId}
 		AND user_id = #{userId}
 	</update>
 	
