@@ -122,12 +122,10 @@
 	
 	<select id="checkDailyInfo" parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO"
 							resultType="int">
-		SELECT daily_id
-			,note_id
-			,mood_id
-			,DATE_FORMAT(`date`, '%Y-%m-%d') as `date`
+		SELECT COUNT(daily_id)
 		FROM dailies
 		WHERE user_id = #{userId}	
+		AND `date` = #{date}
 	</select>
 	
 	<select id="getDailyRelatedIds" parameterType="kr.co.moodtracker.vo.SearchDailyInfoVO"
