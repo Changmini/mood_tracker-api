@@ -51,6 +51,7 @@ public class ApiCommonController {
 		details = new LinkedHashMap<>();
 		details.put("href", contextPath+"/api/v1/daily/{*yyyy-MM-dd}");
 		type = new ArrayList<>();
+		type.add("select");
 		type.add("insert");
 		type.add("update");
 		details.put("type", type);
