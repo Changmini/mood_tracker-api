@@ -7,23 +7,23 @@ import lombok.Setter;
 @Setter
 public class DailyInfoVO extends ReturnDailyInfoVO {
 
-	private int userId;
-	private int noteId;
+    private int userId;
+    private int noteId;
     private int moodId;
     /* ReturnDailyInfoVO ~ */
     private String createdAt;
     private String updatedAt;
-    
+
     public ReturnDailyInfoVO returnDailyInfoVO() {
-    	return new ReturnDailyInfoVO(
-    				this.getDailyId()
-    				,this.getDate()
-    				,this.getNoteTitle()
-    				,this.getNoteContent()
-    				,this.getMoodLevel()
-    				,this.getDescription()
-    				,this.getImageList()
-    			);
+        return new ReturnDailyInfoVO(
+                this.getDailyId()
+                , this.getDate()
+                , this.getNoteTitle()
+                , this.getNoteContent()
+                , this.getMoodLevel()
+                , this.getDescription()
+                , this.getImageList()
+        );
     }
-    
+
 }
