@@ -93,7 +93,7 @@ git pull
 
 ##### Set Database info
 FILENAME="src/main/resources/application.yml"
-sed -i "s/usrename:/usrename: $USERNAME/g" "$FILENAME"
+sed -i "s/username:/username: $USERNAME/g" "$FILENAME"
 sed -i "s/password:/password: $PASSWORD/g" "$FILENAME"
 echo "DB-info modification completed"
 
