@@ -41,8 +41,8 @@ git pull
 
 ##### Change URL-Origin info
 FILENAME="src/common.js"
-sed -i "s|^const API_HOST = \"localhost\"; *|//const API API_HOST = \"localhost\";|" "$FILENAME"
-sed -i "s|^//const API_HOST = \"3.38.99.65\"; *|const API API_HOST = \"3.38.99.65\";|" "$FILENAME"
+sed -i "s|^const API_HOST = \"localhost\"; *|//const API_HOST = \"localhost\";|" "$FILENAME"
+sed -i "s|^//const API_HOST = \"3.38.99.65\"; *|const API_HOST = \"3.38.99.65\";|" "$FILENAME"
 echo "API Origin modification completed"
 
 
