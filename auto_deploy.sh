@@ -7,10 +7,12 @@
 read -p "DB username : " USERNAME
 if [ -z "$USERNAME" ]; then
     echo "Nothing username"
+    exit 1
 fi
 read -sp "DB password : " PASSWORD
 if [ -z "$PASSWORD" ]; then
     echo "Nothing username"
+    exit 1
 fi
 
 ##### Process Kill -15 java
