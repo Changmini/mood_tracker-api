@@ -1,4 +1,15 @@
 #!/bin/bash
+#
+#
+#
+#
+#
+read -p "DB username : " USERNAME
+if [ -z "$USERNAME" ]; then
+    echo "Nothing username"
+read -sp "DB password : " PASSWORD
+if [ -z "$PASSWORD" ]; then
+    echo "Nothing username"
 
 ##### Process Kill -15 java
 processes=$(ps -ef | grep java | grep -v grep)
@@ -77,8 +88,6 @@ git pull
 
 ##### Set Database info
 FILENAME="src/main/resources/application.yml"
-USERNAME=
-PASSWORD=
 sed -i "s/usrename:/usrename: $USERNAME/g" "$FILENAME"
 sed -i "s/password:/password: $PASSWORD/g" "$FILENAME"
 echo "DB-info modification completed"
