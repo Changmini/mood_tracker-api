@@ -1,9 +1,9 @@
 #!/bin/bash
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
+# Currently, the shell script must be executed with the API and VIEW projects existing in the path of the Linux User( /home/{user} )
 #
-#
-#
-#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 read -p "DB username : " USERNAME
 if [ -z "$USERNAME" ]; then
     echo "Nothing username"
