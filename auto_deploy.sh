@@ -2,6 +2,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 # Currently, the shell script must be executed with the API and VIEW projects existing in the path of the Linux User( /home/{user} )
+# In addition, the shell script must be in the root path of both projects (API, VIEW).
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 read -p "DB username : " USERNAME
